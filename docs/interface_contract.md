@@ -73,6 +73,7 @@ class AudioInput:
 ```
 
 **Expected Behavior & Invariants**:
+
 - Immutable after instantiation.
 - Enforces 16kHz mono audio input.
 
@@ -117,6 +118,7 @@ class Transcript:
 ```
 
 **Expected Behavior & Invariants**:
+
 - `logits` tensor MUST NOT be empty or truncated.
 - `tokens` list length MUST match `logits.shape[0]`.
 
@@ -152,6 +154,7 @@ class ConfidenceScore:
 ```
 
 **Expected Behavior & Invariants**:
+
 - All entropy values are non-negative floats ($\ge 0.0$).
 - `is_uncertain_word` is evaluated as `True` if any constituent token entropy exceeds `threshold_tau`.
 
@@ -194,6 +197,7 @@ class EntitySpan:
 ```
 
 **Expected Behavior & Invariants**:
+
 - `requires_correction` is strictly `False` if `category == EntityCategory.NON_MEDICAL`.
 - Bounds check: $0 \le \text{start\_char} < \text{end\_char} \le \text{len(raw\_text)}$.
 
@@ -227,6 +231,7 @@ class RetrievalCandidate:
 ```
 
 **Expected Behavior & Invariants**:
+
 - `rank` must be $\ge 1$.
 - `raw_score` normalized to $[0.0, 1.0]$.
 
@@ -258,6 +263,7 @@ class FusionCandidate:
 ```
 
 **Expected Behavior & Invariants**:
+
 - Candidates appearing in BOTH semantic and phonetic lists earn higher `rrf_score`.
 
 ---
@@ -322,12 +328,12 @@ class PipelineOutput:
 
 ## 3. Data Flow Integrity Validation Matrix
 
-| Source Module | Generated Output Object | Recipient Module | Validations Enforced |
-| :--- | :--- | :--- | :--- |
-| **1. Transcriber** | `Transcript` | `Confidence Estimator` | 16kHz audio check, non-empty logits, 2D tensor shape check. |
-| **2. Confidence** | `ConfidenceScore` | `NER Tagger` | $H_q \ge 0.0$, binary threshold mapping, length alignment. |
-| **3. NER Tagger** | `EntitySpan` list | `Retrieval Engines` | Category check (MED/COND/ANA/TTP), span character bounds. |
-| **4/5. Retrieval** | `RetrievalCandidate` list | `Fusion Engine` | Top-K limit ($K \le 20$), rank $\ge 1$, score in $[0,1]$. |
-| **6. Fusion** | `FusionCandidate` list | `LLM Correction` | RRF formula calculation, descending score sorting. |
-| **7. LLM Engine** | Proposed String | `Safety Gate` | Valid string output or explicit `UNSURE` token. |
-| **8. Safety Gate** | `CorrectionResult` | `Output Assembler` | Normalized Levenshtein distance $\le 0.45$, category preservation. |
+| Source Module            | Generated Output Object     | Recipient Module         | Validations Enforced                                                |
+| :----------------------- | :-------------------------- | :----------------------- | :------------------------------------------------------------------ |
+| **1. Transcriber** | `Transcript`              | `Confidence Estimator` | 16kHz audio check, non-empty logits, 2D tensor shape check.         |
+| **2. Confidence**  | `ConfidenceScore`         | `NER Tagger`           | $H_q \ge 0.0$, binary threshold mapping, length alignment.        |
+| **3. NER Tagger**  | `EntitySpan` list         | `Retrieval Engines`    | Category check (MED/COND/ANA/TTP), span character bounds.           |
+| **4/5. Retrieval** | `RetrievalCandidate` list | `Fusion Engine`        | Top-K limit ($K \le 20$), rank $\ge 1$, score in $[0,1]$.     |
+| **6. Fusion**      | `FusionCandidate` list    | `LLM Correction`       | RRF formula calculation, descending score sorting.                  |
+| **7. LLM Engine**  | Proposed String             | `Safety Gate`          | Valid string output or explicit`UNSURE` token.                    |
+| **8. Safety Gate** | `CorrectionResult`        | `Output Assembler`     | Normalized Levenshtein distance$\le 0.45$, category preservation. |
