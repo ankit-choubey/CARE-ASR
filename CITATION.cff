@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+title: "CARE-ASR: Confidence-Aware Retrieval-Augmented Clinical Entity Recovery for Accented and Code-Mixed Medical Speech Recognition"
+message: "If you use this software or research framework in your work, please cite it using the metadata from this file."
+type: software
+authors:
+  - family-names: "Choubey"
+    given-names: "Ankit"
+    role: "Integration & ML Core Lead"
+  - family-names: "Nandini"
+    given-names: "Mahi"
+    role: "Testing & Evaluation Lead"
+  - family-names: "Aarth"
+    given-names: "Aarth"
+    role: "Data Lead & Domain Specialist"
+  - family-names: "Divya"
+    given-names: "Divya"
+    role: "Preprocessing & Retrieval Lead"
+repository-code: "https://github.com/ankit-choubey/CARE-ASR"
+abstract: "CARE-ASR is a confidence-aware, zero-retraining post-processing framework designed to recover misrecognized medical entities in accented and code-mixed clinical speech recognition outputs."
+keywords:
+  - speech recognition
+  - whisper
+  - medical entity recovery
+  - tsallis entropy
+  - retrieval augmented generation
+license: MIT
+version: 0.1.0
+date-released: 2026-07-21
