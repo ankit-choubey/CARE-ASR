@@ -1,0 +1,20 @@
+# Model Architecture & Checkpoint Paths
+
+models:
+  whisper:
+    type: "asr"
+    checkpoint: "openai/whisper-medium"
+    local_path: "models/checkpoints/whisper-medium.pt"
+    compute_type: "float16"
+
+  clinical_bert:
+    type: "embedding"
+    checkpoint: "emilyalsentzer/Bio_ClinicalBERT"
+    embedding_dim: 768
+
+  llama:
+    type: "llm"
+    backend: "ollama" # Options: ollama, vllm
+    model_tag: "llama3.1:8b"
+    context_window: 4096
+    quantization: "4-bit"

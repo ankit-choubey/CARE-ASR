@@ -1,0 +1,22 @@
+* @ankit-choubey
+
+/src/asr/ @ankit-choubey
+/src/entropy/ @ankit-choubey
+/src/correction/ @ankit-choubey
+/src/pipeline/ @ankit-choubey
+/src/utils/schemas.py @ankit-choubey
+/src/utils/logging.py @ankit-choubey
+
+/src/retrieval/ @DivyaHandle
+/src/fusion/ @DivyaHandle
+/src/utils/audio.py @DivyaHandle
+/data/ @DivyaHandle
+
+/src/ner/ @AarthHandle
+/src/evaluation/ @AarthHandle
+/src/utils/text.py @AarthHandle
+/docs/ @AarthHandle
+
+/src/safety/ @MahiHandle
+/tests/ @MahiHandle
+/demo/ @MahiHandle

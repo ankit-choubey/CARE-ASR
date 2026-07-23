@@ -1,0 +1,19 @@
+# Evaluation & Metrics Configuration
+
+dataset:
+  name: "AfriSpeech-200"
+  split: "clinical_test"
+  data_dir: "data/raw/afrispeech"
+
+metrics:
+  calculate_overall_wer: true
+  calculate_mwer: true # Medical Entity WER
+  entity_categories:
+    - "MED" # Medication
+    - "COND" # Condition
+    - "ANA" # Anatomy
+    - "TTP" # Test / Treatment / Procedure
+
+output:
+  report_dir: "outputs/eval_reports"
+  save_transcripts: true

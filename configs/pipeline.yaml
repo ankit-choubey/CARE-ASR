@@ -1,0 +1,37 @@
+# CARE-ASR Core Hyperparameters
+
+pipeline:
+  name: "care-asr-v0.1.0"
+  device: "cuda"
+  debug: false
+
+whisper:
+  model_name: "whisper-medium"
+  beam_size: 5
+  temperature: 0.0
+  language: "en"
+
+tsallis_entropy:
+  q_parameter: 0.5
+  threshold_tau: 0.45
+
+ner:
+  model_name: "emilyalsentzer/Bio_ClinicalBERT"
+  confidence_threshold: 0.70
+
+retrieval:
+  top_k_semantic: 10
+  top_k_phonetic: 10
+  top_n_fusion: 5
+  rrf_k: 60
+
+correction:
+  model_endpoint: "http://localhost:11434"
+  model_name: "llama3.1:8b-instruct-q4_K_M"
+  max_tokens: 64
+  temperature: 0.1
+
+safety_gate:
+  max_levenshtein_ratio: 0.45
+  enforce_category_preservation: true
+  fallback_action: "UNSURE"
