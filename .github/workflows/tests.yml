@@ -63,7 +63,7 @@ jobs:
 
       - name: Execute Pytest Suite
         run: |
-          pytest tests/ --cov=care_asr --cov-report=xml
+          python -m pytest tests/ --cov=care_asr --cov-report=xml
 
       - name: Verify Interface Contracts Import Cleanly
         run: |
