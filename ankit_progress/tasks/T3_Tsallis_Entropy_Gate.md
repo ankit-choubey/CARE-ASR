@@ -137,6 +137,8 @@ git commit -m "T3: Implement Tsallis entropy gate"
 git push origin ankit
 ```
 
+**Generated Commit Hash**: `aecbc1b4cc677edaaa572bc2e74e51a2b64bcb82` (short `aecbc1b`)
+
 ---
 
 ## 7. Known Limitations & Next Dependency (Task T5)
