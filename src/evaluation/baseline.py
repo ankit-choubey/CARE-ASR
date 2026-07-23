@@ -11,7 +11,11 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 import torch
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
-from src.evaluation.io_utils import load_afrispeech_dataset, save_predictions, save_metrics
+from src.evaluation.io_utils import (
+    load_afrispeech_dataset,
+    save_predictions,
+    save_metrics,
+)
 from src.evaluation.metrics import evaluate_baseline
 
 
@@ -20,7 +24,9 @@ class WhisperBaselineEvaluator:
     Evaluator class for Task T1 Whisper-medium baseline inference.
     """
 
-    def __init__(self, model_name: str = "openai/whisper-medium", device: Optional[str] = None):
+    def __init__(
+        self, model_name: str = "openai/whisper-medium", device: Optional[str] = None
+    ):
         """
         Initializes Whisper processor and model.
 
@@ -31,7 +37,10 @@ class WhisperBaselineEvaluator:
         if device is None:
             if torch.cuda.is_available():
                 device = "cuda"
-            elif getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
+            elif (
+                getattr(torch.backends, "mps", None)
+                and torch.backends.mps.is_available()
+            ):
                 device = "mps"
             else:
                 device = "cpu"
@@ -39,7 +48,9 @@ class WhisperBaselineEvaluator:
         self.device = device
         self.model_name = model_name
 
-        print(f"[WhisperBaselineEvaluator] Loading '{model_name}' on device '{device}'...")
+        print(
+            f"[WhisperBaselineEvaluator] Loading '{model_name}' on device '{device}'..."
+        )
         self.processor = WhisperProcessor.from_pretrained(model_name)
         self.model = WhisperForConditionalGeneration.from_pretrained(model_name)
         self.model.to(self.device)
@@ -50,7 +61,7 @@ class WhisperBaselineEvaluator:
         audio_data: np.ndarray,
         sample_rate: int = 16000,
         audio_id: str = "utt_000",
-        reference: str = ""
+        reference: str = "",
     ) -> Dict[str, Any]:
         """
         Runs Whisper-medium inference on a single audio utterance and extracts
@@ -66,16 +77,12 @@ class WhisperBaselineEvaluator:
             Dict[str, Any]: Formatted utterance prediction result dictionary.
         """
         input_features = self.processor(
-            audio_data,
-            sampling_rate=sample_rate,
-            return_tensors="pt"
+            audio_data, sampling_rate=sample_rate, return_tensors="pt"
         ).input_features.to(self.device)
 
         with torch.no_grad():
             outputs = self.model.generate(
-                input_features,
-                return_dict_in_generate=True,
-                output_scores=True
+                input_features, return_dict_in_generate=True, output_scores=True
             )
 
         sequences = outputs.sequences
@@ -100,7 +107,9 @@ class WhisperBaselineEvaluator:
 
         return utterance_result
 
-    def _extract_word_timestamps(self, sequence_tensor: torch.Tensor) -> List[Dict[str, Any]]:
+    def _extract_word_timestamps(
+        self, sequence_tensor: torch.Tensor
+    ) -> List[Dict[str, Any]]:
         """
         Extracts word-level timestamps from Whisper output sequence.
 
@@ -111,39 +120,48 @@ class WhisperBaselineEvaluator:
         word_timestamps = []
         try:
             decoded_timestamps = self.processor.tokenizer._decode_asr(
-                [{"tokens": sequence_tensor.tolist()}],
-                return_timestamps=True
+                [{"tokens": sequence_tensor.tolist()}], return_timestamps=True
             )
             chunks = decoded_timestamps.get("chunks", [])
             for chunk in chunks:
                 text = chunk.get("text", "").strip()
                 timestamp = chunk.get("timestamp", (None, None))
                 if text and timestamp and len(timestamp) == 2:
-                    start_time = float(timestamp[0]) if timestamp[0] is not None else 0.0
-                    end_time = float(timestamp[1]) if timestamp[1] is not None else start_time + 0.1
-                    word_timestamps.append({
-                        "word": text,
-                        "start": round(start_time, 2),
-                        "end": round(end_time, 2)
-                    })
+                    start_time = (
+                        float(timestamp[0]) if timestamp[0] is not None else 0.0
+                    )
+                    end_time = (
+                        float(timestamp[1])
+                        if timestamp[1] is not None
+                        else start_time + 0.1
+                    )
+                    word_timestamps.append(
+                        {
+                            "word": text,
+                            "start": round(start_time, 2),
+                            "end": round(end_time, 2),
+                        }
+                    )
         except Exception:
             # Fallback estimation if token-level timestamps are not present in sequence
-            words = self.processor.decode(sequence_tensor, skip_special_tokens=True).split()
+            words = self.processor.decode(
+                sequence_tensor, skip_special_tokens=True
+            ).split()
             current_time = 0.0
             for w in words:
-                word_timestamps.append({
-                    "word": w,
-                    "start": round(current_time, 2),
-                    "end": round(current_time + 0.3, 2)
-                })
+                word_timestamps.append(
+                    {
+                        "word": w,
+                        "start": round(current_time, 2),
+                        "end": round(current_time + 0.3, 2),
+                    }
+                )
                 current_time += 0.35
 
         return word_timestamps
 
     def _extract_token_scores(
-        self,
-        scores: Tuple[torch.Tensor, ...],
-        sequence_tensor: torch.Tensor
+        self, scores: Tuple[torch.Tensor, ...], sequence_tensor: torch.Tensor
     ) -> List[Dict[str, Any]]:
         """
         Extracts per-step logit/probability score statistics for generated tokens.
@@ -165,19 +183,25 @@ class WhisperBaselineEvaluator:
 
             # Corresponding token ID generated at this step
             token_id_idx = prompt_offset + step_idx
-            gen_token_id = token_ids[token_id_idx] if token_id_idx < num_tokens else torch.argmax(logits).item()
-            
+            gen_token_id = (
+                token_ids[token_id_idx]
+                if token_id_idx < num_tokens
+                else torch.argmax(logits).item()
+            )
+
             token_str = self.processor.tokenizer.decode([gen_token_id])
             token_prob = float(probs[gen_token_id].item())
             token_log_prob = float(log_probs[gen_token_id].item())
 
-            token_scores.append({
-                "step": step_idx,
-                "token_id": int(gen_token_id),
-                "token": token_str,
-                "log_prob": round(token_log_prob, 4),
-                "prob": round(token_prob, 6)
-            })
+            token_scores.append(
+                {
+                    "step": step_idx,
+                    "token_id": int(gen_token_id),
+                    "token": token_str,
+                    "log_prob": round(token_log_prob, 4),
+                    "prob": round(token_prob, 6),
+                }
+            )
 
         return token_scores
 
@@ -188,7 +212,7 @@ def run_baseline_evaluation(
     split: str = "test",
     category: str = "clinical",
     max_samples: Optional[int] = None,
-    output_dir: str = "results"
+    output_dir: str = "results",
 ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
     """
     Executes the complete Task T1 baseline evaluation pipeline.
@@ -212,12 +236,14 @@ def run_baseline_evaluation(
     """
     evaluator = WhisperBaselineEvaluator(model_name=model_name)
 
-    print(f"[run_baseline_evaluation] Loading dataset '{dataset_name_or_path}' ({category} {split})...")
+    print(
+        f"[run_baseline_evaluation] Loading dataset '{dataset_name_or_path}' ({category} {split})..."
+    )
     dataset_iter = load_afrispeech_dataset(
         dataset_name_or_path=dataset_name_or_path,
         split=split,
         category=category,
-        max_samples=max_samples
+        max_samples=max_samples,
     )
 
     predictions = []
@@ -227,7 +253,7 @@ def run_baseline_evaluation(
             audio_data=sample["audio"],
             sample_rate=sample["sample_rate"],
             audio_id=sample["audio_id"],
-            reference=sample["reference"]
+            reference=sample["reference"],
         )
         predictions.append(pred_item)
 

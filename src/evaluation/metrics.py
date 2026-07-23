@@ -30,7 +30,7 @@ def normalize_text(text: str) -> str:
 
 def compute_wer(
     predictions: Union[List[Dict[str, Any]], List[str]],
-    references: Optional[List[str]] = None
+    references: Optional[List[str]] = None,
 ) -> float:
     """
     Computes Word Error Rate (WER) using jiwer across prediction and reference pairs.
@@ -56,7 +56,7 @@ def compute_wer(
 
 def compute_cer(
     predictions: Union[List[Dict[str, Any]], List[str]],
-    references: Optional[List[str]] = None
+    references: Optional[List[str]] = None,
 ) -> float:
     """
     Computes Character Error Rate (CER) using jiwer across prediction and reference pairs.
@@ -80,8 +80,7 @@ def compute_cer(
 
 
 def compute_mwer(
-    predictions: List[Dict[str, Any]],
-    entity_spans: Optional[List[Any]] = None
+    predictions: List[Dict[str, Any]], entity_spans: Optional[List[Any]] = None
 ) -> float:
     """
     Placeholder interface for Medical-WER (M-WER).
@@ -104,8 +103,7 @@ def compute_mwer(
 
 
 def compute_category_recall(
-    predictions: List[Dict[str, Any]],
-    ground_truth_entities: Optional[List[Any]] = None
+    predictions: List[Dict[str, Any]], ground_truth_entities: Optional[List[Any]] = None
 ) -> Dict[str, float]:
     """
     Placeholder interface for per-category medical entity Recall.
@@ -149,7 +147,7 @@ def evaluate_baseline(predictions: List[Dict[str, Any]]) -> Dict[str, Any]:
             "M-WER": "RESERVED_FOR_T4 (NotImplementedError)",
             "category_recall": "RESERVED_FOR_T4 (NotImplementedError)",
         },
-        "status": "T1 Baseline Evaluation Completed Successfully"
+        "status": "T1 Baseline Evaluation Completed Successfully",
     }
 
     return metrics_summary
@@ -157,10 +155,14 @@ def evaluate_baseline(predictions: List[Dict[str, Any]]) -> Dict[str, Any]:
 
 def _extract_texts(
     predictions: Union[List[Dict[str, Any]], List[str]],
-    references: Optional[List[str]] = None
+    references: Optional[List[str]] = None,
 ) -> Tuple[List[str], List[str]]:
     """Helper to parse prediction and reference texts from list of dicts or strings."""
-    if isinstance(predictions, list) and len(predictions) > 0 and isinstance(predictions[0], dict):
+    if (
+        isinstance(predictions, list)
+        and len(predictions) > 0
+        and isinstance(predictions[0], dict)
+    ):
         preds_text = [str(item.get("prediction", "")) for item in predictions]
         refs_text = [str(item.get("reference", "")) for item in predictions]
     else:

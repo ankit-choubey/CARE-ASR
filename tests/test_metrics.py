@@ -23,7 +23,7 @@ def test_compute_wer_simple_synthetic():
     """Test WER calculation on simple synthetic examples."""
     ref = ["the patient presents with acute fever"]
     pred = ["the patient presents with high fever"]
-    
+
     # 1 substitution ("acute" -> "high") out of 6 words = 1/6 ≈ 0.1667
     wer_val = compute_wer(predictions=pred, references=ref)
     assert 0.15 < wer_val < 0.20
@@ -45,18 +45,40 @@ def test_compute_cer_simple_synthetic():
 
 def test_placeholder_mwer_interface_exists():
     """Verify placeholder compute_mwer interface raises NotImplementedError."""
-    dummy_predictions = [{"audio_id": "1", "prediction": "a", "reference": "a", "word_timestamps": [], "token_scores": []}]
+    dummy_predictions = [
+        {
+            "audio_id": "1",
+            "prediction": "a",
+            "reference": "a",
+            "word_timestamps": [],
+            "token_scores": [],
+        }
+    ]
     with pytest.raises(NotImplementedError) as exc_info:
         compute_mwer(predictions=dummy_predictions, entity_spans=None)
-    assert "M-WER requires clinical entity spans produced by Task T4" in str(exc_info.value)
+    assert "M-WER requires clinical entity spans produced by Task T4" in str(
+        exc_info.value
+    )
 
 
 def test_placeholder_category_recall_interface_exists():
     """Verify placeholder compute_category_recall interface raises NotImplementedError."""
-    dummy_predictions = [{"audio_id": "1", "prediction": "a", "reference": "a", "word_timestamps": [], "token_scores": []}]
+    dummy_predictions = [
+        {
+            "audio_id": "1",
+            "prediction": "a",
+            "reference": "a",
+            "word_timestamps": [],
+            "token_scores": [],
+        }
+    ]
     with pytest.raises(NotImplementedError) as exc_info:
-        compute_category_recall(predictions=dummy_predictions, ground_truth_entities=None)
-    assert "Per-category Recall requires medical entity span ground truth" in str(exc_info.value)
+        compute_category_recall(
+            predictions=dummy_predictions, ground_truth_entities=None
+        )
+    assert "Per-category Recall requires medical entity span ground truth" in str(
+        exc_info.value
+    )
 
 
 def test_evaluate_baseline():
@@ -67,7 +89,7 @@ def test_evaluate_baseline():
             "prediction": "patient has mild hypertension",
             "reference": "patient has acute hypertension",
             "word_timestamps": [],
-            "token_scores": []
+            "token_scores": [],
         }
     ]
     summary = evaluate_baseline(predictions)
@@ -75,4 +97,6 @@ def test_evaluate_baseline():
     assert "WER" in summary["metrics"]
     assert "CER" in summary["metrics"]
     assert summary["metrics"]["M-WER"] == "RESERVED_FOR_T4 (NotImplementedError)"
-    assert summary["metrics"]["category_recall"] == "RESERVED_FOR_T4 (NotImplementedError)"
+    assert (
+        summary["metrics"]["category_recall"] == "RESERVED_FOR_T4 (NotImplementedError)"
+    )

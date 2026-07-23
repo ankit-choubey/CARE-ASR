@@ -10,7 +10,6 @@ from src.evaluation.io_utils import (
     validate_prediction_schema,
     save_predictions,
     load_predictions,
-    save_metrics,
 )
 from src.evaluation.baseline import WhisperBaselineEvaluator, run_baseline_evaluation
 
@@ -19,7 +18,7 @@ def test_dataset_iteration_works():
     """Verify load_afrispeech_dataset yields valid audio sample dictionaries."""
     samples = list(load_afrispeech_dataset(max_samples=2, use_dummy_fallback=True))
     assert len(samples) == 2
-    
+
     first_sample = samples[0]
     assert "audio_id" in first_sample
     assert "audio" in first_sample
@@ -35,14 +34,13 @@ def test_output_json_schema_validation():
         "prediction": "sample transcript",
         "reference": "sample transcript",
         "word_timestamps": [{"word": "sample", "start": 0.0, "end": 0.3}],
-        "token_scores": [{"step": 0, "token_id": 10, "token": "sample", "log_prob": 0.0, "prob": 1.0}],
+        "token_scores": [
+            {"step": 0, "token_id": 10, "token": "sample", "log_prob": 0.0, "prob": 1.0}
+        ],
     }
     assert validate_prediction_schema(valid_item) is True
 
-    invalid_item = {
-        "audio_id": "test_002",
-        "prediction": "missing other keys"
-    }
+    invalid_item = {"audio_id": "test_002", "prediction": "missing other keys"}
     with pytest.raises(ValueError) as exc_info:
         validate_prediction_schema(invalid_item)
     assert "missing required keys" in str(exc_info.value)
@@ -84,7 +82,7 @@ def test_prediction_pipeline_returns_expected_object(evaluator_instance):
         audio_data=audio_signal,
         sample_rate=sample_rate,
         audio_id="unit_test_utt",
-        reference="test reference text"
+        reference="test reference text",
     )
 
     assert isinstance(result, dict)
@@ -102,9 +100,7 @@ def test_end_to_end_baseline_run(tmp_path):
     """Verify run_baseline_evaluation creates predictions.json and baseline_metrics.json."""
     output_dir = tmp_path / "results"
     predictions, metrics = run_baseline_evaluation(
-        model_name="openai/whisper-tiny",
-        max_samples=1,
-        output_dir=str(output_dir)
+        model_name="openai/whisper-tiny", max_samples=1, output_dir=str(output_dir)
     )
 
     assert len(predictions) == 1

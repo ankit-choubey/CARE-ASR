@@ -44,7 +44,7 @@ def load_afrispeech_dataset(
     split: str = "test",
     category: str = "clinical",
     max_samples: Optional[int] = None,
-    use_dummy_fallback: bool = True
+    use_dummy_fallback: bool = True,
 ) -> Iterator[Dict[str, Any]]:
     """
     Loads and yields audio samples from AfriSpeech-200 clinical test split
@@ -71,13 +71,15 @@ def load_afrispeech_dataset(
     # Try loading from local path if directory exists
     if os.path.exists(dataset_name_or_path):
         import soundfile as sf
-        audio_dir = os.path.join(dataset_name_or_path, split, category)
-        transcripts_file = os.path.join(dataset_name_or_path, f"{split}_transcripts.json")
-        
+
+        transcripts_file = os.path.join(
+            dataset_name_or_path, f"{split}_transcripts.json"
+        )
+
         if os.path.exists(transcripts_file):
             with open(transcripts_file, "r", encoding="utf-8") as f:
                 transcripts = json.load(f)
-            
+
             for item in transcripts:
                 if max_samples is not None and count >= max_samples:
                     break
@@ -97,17 +99,22 @@ def load_afrispeech_dataset(
     # Try loading via HuggingFace datasets library
     try:
         from datasets import load_dataset
+
         ds = load_dataset(dataset_name_or_path, name=category, split=split)
         for idx, sample in enumerate(ds):
             if max_samples is not None and count >= max_samples:
                 break
-            
+
             audio_info = sample.get("audio", {})
             audio_array = audio_info.get("array", np.zeros(16000, dtype=np.float32))
             sr = audio_info.get("sampling_rate", 16000)
-            audio_id = sample.get("audio_id", sample.get("id", f"afrispeech_{split}_{idx:04d}"))
-            reference = sample.get("transcript", sample.get("text", sample.get("reference", "")))
-            
+            audio_id = sample.get(
+                "audio_id", sample.get("id", f"afrispeech_{split}_{idx:04d}")
+            )
+            reference = sample.get(
+                "transcript", sample.get("text", sample.get("reference", ""))
+            )
+
             yield {
                 "audio_id": str(audio_id),
                 "audio": np.array(audio_array, dtype=np.float32),
@@ -123,13 +130,24 @@ def load_afrispeech_dataset(
     # Fallback synthetic dataset generator for unit testing / offline execution
     if use_dummy_fallback:
         dummy_data = [
-            ("clinical_utt_001", "the patient presents with acute hypertension and elevated fever"),
-            ("clinical_utt_002", "prescribed amoxicillin five hundred milligrams orally twice daily"),
-            ("clinical_utt_003", "electrocardiogram reveals normal sinus rhythm with no ST elevation"),
+            (
+                "clinical_utt_001",
+                "the patient presents with acute hypertension and elevated fever",
+            ),
+            (
+                "clinical_utt_002",
+                "prescribed amoxicillin five hundred milligrams orally twice daily",
+            ),
+            (
+                "clinical_utt_003",
+                "electrocardiogram reveals normal sinus rhythm with no ST elevation",
+            ),
         ]
         sample_rate = 16000
         duration_sec = 2.5
-        t = np.linspace(0, duration_sec, int(sample_rate * duration_sec), endpoint=False)
+        t = np.linspace(
+            0, duration_sec, int(sample_rate * duration_sec), endpoint=False
+        )
 
         for idx, (utt_id, ref_text) in enumerate(dummy_data):
             if max_samples is not None and count >= max_samples:
@@ -160,7 +178,9 @@ def save_predictions(predictions: List[Dict[str, Any]], output_path: str) -> Non
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(predictions, f, indent=2, ensure_ascii=False)
-    print(f"[save_predictions] Successfully saved {len(predictions)} predictions to '{output_path}'.")
+    print(
+        f"[save_predictions] Successfully saved {len(predictions)} predictions to '{output_path}'."
+    )
 
 
 def load_predictions(input_path: str) -> List[Dict[str, Any]]:

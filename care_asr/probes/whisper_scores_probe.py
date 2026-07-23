@@ -36,10 +36,11 @@ from typing import Any, Dict, Tuple, Optional
 import numpy as np
 import torch
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
-from transformers.generation.utils import GenerateEncoderDecoderOutput, GenerateDecoderOnlyOutput
 
 
-def load_audio(audio_path: Optional[str] = None, sample_rate: int = 16000) -> np.ndarray:
+def load_audio(
+    audio_path: Optional[str] = None, sample_rate: int = 16000
+) -> np.ndarray:
     """
     Loads an audio sample for inference.
 
@@ -53,13 +54,17 @@ def load_audio(audio_path: Optional[str] = None, sample_rate: int = 16000) -> np
     """
     if audio_path is not None and os.path.exists(audio_path):
         import librosa
+
         audio, _ = librosa.load(audio_path, sr=sample_rate)
         return audio
 
     # Try loading real audio sample from HuggingFace datasets
     try:
         from datasets import load_dataset
-        ds = load_dataset("hf-internal-testing/librispeech_asr_dummy", "clean", split="validation")
+
+        ds = load_dataset(
+            "hf-internal-testing/librispeech_asr_dummy", "clean", split="validation"
+        )
         sample_audio = ds[0]["audio"]["array"]
         return np.array(sample_audio, dtype=np.float32)
     except Exception as e:
@@ -73,7 +78,7 @@ def load_audio(audio_path: Optional[str] = None, sample_rate: int = 16000) -> np
 def run_probe(
     model_name: str = "openai/whisper-medium",
     audio_data: Optional[np.ndarray] = None,
-    sample_rate: int = 16000
+    sample_rate: int = 16000,
 ) -> Tuple[Any, WhisperProcessor, torch.Tensor]:
     """
     Loads Whisper processor and model, prepares input features, and runs generate()
@@ -100,17 +105,15 @@ def run_probe(
 
     print("[run_probe] Processing audio input features...")
     input_features = processor(
-        audio_data,
-        sampling_rate=sample_rate,
-        return_tensors="pt"
+        audio_data, sampling_rate=sample_rate, return_tensors="pt"
     ).input_features
 
-    print("[run_probe] Executing model.generate(return_dict_in_generate=True, output_scores=True)...")
+    print(
+        "[run_probe] Executing model.generate(return_dict_in_generate=True, output_scores=True)..."
+    )
     with torch.no_grad():
         outputs = model.generate(
-            input_features,
-            return_dict_in_generate=True,
-            output_scores=True
+            input_features, return_dict_in_generate=True, output_scores=True
         )
 
     return outputs, processor, input_features
@@ -129,8 +132,12 @@ def inspect_scores(outputs: Any, processor: WhisperProcessor) -> Dict[str, Any]:
     """
     # 1. Transcription
     raw_sequence = outputs.sequences[0]
-    transcription = processor.batch_decode(outputs.sequences, skip_special_tokens=True)[0]
-    full_decoding = processor.batch_decode(outputs.sequences, skip_special_tokens=False)[0]
+    transcription = processor.batch_decode(outputs.sequences, skip_special_tokens=True)[
+        0
+    ]
+    full_decoding = processor.batch_decode(
+        outputs.sequences, skip_special_tokens=False
+    )[0]
 
     # 2. Generated token IDs
     token_ids = raw_sequence.tolist()
@@ -149,47 +156,59 @@ def inspect_scores(outputs: Any, processor: WhisperProcessor) -> Dict[str, Any]:
     # Determine prompt token count by checking output sequences length minus decoder score steps:
     num_total_tokens = len(token_ids)
     num_prompt_tokens = num_total_tokens - num_decoder_steps
-    is_equal = (num_decoder_steps == (num_total_tokens - num_prompt_tokens))
+    is_equal = num_decoder_steps == (num_total_tokens - num_prompt_tokens)
 
     # 6. First token probability distribution statistics
     first_logits = scores[0]  # shape: (batch_size, vocab_size)
     first_probs = torch.softmax(first_logits, dim=-1)[0]  # shape: (vocab_size,)
-    
+
     max_prob_val, max_prob_idx = torch.max(first_probs, dim=-1)
     top5_probs, top5_indices = torch.topk(first_probs, 5, dim=-1)
-    
+
     top5_tokens = [processor.tokenizer.decode([idx.item()]) for idx in top5_indices]
     top5_info = list(zip(top5_indices.tolist(), top5_probs.tolist(), top5_tokens))
 
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("CARE-ASR S3 WHISPER OUTPUT SCORES PROBE RESULTS")
-    print("="*70)
+    print("=" * 70)
     print(f"1. Transcription: '{transcription}'")
     print(f"   (Full sequence with special tokens: '{full_decoding}')")
     print(f"\n2. Generated Token IDs (Total {num_total_tokens} tokens):")
     print(f"   {token_ids}")
     print(f"\n3. Number of decoder steps (len(outputs.scores)): {num_decoder_steps}")
-    print(f"\n4. Shape of every tensor inside outputs.scores:")
+    print("\n4. Shape of every tensor inside outputs.scores:")
     for step_idx, shape in enumerate(score_shapes):
         print(f"   Step {step_idx:02d}: {shape}")
-    
-    print(f"\n5. Length Verification:")
+
+    print("\n5. Length Verification:")
     print(f"   len(outputs.scores) = {num_decoder_steps}")
     print(f"   Total tokens in sequence = {num_total_tokens}")
     print(f"   Prompt/Prefix tokens count = {num_prompt_tokens}")
-    print(f"   Newly generated content tokens count = {num_total_tokens - num_prompt_tokens}")
-    print(f"   VERIFICATION MATCH: len(outputs.scores) == generated_content_tokens ({num_decoder_steps} == {num_total_tokens - num_prompt_tokens}): {is_equal}")
-    print(f"   Explanation: outputs.scores contains logit tensors for each autoregressive generation step.")
-    print(f"   Initial prompt tokens are pre-filled in the decoder, so outputs.scores length strictly equals")
-    print(f"   the number of generated decoder steps (excluding initial prompt tokens).")
+    print(
+        f"   Newly generated content tokens count = {num_total_tokens - num_prompt_tokens}"
+    )
+    print(
+        f"   VERIFICATION MATCH: len(outputs.scores) == generated_content_tokens ({num_decoder_steps} == {num_total_tokens - num_prompt_tokens}): {is_equal}"
+    )
+    print(
+        "   Explanation: outputs.scores contains logit tensors for each autoregressive generation step."
+    )
+    print(
+        "   Initial prompt tokens are pre-filled in the decoder, so outputs.scores length strictly equals"
+    )
+    print("   the number of generated decoder steps (excluding initial prompt tokens).")
 
-    print(f"\n6. First Token Probability Distribution Statistics:")
+    print("\n6. First Token Probability Distribution Statistics:")
     print(f"   - Logits / Probs Tensor Shape: {tuple(first_logits.shape)}")
-    print(f"   - Max Probability: {max_prob_val.item():.6f} (Token ID: {max_prob_idx.item()} -> '{processor.tokenizer.decode([max_prob_idx.item()])}')")
-    print(f"   - Top 5 Tokens:")
+    print(
+        f"   - Max Probability: {max_prob_val.item():.6f} (Token ID: {max_prob_idx.item()} -> '{processor.tokenizer.decode([max_prob_idx.item()])}')"
+    )
+    print("   - Top 5 Tokens:")
     for rank, (tid, prob, tok_str) in enumerate(top5_info, start=1):
-        print(f"     {rank}. Token ID {tid:5d} | Prob: {prob:.6f} | Token: {repr(tok_str)}")
-    print("="*70 + "\n")
+        print(
+            f"     {rank}. Token ID {tid:5d} | Prob: {prob:.6f} | Token: {repr(tok_str)}"
+        )
+    print("=" * 70 + "\n")
 
     return {
         "transcription": transcription,
@@ -199,7 +218,7 @@ def inspect_scores(outputs: Any, processor: WhisperProcessor) -> Dict[str, Any]:
         "is_equal": is_equal,
         "first_step_shape": tuple(first_logits.shape),
         "first_step_max_prob": max_prob_val.item(),
-        "top5_info": top5_info
+        "top5_info": top5_info,
     }
 
 
