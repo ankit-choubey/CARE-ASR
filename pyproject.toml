@@ -1,31 +1,10 @@
 [build-system]
-requires = ["setuptools>=61.0"]
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "care-asr"
 version = "0.1.0"
-description = "Context-Aware Retrieval-Enhanced Automatic Speech Recognition"
-authors = [{ name = "CARE-ASR Team" }]
-requires-python = ">=3.11"
-dependencies = [
-    "torch",
-    "transformers",
-    "datasets",
-    "librosa",
-    "soundfile",
-    "jiwer"
-]
-
-[project.optional-dependencies]
-dev = [
-    "pytest"
-]
-
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["care_asr*", "src*"]
 description = "Confidence-Aware Retrieval-Augmented Clinical Entity Recovery for Accented and Code-Mixed Medical Speech Recognition"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -54,7 +33,6 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Medical Science Apps"
 ]
-
 dependencies = [
     "torch>=2.0.0",
     "torchaudio>=2.0.0",
@@ -90,6 +68,10 @@ dev = [
 Homepage = "https://github.com/ankit-choubey/CARE-ASR"
 Repository = "https://github.com/ankit-choubey/CARE-ASR.git"
 Documentation = "https://github.com/ankit-choubey/CARE-ASR/tree/main/docs"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["care_asr*", "src*"]
 
 # Tool Configurations
 
