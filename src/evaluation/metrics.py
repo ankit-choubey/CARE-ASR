@@ -7,6 +7,7 @@ to be implemented in Task T4 when entity spans become available.
 """
 
 from typing import Any, Dict, List, Optional, Tuple, Union
+
 import jiwer
 
 

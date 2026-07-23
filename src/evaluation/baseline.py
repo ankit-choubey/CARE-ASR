@@ -8,13 +8,15 @@ computes WER/CER scoreboard metrics, and saves prediction artifacts to results/.
 
 import os
 from typing import Any, Dict, List, Optional, Tuple
+
 import numpy as np
 import torch
-from transformers import WhisperProcessor, WhisperForConditionalGeneration
+from transformers import WhisperForConditionalGeneration, WhisperProcessor
+
 from src.evaluation.io_utils import (
     load_afrispeech_dataset,
-    save_predictions,
     save_metrics,
+    save_predictions,
 )
 from src.evaluation.metrics import evaluate_baseline
 

@@ -32,10 +32,11 @@ EXPLANATORY COMMENTS FOR TASK S3 REQUIREMENTS:
 """
 
 import os
-from typing import Any, Dict, Tuple, Optional
+from typing import Any, Dict, Optional, Tuple
+
 import numpy as np
 import torch
-from transformers import WhisperProcessor, WhisperForConditionalGeneration
+from transformers import WhisperForConditionalGeneration, WhisperProcessor
 
 
 def load_audio(
@@ -166,7 +167,9 @@ def inspect_scores(outputs: Any, processor: WhisperProcessor) -> Dict[str, Any]:
     top5_probs, top5_indices = torch.topk(first_probs, 5, dim=-1)
 
     top5_tokens = [processor.tokenizer.decode([idx.item()]) for idx in top5_indices]
-    top5_info = list(zip(top5_indices.tolist(), top5_probs.tolist(), top5_tokens))
+    top5_info = list(
+        zip(top5_indices.tolist(), top5_probs.tolist(), top5_tokens, strict=False)
+    )
 
     print("\n" + "=" * 70)
     print("CARE-ASR S3 WHISPER OUTPUT SCORES PROBE RESULTS")

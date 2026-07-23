@@ -3,11 +3,12 @@ Unit tests for CARE-ASR Task T1 metrics module.
 """
 
 import pytest
+
 from src.evaluation.metrics import (
-    compute_wer,
+    compute_category_recall,
     compute_cer,
     compute_mwer,
-    compute_category_recall,
+    compute_wer,
     evaluate_baseline,
     normalize_text,
 )
