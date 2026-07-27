@@ -5,6 +5,7 @@ faiss:
   dimension: 768
   index_file: "data/indices/faiss_umls.index"
   mapping_file: "data/indices/cui_mapping.json"
+  encoding_batch_size: 64
 
 phonetic:
   algorithm: "double_metaphone"
