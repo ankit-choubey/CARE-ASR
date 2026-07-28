@@ -39,6 +39,7 @@ class AudioInput:
         speaker_id: Metadata tag for speaker/accent tracking.
         session_id: Unique identifier for the transaction run.
     """
+
     file_path: Optional[str] = None
     audio_bytes: Optional[bytes] = None
     sample_rate: int = 16000
@@ -67,6 +68,7 @@ class Transcript:
         word_timings: Word-level timestamp alignments.
         language: Detected language code (e.g., 'en').
     """
+
     raw_text: str
     tokens: List[str]
     token_ids: List[int]
@@ -87,6 +89,7 @@ class ConfidenceScore:
         q_parameter: Tsallis entropy non-extensivity parameter q (Default: 0.5).
         threshold_tau: Entropy cutoff threshold tau used for flagging.
     """
+
     token_entropies: List[float]
     word_entropies: List[float]
     is_uncertain_token: List[bool]
@@ -109,6 +112,7 @@ class EntitySpan:
         mean_entropy: Aggregated Tsallis entropy across the entity span.
         requires_correction: True if mean_entropy > tau_entropy AND category != NON.
     """
+
     text: str
     category: EntityCategory
     start_char: int
@@ -131,6 +135,7 @@ class RetrievalCandidate:
             phonetic).
         rank: Rank position within its single-source retrieval list (1-indexed).
     """
+
     concept_id: str
     concept_name: str
     source: RetrievalSource
@@ -150,6 +155,7 @@ class FusionCandidate:
         phonetic_rank: Rank from phonetic retrieval (None if missing).
         final_rank: Unified rank order (1-indexed).
     """
+
     concept_id: str
     concept_name: str
     rrf_score: float
@@ -173,6 +179,7 @@ class CorrectionResult:
         levenshtein_distance: Character edit distance between original and final term.
         selected_candidate: FusionCandidate object if replacement occurred.
     """
+
     original_span: str
     proposed_span: str
     final_span: str
@@ -196,6 +203,7 @@ class PipelineOutput:
         total_latency_seconds: Total pipeline execution time in seconds.
         latency_breakdown: Execution time breakdown per pipeline module.
     """
+
     session_id: str
     raw_transcript: str
     corrected_transcript: str

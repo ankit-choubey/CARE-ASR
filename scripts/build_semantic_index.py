@@ -42,6 +42,7 @@ class ConceptDict(TypedDict):
         concept_id: UMLS CUI or RxNorm RxCUI identifier (e.g., 'C0025598').
         concept_name: Preferred clinical concept label (e.g., 'Metformin').
     """
+
     concept_id: str
     concept_name: str
 
@@ -58,6 +59,7 @@ class SemanticIndexConfig:
         faiss_mapping_path: Path to write the CUI-to-position mapping JSON.
         encoding_batch_size: Number of concepts to encode per batch.
     """
+
     clinical_bert_checkpoint: str
     faiss_index_type: str
     faiss_dimension: int
@@ -74,9 +76,7 @@ CONFIG_RETRIEVAL_PATH = Path("configs/retrieval.yaml")
 def _check_path(path: Path) -> None:
     """Raise FileNotFoundError if the given path does not exist."""
     if not path.exists():
-        raise FileNotFoundError(
-            f"Configuration file not found: {path.resolve()}"
-        )
+        raise FileNotFoundError(f"Configuration file not found: {path.resolve()}")
 
 
 def load_configs() -> SemanticIndexConfig:
@@ -146,16 +146,11 @@ def load_clinical_bert(
     """
     checkpoint = config.clinical_bert_checkpoint
     try:
-        tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(
-            checkpoint
-        )
-        model: PreTrainedModel = AutoModel.from_pretrained(
-            checkpoint
-        )
+        tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(checkpoint)
+        model: PreTrainedModel = AutoModel.from_pretrained(checkpoint)
     except Exception as e:
         raise RuntimeError(
-            f"Failed to load ClinicalBERT model from checkpoint "
-            f"'{checkpoint}': {e}"
+            f"Failed to load ClinicalBERT model from checkpoint " f"'{checkpoint}': {e}"
         ) from e
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = model.to(device)
@@ -251,16 +246,13 @@ def encode_concepts(
             )
             device = next(model.parameters()).device
 
-            inputs = {
-                key: value.to(device)
-                for key, value in inputs.items()
-            }
+            inputs = {key: value.to(device) for key, value in inputs.items()}
 
             with torch.no_grad():
                 outputs = model(**inputs)
 
             last_hidden_state = outputs.last_hidden_state  # (B, seq_len, hidden)
-            attention_mask = inputs["attention_mask"]       # (B, seq_len)
+            attention_mask = inputs["attention_mask"]  # (B, seq_len)
 
             # Expand mask to match hidden state dimensions
             mask = attention_mask.unsqueeze(-1).expand(last_hidden_state.size())
@@ -334,14 +326,10 @@ def build_faiss_index(
         )
 
     if embeddings.ndim != 2:
-        raise ValueError(
-            f"Embeddings must be a 2D array, got {embeddings.ndim}D."
-        )
+        raise ValueError(f"Embeddings must be a 2D array, got {embeddings.ndim}D.")
 
     if embeddings.dtype != np.float32:
-        raise ValueError(
-            f"Embeddings dtype must be float32, got {embeddings.dtype}."
-        )
+        raise ValueError(f"Embeddings dtype must be float32, got {embeddings.dtype}.")
 
     if embeddings.shape[1] != dimension:
         raise ValueError(
@@ -392,14 +380,10 @@ def save_index(
         path.parent.mkdir(parents=True, exist_ok=True)
         faiss.write_index(index, str(path))
     except Exception as e:
-        raise RuntimeError(
-            f"Failed to save FAISS index to '{path}': {e}"
-        ) from e
+        raise RuntimeError(f"Failed to save FAISS index to '{path}': {e}") from e
 
     if not path.exists():
-        raise RuntimeError(
-            f"FAISS index file was not created at '{path}'."
-        )
+        raise RuntimeError(f"FAISS index file was not created at '{path}'.")
 
 
 def save_mapping(concepts: list[ConceptDict], config: SemanticIndexConfig) -> None:
@@ -423,24 +407,17 @@ def save_mapping(concepts: list[ConceptDict], config: SemanticIndexConfig) -> No
     """
     path = config.faiss_mapping_path
 
-    mapping = {
-        str(idx): concept
-        for idx, concept in enumerate(concepts)
-    }
+    mapping = {str(idx): concept for idx, concept in enumerate(concepts)}
 
     try:
         path.parent.mkdir(parents=True, exist_ok=True)
         with open(path, "w", encoding="utf-8") as f:
             json.dump(mapping, f, indent=2)
     except Exception as e:
-        raise RuntimeError(
-            f"Failed to save concept mapping to '{path}': {e}"
-        ) from e
+        raise RuntimeError(f"Failed to save concept mapping to '{path}': {e}") from e
 
     if not path.exists():
-        raise RuntimeError(
-            f"Concept mapping file was not created at '{path}'."
-        )
+        raise RuntimeError(f"Concept mapping file was not created at '{path}'.")
 
 
 def main() -> None:
@@ -505,9 +482,7 @@ def main() -> None:
         )
         print("✓ Concept mapping saved")
     except Exception as e:
-        raise RuntimeError(
-            f"Semantic index build pipeline failed: {e}"
-        ) from e
+        raise RuntimeError(f"Semantic index build pipeline failed: {e}") from e
 
     elapsed = time.perf_counter() - start_time
 
