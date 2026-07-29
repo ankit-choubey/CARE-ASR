@@ -19,7 +19,8 @@ TODOs:
 import logging
 import math
 import time
-from typing import Any, Optional
+from typing import Any
+
 try:
     import torch
     from transformers import AutoModelForTokenClassification, AutoTokenizer
@@ -30,7 +31,7 @@ except ImportError:
 
 from care_asr.config.settings import Settings, get_settings
 from care_asr.contracts.asr_input import ASRTranscriptInput
-from care_asr.utils.exceptions import ModelInferenceError, InvalidCheckpointError
+from care_asr.utils.exceptions import InvalidCheckpointError, ModelInferenceError
 
 logger = logging.getLogger(__name__)
 
@@ -50,23 +51,27 @@ class BioBertNERExtractor:
 
     def __init__(
         self,
-        settings: Optional[Settings] = None,
-        tokenizer: Optional[Any] = None,
-        model: Optional[Any] = None,
+        settings: Settings | None = None,
+        tokenizer: Any | None = None,
+        model: Any | None = None,
         auto_load: bool = True,
     ) -> None:
         self.settings: Settings = settings or get_settings()
-        
+
         yaml_config = self.settings.load_yaml_config()
         model_config = yaml_config.get("model", {})
-        
-        self.model_name: str = str(model_config.get("name_or_path", self.settings.biobert_model_name_or_path))
+
+        self.model_name: str = str(
+            model_config.get("name_or_path", self.settings.biobert_model_name_or_path)
+        )
         self.device: torch.device = self._detect_device(self.settings.torch_device)
-        self.aggregation_strategy: str = str(model_config.get("confidence_aggregation_strategy", "mean"))
+        self.aggregation_strategy: str = str(
+            model_config.get("confidence_aggregation_strategy", "mean")
+        )
         self.taxonomy_mapping: dict[str, str] = yaml_config.get("taxonomy_mapping", {})
 
-        self.tokenizer: Optional[Any] = tokenizer
-        self.model: Optional[Any] = model
+        self.tokenizer: Any | None = tokenizer
+        self.model: Any | None = model
         self._unknown_label_warned: bool = False
 
         logger.info(
@@ -79,7 +84,9 @@ class BioBertNERExtractor:
 
     def _detect_device(self, requested_device: str) -> Any:
         if torch is None:
-            logger.warning("PyTorch is not installed in the current environment. Defaulting device to 'cpu'.")
+            logger.warning(
+                "PyTorch is not installed in the current environment. Defaulting device to 'cpu'."
+            )
             return "cpu"
 
         if requested_device.lower() == "cuda":
@@ -88,7 +95,9 @@ class BioBertNERExtractor:
                 logger.info(f"CUDA acceleration detected. GPU: {torch.cuda.get_device_name(0)}")
                 return device
             else:
-                logger.warning("CUDA requested in configuration but PyTorch reported CUDA is unavailable. Falling back to CPU.")
+                logger.warning(
+                    "CUDA requested in configuration but PyTorch reported CUDA is unavailable. Falling back to CPU."
+                )
                 return torch.device("cpu")
 
         return torch.device("cpu")
@@ -98,7 +107,9 @@ class BioBertNERExtractor:
         logger.info(f"Starting BioBERT model loading pipeline for '{self.model_name}'...")
 
         if AutoTokenizer is None or AutoModelForTokenClassification is None:
-            logger.error("HuggingFace 'transformers' package is missing. Install requirements.txt to load models.")
+            logger.error(
+                "HuggingFace 'transformers' package is missing. Install requirements.txt to load models."
+            )
             raise ModelInferenceError("HuggingFace 'transformers' package is not installed.")
 
         try:
@@ -116,7 +127,7 @@ class BioBertNERExtractor:
             self.model.to(self.device)
             self.model.eval()
             logger.info(f"Model successfully moved to '{self.device}' and switched to eval() mode.")
-            
+
             self._validate_checkpoint_labels()
 
             elapsed_sec = time.perf_counter() - start_time
@@ -128,7 +139,9 @@ class BioBertNERExtractor:
         except InvalidCheckpointError:
             raise
         except Exception as e:
-            logger.error(f"Failed to initialize BioBERT model '{self.model_name}': {e}", exc_info=True)
+            logger.error(
+                f"Failed to initialize BioBERT model '{self.model_name}': {e}", exc_info=True
+            )
             raise ModelInferenceError(
                 f"Failed to load BioBERT tokenizer or model weights for '{self.model_name}': {e}"
             ) from e
@@ -136,23 +149,25 @@ class BioBertNERExtractor:
     def _validate_checkpoint_labels(self) -> None:
         """Validates that all model id2label values are correctly mapped in the taxonomy config."""
         id2label = getattr(self.model.config, "id2label", {})
-        for label_id, label in id2label.items():
+        for _label_id, label in id2label.items():
             if not label or label.upper() in ("O", "OUTSIDE", "[CLS]", "[SEP]", "[PAD]"):
                 continue
-            
+
             clean_label = label
             if clean_label.startswith(("B-", "I-", "U-", "L-")):
                 clean_label = clean_label[2:]
-            
+
             clean_label = clean_label.upper()
-            
+
             if clean_label in ("MED", "COND", "ANA", "TTP", "PHI"):
                 continue
-                
-            if clean_label not in self.taxonomy_mapping:
-                raise InvalidCheckpointError(f"Unsupported label in checkpoint id2label: '{label}' (clean: '{clean_label}')")
 
-    def _map_label_to_category(self, raw_label: str) -> Optional[str]:
+            if clean_label not in self.taxonomy_mapping:
+                raise InvalidCheckpointError(
+                    f"Unsupported label in checkpoint id2label: '{label}' (clean: '{clean_label}')"
+                )
+
+    def _map_label_to_category(self, raw_label: str) -> str | None:
         if not raw_label or raw_label.upper() in ("O", "OUTSIDE", "[CLS]", "[SEP]", "[PAD]"):
             return None
 
@@ -168,20 +183,28 @@ class BioBertNERExtractor:
         category = self.taxonomy_mapping.get(clean_label)
         if category is None:
             if not self._unknown_label_warned:
-                logger.warning(f"Unknown label encountered during inference: '{raw_label}'. Skipping.")
+                logger.warning(
+                    f"Unknown label encountered during inference: '{raw_label}'. Skipping."
+                )
                 self._unknown_label_warned = True
             return None
-            
+
         return category
 
     def extract_entities(self, asr_input: ASRTranscriptInput) -> list[dict[str, Any]]:
         if self.model is None or self.tokenizer is None:
-            logger.error("Attempted to run extract_entities() without initializing model or tokenizer.")
-            raise ModelInferenceError("BioBERT model and tokenizer must be loaded before running inference.")
+            logger.error(
+                "Attempted to run extract_entities() without initializing model or tokenizer."
+            )
+            raise ModelInferenceError(
+                "BioBERT model and tokenizer must be loaded before running inference."
+            )
 
         raw_transcript = asr_input.raw_transcript
         if not raw_transcript or not raw_transcript.strip():
-            logger.info(f"Empty transcript received for ID '{asr_input.transcript_id}'. Returning empty entity list.")
+            logger.info(
+                f"Empty transcript received for ID '{asr_input.transcript_id}'. Returning empty entity list."
+            )
             return []
 
         start_time = time.perf_counter()
@@ -210,9 +233,14 @@ class BioBertNERExtractor:
                 chunk_pred_ids = pred_ids[chunk_idx].cpu().tolist()
                 chunk_conf_scores = conf_scores[chunk_idx].cpu().tolist()
                 chunk_offsets = offset_mapping_tensor[chunk_idx].tolist()
-                
+
                 chunk_entities = self._decode_predictions(
-                    chunk_input_ids, chunk_pred_ids, chunk_conf_scores, chunk_offsets, id2label, raw_transcript
+                    chunk_input_ids,
+                    chunk_pred_ids,
+                    chunk_conf_scores,
+                    chunk_offsets,
+                    id2label,
+                    raw_transcript,
                 )
                 all_extracted_entities.extend(chunk_entities)
 
@@ -228,7 +256,10 @@ class BioBertNERExtractor:
             return final_entities
 
         except Exception as e:
-            logger.error(f"Inference error during NER extraction for transcript ID '{asr_input.transcript_id}': {e}", exc_info=True)
+            logger.error(
+                f"Inference error during NER extraction for transcript ID '{asr_input.transcript_id}': {e}",
+                exc_info=True,
+            )
             raise ModelInferenceError(
                 f"Failed to execute BioBERT NER extraction for transcript ID '{asr_input.transcript_id}': {e}"
             ) from e
@@ -256,13 +287,18 @@ class BioBertNERExtractor:
         return predictions, confidences
 
     def _decode_predictions(
-        self, chunk_input_ids: list[int], chunk_pred_ids: list[int], chunk_conf_scores: list[float],
-        chunk_offsets: list[tuple[int, int]], id2label: dict, raw_transcript: str
+        self,
+        chunk_input_ids: list[int],
+        chunk_pred_ids: list[int],
+        chunk_conf_scores: list[float],
+        chunk_offsets: list[tuple[int, int]],
+        id2label: dict,
+        raw_transcript: str,
     ) -> list[dict[str, Any]]:
         extracted_entities: list[dict[str, Any]] = []
-        current_entity: Optional[dict[str, Any]] = None
+        current_entity: dict[str, Any] | None = None
 
-        for idx, (token_id, pred_id, conf_score, offsets) in enumerate(
+        for idx, (_token_id, pred_id, conf_score, offsets) in enumerate(
             zip(chunk_input_ids, chunk_pred_ids, chunk_conf_scores, chunk_offsets, strict=False)
         ):
             start_char, end_char = offsets
@@ -291,7 +327,11 @@ class BioBertNERExtractor:
                 current_entity = self._create_entity_dict(
                     raw_label, category, start_char, end_char, idx, conf_score
                 )
-            elif is_b_tag or category != current_entity["category"] or start_char > current_entity["end_char"] + 2:
+            elif (
+                is_b_tag
+                or category != current_entity["category"]
+                or start_char > current_entity["end_char"] + 2
+            ):
                 # New entity boundary detected
                 self._finalize_entity(current_entity, raw_transcript, extracted_entities)
                 current_entity = self._create_entity_dict(
@@ -310,7 +350,13 @@ class BioBertNERExtractor:
         return extracted_entities
 
     def _create_entity_dict(
-        self, raw_label: str, category: str, start_char: int, end_char: int, token_idx: int, conf_score: float
+        self,
+        raw_label: str,
+        category: str,
+        start_char: int,
+        end_char: int,
+        token_idx: int,
+        conf_score: float,
     ) -> dict[str, Any]:
         return {
             "model_label": raw_label,
@@ -324,13 +370,13 @@ class BioBertNERExtractor:
     def _compute_entity_confidence(self, confidences: list[float]) -> float:
         if not confidences:
             return 0.0
-            
+
         if self.aggregation_strategy == "min":
             return min(confidences)
         elif self.aggregation_strategy == "geom_mean":
             # Geometric mean using log to avoid underflow
             return math.exp(sum(math.log(max(c, 1e-9)) for c in confidences) / len(confidences))
-        else: # default to mean
+        else:  # default to mean
             return sum(confidences) / len(confidences)
 
     def _finalize_entity(
@@ -347,16 +393,16 @@ class BioBertNERExtractor:
             entity_dict["entity_text"] = entity_text
             entity_dict["confidence"] = round(agg_conf, 4)
             target_list.append(entity_dict)
-            
+
     def _merge_entities(self, all_entities: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Deduplicates entities extracted across multiple sliding window chunks based on span match."""
         merged: dict[tuple[int, int], dict[str, Any]] = {}
         for ent in all_entities:
             key = (ent["start_char"], ent["end_char"])
-            
+
             # If span is seen again, keep the one with higher confidence
             if key not in merged or ent["confidence"] > merged[key]["confidence"]:
                 merged[key] = ent
-                
+
         # Return sorted by character offsets
-        return sorted(list(merged.values()), key=lambda x: x["start_char"])
+        return sorted(merged.values(), key=lambda x: x["start_char"])

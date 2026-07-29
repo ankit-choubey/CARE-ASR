@@ -7,7 +7,7 @@ computes WER/CER scoreboard metrics, and saves prediction artifacts to results/.
 """
 
 import os
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import numpy as np
 import torch
@@ -26,9 +26,7 @@ class WhisperBaselineEvaluator:
     Evaluator class for Task T1 Whisper-medium baseline inference.
     """
 
-    def __init__(
-        self, model_name: str = "openai/whisper-medium", device: Optional[str] = None
-    ):
+    def __init__(self, model_name: str = "openai/whisper-medium", device: str | None = None):
         """
         Initializes Whisper processor and model.
 
@@ -39,10 +37,7 @@ class WhisperBaselineEvaluator:
         if device is None:
             if torch.cuda.is_available():
                 device = "cuda"
-            elif (
-                getattr(torch.backends, "mps", None)
-                and torch.backends.mps.is_available()
-            ):
+            elif getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
                 device = "mps"
             else:
                 device = "cpu"
@@ -50,9 +45,7 @@ class WhisperBaselineEvaluator:
         self.device = device
         self.model_name = model_name
 
-        print(
-            f"[WhisperBaselineEvaluator] Loading '{model_name}' on device '{device}'..."
-        )
+        print(f"[WhisperBaselineEvaluator] Loading '{model_name}' on device '{device}'...")
         self.processor = WhisperProcessor.from_pretrained(model_name)
         self.model = WhisperForConditionalGeneration.from_pretrained(model_name)
         self.model.to(self.device)
@@ -64,7 +57,7 @@ class WhisperBaselineEvaluator:
         sample_rate: int = 16000,
         audio_id: str = "utt_000",
         reference: str = "",
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Runs Whisper-medium inference on a single audio utterance and extracts
         prediction string, word-level timestamps, and token decoder scores.
@@ -109,9 +102,7 @@ class WhisperBaselineEvaluator:
 
         return utterance_result
 
-    def _extract_word_timestamps(
-        self, sequence_tensor: torch.Tensor
-    ) -> List[Dict[str, Any]]:
+    def _extract_word_timestamps(self, sequence_tensor: torch.Tensor) -> list[dict[str, Any]]:
         """
         Extracts word-level timestamps from Whisper output sequence.
 
@@ -129,14 +120,8 @@ class WhisperBaselineEvaluator:
                 text = chunk.get("text", "").strip()
                 timestamp = chunk.get("timestamp", (None, None))
                 if text and timestamp and len(timestamp) == 2:
-                    start_time = (
-                        float(timestamp[0]) if timestamp[0] is not None else 0.0
-                    )
-                    end_time = (
-                        float(timestamp[1])
-                        if timestamp[1] is not None
-                        else start_time + 0.1
-                    )
+                    start_time = float(timestamp[0]) if timestamp[0] is not None else 0.0
+                    end_time = float(timestamp[1]) if timestamp[1] is not None else start_time + 0.1
                     word_timestamps.append(
                         {
                             "word": text,
@@ -146,9 +131,7 @@ class WhisperBaselineEvaluator:
                     )
         except Exception:
             # Fallback estimation if token-level timestamps are not present in sequence
-            words = self.processor.decode(
-                sequence_tensor, skip_special_tokens=True
-            ).split()
+            words = self.processor.decode(sequence_tensor, skip_special_tokens=True).split()
             current_time = 0.0
             for w in words:
                 word_timestamps.append(
@@ -163,8 +146,8 @@ class WhisperBaselineEvaluator:
         return word_timestamps
 
     def _extract_token_scores(
-        self, scores: Tuple[torch.Tensor, ...], sequence_tensor: torch.Tensor
-    ) -> List[Dict[str, Any]]:
+        self, scores: tuple[torch.Tensor, ...], sequence_tensor: torch.Tensor
+    ) -> list[dict[str, Any]]:
         """
         Extracts per-step logit/probability score statistics for generated tokens.
 
@@ -213,9 +196,9 @@ def run_baseline_evaluation(
     dataset_name_or_path: str = "afrispeech",
     split: str = "test",
     category: str = "clinical",
-    max_samples: Optional[int] = None,
+    max_samples: int | None = None,
     output_dir: str = "results",
-) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     """
     Executes the complete Task T1 baseline evaluation pipeline.
 

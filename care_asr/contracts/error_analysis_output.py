@@ -16,6 +16,7 @@ TODOs:
 """
 
 import logging
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
@@ -120,4 +121,6 @@ class ErrorAnalysisAuditOutput(BaseModel):
     overall_metrics: OverallMetrics = Field(..., description="Aggregate evaluation metrics")
     category_breakdown: CategoryBreakdown = Field(..., description="Per-category metric breakdown")
     error_taxonomy: ErrorTaxonomy = Field(..., description="Failure root cause taxonomy counts")
-    failed_instances: list[FailedInstance] = Field(default_factory=list, description="Failed entity instances")
+    failed_instances: list[FailedInstance] = Field(
+        default_factory=list, description="Failed entity instances"
+    )

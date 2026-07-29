@@ -7,7 +7,8 @@ saving prediction outputs, metrics, and enforcing JSON schema validity.
 
 import json
 import os
-from typing import Any, Dict, Iterator, List, Optional
+from collections.abc import Iterator
+from typing import Any
 
 import numpy as np
 
@@ -20,7 +21,7 @@ REQUIRED_PREDICTION_KEYS = {
 }
 
 
-def validate_prediction_schema(pred_item: Dict[str, Any]) -> bool:
+def validate_prediction_schema(pred_item: dict[str, Any]) -> bool:
     """
     Validates that an utterance prediction dictionary contains all required keys
     as specified in Task T1 schema.
@@ -33,15 +34,13 @@ def validate_prediction_schema(pred_item: Dict[str, Any]) -> bool:
     """
     missing_keys = REQUIRED_PREDICTION_KEYS - set(pred_item.keys())
     if missing_keys:
-        raise ValueError(
-            f"Prediction dictionary is missing required keys: {sorted(missing_keys)}"
-        )
+        raise ValueError(f"Prediction dictionary is missing required keys: {sorted(missing_keys)}")
     return True
 
 
 def _load_from_local(
-    dataset_name_or_path: str, split: str, max_samples: Optional[int]
-) -> List[Dict[str, Any]]:
+    dataset_name_or_path: str, split: str, max_samples: int | None
+) -> list[dict[str, Any]]:
     results = []
     if not os.path.exists(dataset_name_or_path):
         return results
@@ -51,7 +50,7 @@ def _load_from_local(
     transcripts_file = os.path.join(dataset_name_or_path, f"{split}_transcripts.json")
 
     if os.path.exists(transcripts_file):
-        with open(transcripts_file, "r", encoding="utf-8") as f:
+        with open(transcripts_file, encoding="utf-8") as f:
             transcripts = json.load(f)
 
         for item in transcripts:
@@ -72,8 +71,8 @@ def _load_from_local(
 
 
 def _load_from_hf(
-    dataset_name_or_path: str, category: str, split: str, max_samples: Optional[int]
-) -> List[Dict[str, Any]]:
+    dataset_name_or_path: str, category: str, split: str, max_samples: int | None
+) -> list[dict[str, Any]]:
     results = []
     try:
         from datasets import load_dataset
@@ -85,12 +84,8 @@ def _load_from_hf(
             audio_info = sample.get("audio", {})
             audio_array = audio_info.get("array", np.zeros(16000, dtype=np.float32))
             sr = audio_info.get("sampling_rate", 16000)
-            audio_id = sample.get(
-                "audio_id", sample.get("id", f"afrispeech_{split}_{idx:04d}")
-            )
-            reference = sample.get(
-                "transcript", sample.get("text", sample.get("reference", ""))
-            )
+            audio_id = sample.get("audio_id", sample.get("id", f"afrispeech_{split}_{idx:04d}"))
+            reference = sample.get("transcript", sample.get("text", sample.get("reference", "")))
             results.append(
                 {
                     "audio_id": str(audio_id),
@@ -104,7 +99,7 @@ def _load_from_hf(
     return results
 
 
-def _load_dummy_samples(max_samples: Optional[int]) -> List[Dict[str, Any]]:
+def _load_dummy_samples(max_samples: int | None) -> list[dict[str, Any]]:
     dummy_data = [
         (
             "clinical_utt_001",
@@ -144,9 +139,9 @@ def load_afrispeech_dataset(
     dataset_name_or_path: str = "afrispeech",
     split: str = "test",
     category: str = "clinical",
-    max_samples: Optional[int] = None,
+    max_samples: int | None = None,
     use_dummy_fallback: bool = True,
-) -> Iterator[Dict[str, Any]]:
+) -> Iterator[dict[str, Any]]:
     """
     Loads and yields audio samples from AfriSpeech-200 clinical test split
     or fallback test dataset.
@@ -165,7 +160,7 @@ def load_afrispeech_dataset(
         yield from _load_dummy_samples(max_samples)
 
 
-def save_predictions(predictions: List[Dict[str, Any]], output_path: str) -> None:
+def save_predictions(predictions: list[dict[str, Any]], output_path: str) -> None:
     """
     Saves predictions list to JSON file after schema validation.
 
@@ -184,7 +179,7 @@ def save_predictions(predictions: List[Dict[str, Any]], output_path: str) -> Non
     )
 
 
-def load_predictions(input_path: str) -> List[Dict[str, Any]]:
+def load_predictions(input_path: str) -> list[dict[str, Any]]:
     """
     Loads predictions list from a JSON file and validates schema.
 
@@ -194,7 +189,7 @@ def load_predictions(input_path: str) -> List[Dict[str, Any]]:
     Returns:
         List[Dict[str, Any]]: Loaded prediction list.
     """
-    with open(input_path, "r", encoding="utf-8") as f:
+    with open(input_path, encoding="utf-8") as f:
         predictions = json.load(f)
 
     for pred in predictions:
@@ -202,7 +197,7 @@ def load_predictions(input_path: str) -> List[Dict[str, Any]]:
     return predictions
 
 
-def save_metrics(metrics: Dict[str, Any], output_path: str) -> None:
+def save_metrics(metrics: dict[str, Any], output_path: str) -> None:
     """
     Saves metrics summary dictionary to JSON file.
 

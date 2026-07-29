@@ -15,12 +15,14 @@ TODOs:
 
 import logging
 from uuid import uuid4
+
 import pytest
 
 from care_asr.config.settings import Settings
 from care_asr.contracts.asr_input import ASRTranscriptInput, WordAlignment
 from care_asr.ner.extractor import BioBertNERExtractor
 from care_asr.ner.span_aligner import SpanAligner
+from care_asr.utils.exceptions import ModelInferenceError
 
 logger = logging.getLogger(__name__)
 
@@ -85,5 +87,5 @@ def test_extract_entities_uninitialized_error(mock_asr_input: ASRTranscriptInput
     """Tests that extract_entities raises ModelInferenceError if model/tokenizer are None."""
     settings = Settings()
     extractor = BioBertNERExtractor(settings=settings, auto_load=False)
-    with pytest.raises(Exception):
+    with pytest.raises(ModelInferenceError):
         extractor.extract_entities(mock_asr_input)

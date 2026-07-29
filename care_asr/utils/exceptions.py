@@ -24,7 +24,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class CAREASRBaseException(Exception):
+class CAREASRError(Exception):
     """Base exception for all CARE-ASR module errors.
 
     Args:
@@ -36,16 +36,16 @@ class CAREASRBaseException(Exception):
         super().__init__(message)
         self.message = message
         self.trace_id = trace_id
-        logger.error(f"[{trace_id or 'NO_TRACE'}] CAREASRBaseException: {message}")
+        logger.error(f"[{trace_id or 'NO_TRACE'}] CAREASRError: {message}")
 
 
-class SchemaValidationError(CAREASRBaseException):
+class SchemaValidationError(CAREASRError):
     """Raised when incoming JSON payload fails Pydantic schema validation."""
 
     pass
 
 
-class ModelInferenceError(CAREASRBaseException):
+class ModelInferenceError(CAREASRError):
     """Raised when BioBERT model loading or PyTorch token classification fails."""
 
     pass
@@ -57,19 +57,19 @@ class InvalidCheckpointError(ModelInferenceError):
     pass
 
 
-class AlignmentException(CAREASRBaseException):
+class AlignmentError(CAREASRError):
     """Raised when subtoken character offsets cannot be mapped to ASR word boundaries."""
 
     pass
 
 
-class ThresholdConfigurationError(CAREASRBaseException):
+class ThresholdConfigurationError(CAREASRError):
     """Raised when category threshold settings are missing, invalid, or out-of-range."""
 
     pass
 
 
-class CandidateEvaluationError(CAREASRBaseException):
+class CandidateEvaluationError(CAREASRError):
     """Raised when FAISS candidate scoring or composite utility computation encounters an invalid state."""
 
     pass

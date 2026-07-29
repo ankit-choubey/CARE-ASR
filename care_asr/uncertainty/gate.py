@@ -24,7 +24,7 @@ BEGINNER-FRIENDLY EXPLANATION:
 --------------------------------------------------------------------------------
 """
 
-from typing import Any, Dict, List, Union
+from typing import Any
 
 import numpy as np
 import torch
@@ -33,8 +33,8 @@ from care_asr.uncertainty.tsallis_entropy import compute_batch_entropy
 
 
 def is_uncertain(
-    entropy: Union[float, torch.Tensor, np.ndarray], threshold: float = 0.5
-) -> Union[bool, torch.Tensor, np.ndarray]:
+    entropy: float | torch.Tensor | np.ndarray, threshold: float = 0.5
+) -> bool | torch.Tensor | np.ndarray:
     """
     Evaluates whether entropy score(s) exceed the configurable decision threshold.
 
@@ -51,19 +51,17 @@ def is_uncertain(
     """
     if isinstance(entropy, (int, float)):
         return float(entropy) >= float(threshold)
-    elif isinstance(entropy, torch.Tensor):
-        return entropy >= float(threshold)
-    elif isinstance(entropy, np.ndarray):
+    elif isinstance(entropy, (torch.Tensor, np.ndarray)):
         return entropy >= float(threshold)
     else:
         raise TypeError(f"Unsupported entropy type: {type(entropy)}.")
 
 
 def gate_tokens(
-    token_scores: Union[List[torch.Tensor], torch.Tensor, np.ndarray],
+    token_scores: list[torch.Tensor] | torch.Tensor | np.ndarray,
     threshold: float = 0.5,
     alpha: float = 1 / 3,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     High-level token gating function processing Whisper scores through the uncertainty gate.
 
@@ -132,7 +130,7 @@ class TsallisUncertaintyGate:
         self.threshold = new_threshold
 
     def evaluate(
-        self, token_scores: Union[List[torch.Tensor], torch.Tensor, np.ndarray]
-    ) -> Dict[str, Any]:
+        self, token_scores: list[torch.Tensor] | torch.Tensor | np.ndarray
+    ) -> dict[str, Any]:
         """Runs gating evaluation using stored threshold and alpha settings."""
         return gate_tokens(token_scores, threshold=self.threshold, alpha=self.alpha)

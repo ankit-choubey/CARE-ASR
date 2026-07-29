@@ -14,7 +14,6 @@ TODOs:
 """
 
 import logging
-import pytest
 
 from care_asr.evaluation.metrics_calculator import ErrorAnalysisEngine
 from care_asr.evaluation.taxonomy_classifier import FailureTaxonomyClassifier

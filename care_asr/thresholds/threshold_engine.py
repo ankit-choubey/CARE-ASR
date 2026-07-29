@@ -18,8 +18,9 @@ Design Rationale:
 
 import logging
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
+
 from pydantic import BaseModel
 
 from care_asr.config.settings import get_settings
@@ -30,6 +31,7 @@ logger = logging.getLogger(__name__)
 
 class ThresholdResult(BaseModel):
     """Structured response container for candidate evaluation results."""
+
     accepted: bool
     rejection_reasons: list[str]
     category: str
@@ -40,7 +42,7 @@ class ThresholdResult(BaseModel):
 
 class CategoryThresholdEngine:
     """Evaluates candidate acceptance based on category-specific thresholds.
-    
+
     This engine caches configuration in memory and evaluates candidate metrics in O(1) time.
     It aggregates multiple rule violations rather than stopping at the first failure.
     """
@@ -53,10 +55,10 @@ class CategoryThresholdEngine:
 
     def _load_thresholds(self) -> dict[str, Any]:
         """Loads the 'thresholds' block from config.yaml.
-        
+
         Returns:
             dict: The dictionary of category threshold constraints.
-            
+
         Raises:
             ThresholdConfigurationError: If the 'thresholds' block is missing.
         """
@@ -68,7 +70,7 @@ class CategoryThresholdEngine:
 
     def _validate_configuration(self) -> None:
         """Validates that all required metrics exist and are numeric for each configured category.
-        
+
         Raises:
             ThresholdConfigurationError: If any configuration value is missing or invalid.
         """
@@ -76,7 +78,7 @@ class CategoryThresholdEngine:
             "min_semantic_similarity",
             "max_phonetic_distance",
             "min_asr_confidence",
-            "max_entropy"
+            "max_entropy",
         ]
         if not self.thresholds:
             raise ThresholdConfigurationError("Thresholds configuration is empty.")
@@ -92,7 +94,9 @@ class CategoryThresholdEngine:
                         f"Threshold '{key}' for category '{category}' must be numeric."
                     )
 
-    def _check_semantic_similarity(self, value: float, threshold: float, reasons: list[str]) -> None:
+    def _check_semantic_similarity(
+        self, value: float, threshold: float, reasons: list[str]
+    ) -> None:
         """Evaluates semantic similarity against the minimum threshold."""
         if value < threshold:
             reasons.append("semantic_similarity_below_threshold")
@@ -118,7 +122,7 @@ class CategoryThresholdEngine:
         rejection_reasons: list[str],
         category: str,
         thresholds_used: dict[str, float],
-        input_metrics: dict[str, float]
+        input_metrics: dict[str, float],
     ) -> ThresholdResult:
         """Constructs the structured response object."""
         return ThresholdResult(
@@ -127,7 +131,7 @@ class CategoryThresholdEngine:
             category=category,
             thresholds_used=thresholds_used,
             input_metrics=input_metrics,
-            decision_timestamp=datetime.now(timezone.utc)
+            decision_timestamp=datetime.now(UTC),
         )
 
     def evaluate_candidate_acceptance(
@@ -136,7 +140,7 @@ class CategoryThresholdEngine:
         semantic_similarity: float,
         phonetic_distance: float,
         asr_confidence: float,
-        entropy: float
+        entropy: float,
     ) -> ThresholdResult:
         """Evaluates a retrieved candidate against all configured thresholds for a specific category.
 
@@ -151,7 +155,7 @@ class CategoryThresholdEngine:
 
         Returns:
             ThresholdResult: Pydantic model containing acceptance flag and aggregate metadata.
-            
+
         Raises:
             ThresholdConfigurationError: If the provided category is unknown.
         """
@@ -165,8 +169,12 @@ class CategoryThresholdEngine:
         rejection_reasons: list[str] = []
 
         # Evaluate all rules independently without short-circuiting
-        self._check_semantic_similarity(semantic_similarity, rules["min_semantic_similarity"], rejection_reasons)
-        self._check_phonetic_distance(phonetic_distance, rules["max_phonetic_distance"], rejection_reasons)
+        self._check_semantic_similarity(
+            semantic_similarity, rules["min_semantic_similarity"], rejection_reasons
+        )
+        self._check_phonetic_distance(
+            phonetic_distance, rules["max_phonetic_distance"], rejection_reasons
+        )
         self._check_asr_confidence(asr_confidence, rules["min_asr_confidence"], rejection_reasons)
         self._check_entropy(entropy, rules["max_entropy"], rejection_reasons)
 
@@ -176,18 +184,18 @@ class CategoryThresholdEngine:
             "min_semantic_similarity": rules["min_semantic_similarity"],
             "max_phonetic_distance": rules["max_phonetic_distance"],
             "min_asr_confidence": rules["min_asr_confidence"],
-            "max_entropy": rules["max_entropy"]
+            "max_entropy": rules["max_entropy"],
         }
-        
+
         input_metrics = {
             "semantic_similarity": semantic_similarity,
             "phonetic_distance": phonetic_distance,
             "asr_confidence": asr_confidence,
-            "entropy": entropy
+            "entropy": entropy,
         }
 
         elapsed_ms = (time.perf_counter() - start_time) * 1000.0
-        
+
         logger.info(
             f"Evaluated candidate for category '{category}'. Accepted: {accepted}. "
             f"Failed rules: {rejection_reasons}. Metrics: {input_metrics}. "
@@ -199,5 +207,5 @@ class CategoryThresholdEngine:
             rejection_reasons=rejection_reasons,
             category=category,
             thresholds_used=thresholds_used,
-            input_metrics=input_metrics
+            input_metrics=input_metrics,
         )

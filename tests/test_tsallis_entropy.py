@@ -44,9 +44,7 @@ def test_2_uniform_distribution_high_entropy():
     entropy_confident = compute_tsallis_entropy(probs_confident, alpha=1 / 3)
 
     assert entropy_uniform > entropy_confident
-    assert (
-        entropy_uniform > 2.0
-    )  # Significant entropy for uniform distribution over 100 tokens
+    assert entropy_uniform > 2.0  # Significant entropy for uniform distribution over 100 tokens
 
 
 def test_3_batch_entropy_calculation():
@@ -88,17 +86,11 @@ def test_5_invalid_alpha_validation():
 
     with pytest.raises(ValueError) as exc_info:
         compute_tsallis_entropy(valid_probs, alpha=0.0)
-    assert (
-        "positive" in str(exc_info.value).lower()
-        or "alpha" in str(exc_info.value).lower()
-    )
+    assert "positive" in str(exc_info.value).lower() or "alpha" in str(exc_info.value).lower()
 
     with pytest.raises(ValueError) as exc_info:
         compute_tsallis_entropy(valid_probs, alpha=-0.5)
-    assert (
-        "positive" in str(exc_info.value).lower()
-        or "alpha" in str(exc_info.value).lower()
-    )
+    assert "positive" in str(exc_info.value).lower() or "alpha" in str(exc_info.value).lower()
 
     with pytest.raises(ValueError) as exc_info:
         compute_tsallis_entropy(valid_probs, alpha=1.0)

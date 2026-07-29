@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 class SpanAligner:
     """Aligns BioBERT entity character spans to ASR word boundary objects.
-    
+
     Implements an efficient O(N + M) scan across sorted entities and words
     to identify overlaps, allowing multiple ASR words to be bound to a single
     entity span and vice versa.
@@ -55,7 +55,7 @@ class SpanAligner:
                 - maximum_entropy (float): Maximum ASR entropy of aligned words.
                 - start_time (float): Start timestamp in seconds.
                 - end_time (float): End timestamp in seconds.
-                
+
         Examples:
             >>> aligner = SpanAligner()
             >>> results = aligner.align_entities_to_words(entities, asr_input)
@@ -63,35 +63,35 @@ class SpanAligner:
             True
         """
         logger.debug(f"Aligning {len(entities)} entities to {len(asr_input.words)} ASR words...")
-        
+
         aligned_results: list[dict[str, Any]] = []
         words = asr_input.words
-        
+
         # Two-pointer approach for O(N + M) time complexity
         word_idx = 0
         num_words = len(words)
-        
+
         # Sort entities by start_char just in case they aren't strictly sorted
         sorted_entities = sorted(entities, key=lambda x: x.get("start_char", 0))
 
         for entity in sorted_entities:
             e_start = entity["start_char"]
             e_end = entity["end_char"]
-            
+
             # Advance word_idx until the word is no longer entirely before the entity.
             # We strictly check <= to allow trailing punctuation attached to prior words to not overlap.
             while word_idx < num_words and words[word_idx].end_char <= e_start:
                 word_idx += 1
-                
+
             # Collect overlapping words
             overlapping_words = []
             temp_idx = word_idx
-            
+
             # A word overlaps if it starts strictly before the entity ends
             while temp_idx < num_words and words[temp_idx].start_char < e_end:
                 overlapping_words.append(words[temp_idx])
                 temp_idx += 1
-                
+
             # Compute aggregates
             if overlapping_words:
                 avg_conf = sum(w.confidence for w in overlapping_words) / len(overlapping_words)
@@ -107,15 +107,17 @@ class SpanAligner:
                 max_entropy = 0.0
                 start_time = 0.0
                 end_time = 0.0
-                
-            aligned_results.append({
-                "entity": entity,
-                "aligned_words": [w.model_dump() for w in overlapping_words],
-                "average_asr_confidence": round(avg_conf, 4),
-                "maximum_entropy": round(max_entropy, 4),
-                "start_time": round(start_time, 3),
-                "end_time": round(end_time, 3),
-            })
-            
+
+            aligned_results.append(
+                {
+                    "entity": entity,
+                    "aligned_words": [w.model_dump() for w in overlapping_words],
+                    "average_asr_confidence": round(avg_conf, 4),
+                    "maximum_entropy": round(max_entropy, 4),
+                    "start_time": round(start_time, 3),
+                    "end_time": round(end_time, 3),
+                }
+            )
+
         logger.info(f"Successfully aligned {len(aligned_results)} entities.")
         return aligned_results

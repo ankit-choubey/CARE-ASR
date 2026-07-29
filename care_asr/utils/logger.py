@@ -18,12 +18,15 @@ TODOs:
 import logging
 import logging.config
 from pathlib import Path
+
 import yaml
 
 logger = logging.getLogger(__name__)
 
 
-def setup_logger(config_path: Path | str = "logging.yaml", default_level: int = logging.INFO) -> logging.Logger:
+def setup_logger(
+    config_path: Path | str = "logging.yaml", default_level: int = logging.INFO
+) -> logging.Logger:
     """Configures structured logging using a YAML configuration file.
 
     Args:
@@ -42,11 +45,13 @@ def setup_logger(config_path: Path | str = "logging.yaml", default_level: int = 
     """
     path = Path(config_path)
     if path.exists():
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             config = yaml.safe_load(f)
         logging.config.dictConfig(config)
         logger.info(f"Logging configured successfully from {path}")
     else:
         logging.basicConfig(level=default_level)
-        logger.warning(f"Logging config file not found at {path}. Using default basic configuration.")
+        logger.warning(
+            f"Logging config file not found at {path}. Using default basic configuration."
+        )
     return logging.getLogger("care_asr")

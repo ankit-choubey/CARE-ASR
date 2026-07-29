@@ -15,16 +15,20 @@ TODOs:
     - Add validation for CUDA device availability when TORCH_DEVICE=cuda.
 """
 
-from functools import lru_cache
 import logging
+from functools import lru_cache
 from pathlib import Path
 
 from pydantic import Field
+
 try:
     from pydantic_settings import BaseSettings, SettingsConfigDict
 except ImportError:
     from pydantic import BaseModel as BaseSettings  # type: ignore
+
     SettingsConfigDict = dict  # type: ignore
+import contextlib
+
 import yaml
 
 from care_asr.utils.exceptions import ThresholdConfigurationError
@@ -51,12 +55,14 @@ class Settings(BaseSettings):
     )
     torch_device: str = Field(default="cuda", description="PyTorch execution device")
     batch_size: int = Field(default=16, ge=1, description="NER inference batch size")
-    config_file_path: Path = Field(default=Path("config.yaml"), description="YAML configuration path")
+    config_file_path: Path = Field(
+        default=Path("config.yaml"), description="YAML configuration path"
+    )
 
-    try:
-        model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
-    except Exception:
-        pass
+    with contextlib.suppress(Exception):
+        model_config = SettingsConfigDict(
+            env_file=".env", env_file_encoding="utf-8", extra="ignore"
+        )
 
     def load_yaml_config(self) -> dict:
         """Parses and returns the YAML threshold and model configuration dictionary.
@@ -75,9 +81,11 @@ class Settings(BaseSettings):
         """
         if not self.config_file_path.exists():
             logger.error(f"Configuration file not found at {self.config_file_path}")
-            raise ThresholdConfigurationError(f"Configuration file missing: {self.config_file_path}")
+            raise ThresholdConfigurationError(
+                f"Configuration file missing: {self.config_file_path}"
+            )
         try:
-            with open(self.config_file_path, "r", encoding="utf-8") as f:
+            with open(self.config_file_path, encoding="utf-8") as f:
                 return yaml.safe_load(f)
         except Exception as e:
             logger.error(f"Failed to parse YAML configuration: {e}")
