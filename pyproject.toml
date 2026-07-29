@@ -10,7 +10,7 @@ authors = [
     { name = "Lead Architect", email = "architect@care-asr.org" }
 ]
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 dependencies = [
     "pydantic>=2.5.0",
     "pydantic-settings>=2.1.0",
