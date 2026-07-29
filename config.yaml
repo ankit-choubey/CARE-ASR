@@ -1,0 +1,82 @@
+version: "2.0"
+
+model:
+  name_or_path: "d4data/biomedical-ner-all"
+  device: "cuda"
+  max_seq_length: 512
+  batch_size: 16
+  subtoken_pooling: "first"
+  confidence_aggregation_strategy: "mean"
+
+taxonomy_mapping:
+  CHEMICAL: MED
+  DISEASE: COND
+  ANATOMY: ANA
+  PROCEDURE: TTP
+  PERSON: PHI
+  MEDICATION: MED
+  MEDICINE: MED
+  DRUG: MED
+  DOSAGE: MED
+  CONDITION: COND
+  DISORDER: COND
+  SYMPTOM: COND
+  FINDING: COND
+  ANATOMICAL_STRUCTURE: ANA
+  BODY_PART: ANA
+  ORGAN: ANA
+  TEST: TTP
+  TREATMENT: TTP
+  DIAGNOSTIC_PROCEDURE: TTP
+  LAB_VALUE: TTP
+  PATIENT_NAME: PHI
+  DATE: PHI
+  LOCATION: PHI
+  AGE: PHI
+
+thresholds:
+  MED:
+    description: "Medications, drugs, chemical compounds"
+    min_asr_confidence: 0.75
+    max_entropy: 0.45
+    min_semantic_similarity: 0.85
+    max_phonetic_distance: 2.0
+    risk_level: "HIGH"
+
+  COND:
+    description: "Medical conditions, diseases, symptoms, disorders"
+    min_asr_confidence: 0.60
+    max_entropy: 0.70
+    min_semantic_similarity: 0.78
+    max_phonetic_distance: 3.0
+    risk_level: "MEDIUM"
+
+  ANA:
+    description: "Anatomical sites, body structures, organs"
+    min_asr_confidence: 0.65
+    max_entropy: 0.65
+    min_semantic_similarity: 0.80
+    max_phonetic_distance: 2.5
+    risk_level: "MEDIUM"
+
+  TTP:
+    description: "Tests, Treatments, Procedures, lab panels"
+    min_asr_confidence: 0.80
+    max_entropy: 0.40
+    min_semantic_similarity: 0.88
+    max_phonetic_distance: 1.5
+    risk_level: "HIGH"
+
+  PHI:
+    description: "Protected Health Information (names, dates, IDs)"
+    min_asr_confidence: 0.85
+    max_entropy: 0.30
+    min_semantic_similarity: 0.92
+    max_phonetic_distance: 1.0
+    risk_level: "CRITICAL"
+
+weights:
+  semantic_similarity: 0.50
+  phonetic_similarity: 0.25
+  asr_confidence: 0.15
+  entropy: 0.10

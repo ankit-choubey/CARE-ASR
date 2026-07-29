@@ -1,138 +1,56 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=68.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "care-asr"
-version = "0.1.0"
-description = "Confidence-Aware Retrieval-Augmented Clinical Entity Recovery for Accented and Code-Mixed Medical Speech Recognition"
-readme = "README.md"
-requires-python = ">=3.10"
-license = { text = "MIT" }
+name = "care-asr-ner-validation"
+version = "2.0.0"
+description = "BioBERT NER, Medical Entity Schema, Retrieval Candidate Validation, Thresholding & Error Analysis for CARE-ASR"
 authors = [
-    { name = "Ankit Choubey", email = "ankit@example.com" },
-    { name = "Mahi Nandini", email = "mahi@example.com" },
-    { name = "Aarth", email = "aarth@example.com" },
-    { name = "Divya", email = "divya@example.com" }
+    { name = "Lead Architect", email = "architect@care-asr.org" }
 ]
-keywords = [
-    "speech-recognition",
-    "whisper",
-    "retrieval-augmented-generation",
-    "clinical-nlp",
-    "medical-entity-recovery",
-    "tsallis-entropy"
-]
-classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Science/Research",
-    "Intended Audience :: Healthcare Industry",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
-    "Topic :: Medical Science Apps"
-]
+readme = "README.md"
+requires-python = ">=3.11"
 dependencies = [
-    "torch>=2.0.0",
-    "torchaudio>=2.0.0",
-    "openai-whisper>=20231117",
-    "transformers>=4.35.0",
-    "datasets>=2.14.0",
-    "faiss-cpu>=1.7.4",
-    "sentence-transformers>=2.2.2",
-    "abydos>=0.5.0",
-    "python-Levenshtein>=0.23.0",
-    "pydantic>=2.4.0",
+    "pydantic>=2.5.0",
+    "pydantic-settings>=2.1.0",
     "pyyaml>=6.0.1",
-    "numpy>=1.24.0",
-    "pandas>=2.0.0",
-    "scikit-learn>=1.3.0",
-    "tqdm>=4.66.0",
-    "librosa>=0.10.0",
-    "soundfile>=0.12.0",
-    "jiwer>=3.0.0"
+    "torch>=2.1.0",
+    "transformers>=4.35.0"
 ]
 
 [project.optional-dependencies]
-gpu = [
-    "faiss-gpu>=1.7.4"
-]
 dev = [
-    "pytest>=7.4.0",
+    "pytest>=7.4.3",
     "pytest-cov>=4.1.0",
-    "black>=23.9.0",
-    "ruff>=0.1.0",
-    "mypy>=1.6.0",
-    "pre-commit>=3.5.0"
+    "black>=23.11.0",
+    "ruff>=0.1.5",
+    "mypy>=1.7.0"
 ]
-
-[project.urls]
-Homepage = "https://github.com/ankit-choubey/CARE-ASR"
-Repository = "https://github.com/ankit-choubey/CARE-ASR.git"
-Documentation = "https://github.com/ankit-choubey/CARE-ASR/tree/main/docs"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["care_asr*", "src*"]
-
-# Tool Configurations
+include = ["care_asr*"]
 
 [tool.black]
-line-length = 88
-target-version = ['py310']
+line-length = 100
+target-version = ['py311']
 include = '\.pyi?$'
-exclude = '''
-/(
-    \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-)/
-'''
 
 [tool.ruff]
-line-length = 88
-target-version = "py310"
+line-length = 100
+target-version = "py311"
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "C4", "SIM"]
+ignore = []
 
-[tool.ruff.lint]
-select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # Pyflakes
-    "I",  # isort
-    "C",  # Convention
-    "B"   # flake8-bugbear
-]
-ignore = [
-    "E501" # Line too long (handled by Black)
-]
-
-[tool.ruff.lint.isort]
-known-first-party = ["care_asr", "src"]
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true
+warn_unused_configs = true
+disallow_untyped_defs = true
 
 [tool.pytest.ini_options]
-minversion = "7.0"
-addopts = "-ra -q --durations=10"
-testpaths = [
-    "tests"
-]
-python_files = [
-    "test_*.py"
-]
-python_classes = [
-    "Test*"
-]
-python_functions = [
-    "test_*"
-]
-filterwarnings = [
-    "ignore::DeprecationWarning",
-    "ignore::UserWarning"
-]
+testpaths = ["care_asr/tests"]
+python_files = ["test_*.py"]
+addopts = "-v"
