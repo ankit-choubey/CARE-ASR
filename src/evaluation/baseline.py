@@ -71,14 +71,12 @@ class WhisperBaselineEvaluator:
         Returns:
             Dict[str, Any]: Formatted utterance prediction result dictionary.
         """
-        input_features = self.processor(
-            audio_data, sampling_rate=sample_rate, return_tensors="pt"
-        ).input_features.to(self.device)
+        input_features = self.processor(audio_data, sampling_rate=sample_rate, return_tensors="pt").input_features.to(
+            self.device
+        )
 
         with torch.no_grad():
-            outputs = self.model.generate(
-                input_features, return_dict_in_generate=True, output_scores=True
-            )
+            outputs = self.model.generate(input_features, return_dict_in_generate=True, output_scores=True)
 
         sequences = outputs.sequences
         scores = outputs.scores
@@ -168,11 +166,7 @@ class WhisperBaselineEvaluator:
 
             # Corresponding token ID generated at this step
             token_id_idx = prompt_offset + step_idx
-            gen_token_id = (
-                token_ids[token_id_idx]
-                if token_id_idx < num_tokens
-                else torch.argmax(logits).item()
-            )
+            gen_token_id = token_ids[token_id_idx] if token_id_idx < num_tokens else torch.argmax(logits).item()
 
             token_str = self.processor.tokenizer.decode([gen_token_id])
             token_prob = float(probs[gen_token_id].item())
@@ -221,9 +215,7 @@ def run_baseline_evaluation(
     """
     evaluator = WhisperBaselineEvaluator(model_name=model_name)
 
-    print(
-        f"[run_baseline_evaluation] Loading dataset '{dataset_name_or_path}' ({category} {split})..."
-    )
+    print(f"[run_baseline_evaluation] Loading dataset '{dataset_name_or_path}' ({category} {split})...")
     dataset_iter = load_afrispeech_dataset(
         dataset_name_or_path=dataset_name_or_path,
         split=split,

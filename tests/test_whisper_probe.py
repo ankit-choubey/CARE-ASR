@@ -56,9 +56,7 @@ def test_3_every_score_tensor_has_vocabulary_dimension(probe_outputs):
     expected_vocab_size = processor.tokenizer.vocab_size
 
     for step_idx, score_tensor in enumerate(outputs.scores):
-        assert isinstance(
-            score_tensor, torch.Tensor
-        ), f"Score at step {step_idx} is not a PyTorch Tensor."
+        assert isinstance(score_tensor, torch.Tensor), f"Score at step {step_idx} is not a PyTorch Tensor."
         assert (
             score_tensor.ndim == 2
         ), f"Score tensor at step {step_idx} expected rank 2 (batch_size, vocab_size), got shape {score_tensor.shape}."

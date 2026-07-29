@@ -36,9 +36,7 @@ def test_output_json_schema_validation():
         "prediction": "sample transcript",
         "reference": "sample transcript",
         "word_timestamps": [{"word": "sample", "start": 0.0, "end": 0.3}],
-        "token_scores": [
-            {"step": 0, "token_id": 10, "token": "sample", "log_prob": 0.0, "prob": 1.0}
-        ],
+        "token_scores": [{"step": 0, "token_id": 10, "token": "sample", "log_prob": 0.0, "prob": 1.0}],
     }
     assert validate_prediction_schema(valid_item) is True
 

@@ -38,9 +38,7 @@ def validate_prediction_schema(pred_item: dict[str, Any]) -> bool:
     return True
 
 
-def _load_from_local(
-    dataset_name_or_path: str, split: str, max_samples: int | None
-) -> list[dict[str, Any]]:
+def _load_from_local(dataset_name_or_path: str, split: str, max_samples: int | None) -> list[dict[str, Any]]:
     results = []
     if not os.path.exists(dataset_name_or_path):
         return results
@@ -174,9 +172,7 @@ def save_predictions(predictions: list[dict[str, Any]], output_path: str) -> Non
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(predictions, f, indent=2, ensure_ascii=False)
-    print(
-        f"[save_predictions] Successfully saved {len(predictions)} predictions to '{output_path}'."
-    )
+    print(f"[save_predictions] Successfully saved {len(predictions)} predictions to '{output_path}'.")
 
 
 def load_predictions(input_path: str) -> list[dict[str, Any]]:

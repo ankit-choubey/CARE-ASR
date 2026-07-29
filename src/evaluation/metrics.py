@@ -96,8 +96,7 @@ def compute_mwer(predictions: list[dict[str, Any]], entity_spans: list[Any] | No
         NotImplementedError: Always raised in T1 to preserve interface contract for T4.
     """
     raise NotImplementedError(
-        "M-WER requires clinical entity spans produced by Task T4. "
-        "This interface is reserved for T4 implementation."
+        "M-WER requires clinical entity spans produced by Task T4. " "This interface is reserved for T4 implementation."
     )
 
 
