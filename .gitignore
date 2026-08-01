@@ -118,3 +118,13 @@ models/checkpoints/
 *.pt
 *.bin
 *.safetensors
+
+# Documentation and Progress Reports (Do not push)
+documentation/
+docs/
+ankit_progress/
+divya_progress/
+
+# Scratch and verification scripts
+verify_pipeline.py
+scratch*.py
