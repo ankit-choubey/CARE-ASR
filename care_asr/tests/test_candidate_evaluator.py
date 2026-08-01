@@ -85,9 +85,7 @@ def test_multiple_candidates_and_tie_scores(evaluator, base_retrieval_input):
         start_char=10,
         end_char=17,
         semantic_candidates=[
-            SemanticCandidate(
-                concept_id="C1", canonical_name="Acetaminophen", similarity_score=0.85, cui="C1"
-            ),
+            SemanticCandidate(concept_id="C1", canonical_name="Acetaminophen", similarity_score=0.85, cui="C1"),
             SemanticCandidate(
                 concept_id="C2", canonical_name="Paracetamol", similarity_score=0.85, cui="C2"
             ),  # Tie semantic
@@ -131,9 +129,7 @@ def test_threshold_rejection(evaluator, base_retrieval_input):
         start_char=0,
         end_char=7,
         semantic_candidates=[
-            SemanticCandidate(
-                concept_id="C1", canonical_name="BadDrug", similarity_score=0.10, cui="C1"
-            )  # Sim too low
+            SemanticCandidate(concept_id="C1", canonical_name="BadDrug", similarity_score=0.10, cui="C1")  # Sim too low
         ],
     )
     base_retrieval_input.entity_queries.append(query)
@@ -158,9 +154,7 @@ def test_threshold_rejection(evaluator, base_retrieval_input):
 
 
 def test_empty_retrieval(evaluator, base_retrieval_input):
-    query = EntityQuery(
-        query_span_id="span-4", query_text="Nothing", category="MED", start_char=0, end_char=7
-    )
+    query = EntityQuery(query_span_id="span-4", query_text="Nothing", category="MED", start_char=0, end_char=7)
     base_retrieval_input.entity_queries.append(query)
 
     aligned_entities = [

@@ -50,19 +50,13 @@ class Settings(BaseSettings):
 
     environment: str = Field(default="development", description="Execution environment")
     log_level: str = Field(default="INFO", description="Logging level")
-    biobert_model_name_or_path: str = Field(
-        default="d4data/biomedical-ner-all", description="BioBERT model identifier"
-    )
+    biobert_model_name_or_path: str = Field(default="d4data/biomedical-ner-all", description="BioBERT model identifier")
     torch_device: str = Field(default="cuda", description="PyTorch execution device")
     batch_size: int = Field(default=16, ge=1, description="NER inference batch size")
-    config_file_path: Path = Field(
-        default=Path("config.yaml"), description="YAML configuration path"
-    )
+    config_file_path: Path = Field(default=Path("config.yaml"), description="YAML configuration path")
 
     with contextlib.suppress(Exception):
-        model_config = SettingsConfigDict(
-            env_file=".env", env_file_encoding="utf-8", extra="ignore"
-        )
+        model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     def load_yaml_config(self) -> dict:
         """Parses and returns the YAML threshold and model configuration dictionary.
@@ -81,9 +75,7 @@ class Settings(BaseSettings):
         """
         if not self.config_file_path.exists():
             logger.error(f"Configuration file not found at {self.config_file_path}")
-            raise ThresholdConfigurationError(
-                f"Configuration file missing: {self.config_file_path}"
-            )
+            raise ThresholdConfigurationError(f"Configuration file missing: {self.config_file_path}")
         try:
             with open(self.config_file_path, encoding="utf-8") as f:
                 return yaml.safe_load(f)

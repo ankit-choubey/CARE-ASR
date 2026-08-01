@@ -99,9 +99,7 @@ def test_span_aligner_single_word_exact_match(sample_asr_input):
 def test_span_aligner_multi_word_overlap(sample_asr_input):
     aligner = SpanAligner()
     # Entity spanning "Aspirin 81mg" (simulating missing spaces or multi-word extraction)
-    entities = [
-        {"entity_text": "Aspirin 81mg", "category": "MED", "start_char": 14, "end_char": 26}
-    ]
+    entities = [{"entity_text": "Aspirin 81mg", "category": "MED", "start_char": 14, "end_char": 26}]
 
     results = aligner.align_entities_to_words(entities, sample_asr_input)
     assert len(results) == 1
