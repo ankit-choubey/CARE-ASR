@@ -2,14 +2,12 @@
 LLM-based medical term corrector with Outlines schema-constrained decoding.
 Ensures output strictly conforms to CORRECT | <candidate>, WRONG, or UNSURE.
 """
-
 from __future__ import annotations
 
-import torch
 import yaml
-from transformers import AutoModelForCausalLM, AutoTokenizer
+import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
-from care_asr.contracts.retrieval_input import RetrievalCandidate
 from care_asr.contracts.validated_output import CorrectionOutput
 
 FEW_SHOT = """\
@@ -29,38 +27,46 @@ Output: UNSURE
 
 
 class LLMCorrector:
-    """Qwen2.5 / LLM clinical term corrector with schema constraint."""
-
     def __init__(self, config_path: str = "configs/correction.yaml") -> None:
         try:
-            with open(config_path) as f:
-                cfg = yaml.safe_load(f)
+            cfg = yaml.safe_load(open(config_path))
         except Exception:
-            cfg = {"model_name": "Qwen/Qwen2.5-7B-Instruct", "max_new_tokens": 30}
+            cfg = {"model_name": "Qwen/Qwen2.5-7B-Instruct"}
 
         self.cfg = cfg
-        self.use_model = False
+        self.use_outlines = False
 
-        model_name = cfg.get("model_name", "Qwen/Qwen2.5-7B-Instruct")
         if torch.cuda.is_available():
             try:
-                self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+                bnb = BitsAndBytesConfig(
+                    load_in_4bit=True, bnb_4bit_use_double_quant=True,
+                    bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=torch.float16,
+                )
+                self.tokenizer = AutoTokenizer.from_pretrained(cfg["model_name"])
                 self.model = AutoModelForCausalLM.from_pretrained(
-                    model_name,
+                    cfg["model_name"],
+                    quantization_config=bnb,
                     device_map="auto",
-                    torch_dtype=torch.float16,
+                    trust_remote_code=True,
                 )
                 self.model.eval()
-                self.use_model = True
-            except Exception:
-                self.use_model = False
 
-    def correct(self, asr_token: str, candidates: list[RetrievalCandidate], context: str = "") -> CorrectionOutput:
-        """Corrects uncertain ASR token using candidate retrieval list."""
+                # Outlines constrained generator setup if available
+                import outlines
+                self.outlines_model = outlines.models.Transformers(self.model, self.tokenizer)
+                # Regex restricting output to exact schema
+                regex_pattern = r"(CORRECT \| [a-zA-Z0-9_\- ]+|WRONG|UNSURE)"
+                self.generator = outlines.generate.regex(self.outlines_model, regex_pattern)
+                self.use_outlines = True
+            except Exception as e:
+                self.use_outlines = False
+                print(f"Failed to initialize LLM / Outlines: {e}. Falling back to heuristic parser.")
+
+    def correct(self, asr_token: str, candidates: list, context: str = "") -> CorrectionOutput:
         cand_names = [c.candidate for c in candidates[:5]]
 
-        if not self.use_model or not cand_names:
-            # Fallback heuristic parser when GPU/model is offline
+        if not self.use_outlines or not cand_names:
+            # Fallback heuristic parser when GPU/model is offline (for local unit testing)
             if cand_names:
                 top_cand = cand_names[0]
                 return CorrectionOutput(
@@ -77,52 +83,17 @@ class LLMCorrector:
             )
 
         prompt = f'{FEW_SHOT}\nInput: asr="{asr_token}", candidates={cand_names}, context="{context}"\nOutput:'
-        inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
-
-        with torch.no_grad():
-            out = self.model.generate(
-                **inputs,
-                max_new_tokens=30,
-                do_sample=False,
-                pad_token_id=self.tokenizer.eos_token_id,
-            )
-
-        response = self.tokenizer.decode(out[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True).strip()
-
+        response = self.generator(prompt, max_tokens=30)
         return self._parse(response, asr_token, cand_names)
 
     def _parse(self, response: str, asr_token: str, candidates: list[str]) -> CorrectionOutput:
-        """Parses LLM output into canonical CorrectionOutput schema."""
         up = response.upper()
         if "UNSURE" in up:
-            return CorrectionOutput(
-                original_token=asr_token,
-                corrected_token=asr_token,
-                label="UNSURE",
-                confidence=0.0,
-            )
+            return CorrectionOutput(original_token=asr_token, corrected_token=asr_token, label="UNSURE", confidence=0.0)
         if "CORRECT" in up and "|" in response:
             chosen = response.split("|")[-1].strip().lower()
-            matched = next(
-                (c for c in candidates if c.lower() == chosen),
-                candidates[0] if candidates else asr_token,
-            )
-            return CorrectionOutput(
-                original_token=asr_token,
-                corrected_token=matched,
-                label="CORRECT",
-                confidence=0.9,
-            )
+            matched = next((c for c in candidates if c.lower() == chosen), candidates[0] if candidates else asr_token)
+            return CorrectionOutput(original_token=asr_token, corrected_token=matched, label="CORRECT", confidence=0.9)
         if "WRONG" in up:
-            return CorrectionOutput(
-                original_token=asr_token,
-                corrected_token=asr_token,
-                label="WRONG",
-                confidence=0.1,
-            )
-        return CorrectionOutput(
-            original_token=asr_token,
-            corrected_token=asr_token,
-            label="UNSURE",
-            confidence=0.0,
-        )
+            return CorrectionOutput(original_token=asr_token, corrected_token=asr_token, label="WRONG", confidence=0.1)
+        return CorrectionOutput(original_token=asr_token, corrected_token=asr_token, label="UNSURE", confidence=0.0)

@@ -82,7 +82,7 @@ def main():
     )
 
     refs, hyps, preds = [], [], []
-    unsure_count, total_corrections = 0, 0
+    unsure_count, wrong_count, total_corrections = 0, 0, 0
 
     for sample in ds.select(range(min(200, len(ds)))):
         audio = {
@@ -113,6 +113,8 @@ def main():
                     total_corrections += 1
                     if entry.get("label") == "UNSURE":
                         unsure_count += 1
+                    elif entry.get("label") == "WRONG":
+                        wrong_count += 1
 
         refs.append(sample["transcript"].lower().strip())
         hyps.append(hyp)
@@ -120,11 +122,13 @@ def main():
 
     wer = jiwer.wer(refs, hyps)
     unsure_rate = unsure_count / total_corrections if total_corrections > 0 else 0.0
+    fdr = wrong_count / total_corrections if total_corrections > 0 else 0.0
 
     row = {
         "mode": args.mode,
         "wer": round(wer, 4),
         "unsure_rate": round(unsure_rate, 4),
+        "fdr": round(fdr, 4),
         "num_samples": len(preds),
     }
     print(json.dumps(row, indent=2))
