@@ -75,3 +75,29 @@ class ASRTranscriptInput(BaseModel):
             True
         """
         pass
+
+
+class TokenScore(BaseModel):
+    """Represents a token decoding step score."""
+
+    step: int = Field(..., description="Decoding step index")
+    token_id: int = Field(..., description="Decoded token vocabulary ID")
+    token: str = Field(..., description="Decoded token string")
+    log_prob: float = Field(..., description="Log probability score")
+    prob: float = Field(..., description="Probability score in [0.0, 1.0]")
+
+
+class WordTimestamp(BaseModel):
+    """Represents word timestamp metadata."""
+
+    word: str = Field(..., description="Word string")
+    start: float = Field(..., description="Start timestamp")
+    end: float = Field(..., description="End timestamp")
+
+
+class Transcript(BaseModel):
+    """Represents decoded transcript with per-token scores."""
+
+    text: str = Field(..., description="Full decoded text string")
+    token_scores: list[TokenScore] = Field(default_factory=list, description="Token scores")
+    word_timestamps: list[WordTimestamp] = Field(default_factory=list, description="Word timestamps")

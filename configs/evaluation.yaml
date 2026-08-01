@@ -1,0 +1,6 @@
+output_dir: "outputs/metrics"
+baseline_dir: "outputs/metrics/baseline"
+ablation_dir: "outputs/metrics/ablation"
+india_dir: "outputs/metrics/india"
+predictions_file: "outputs/metrics/baseline/predictions.json"
+num_eval_samples: 200

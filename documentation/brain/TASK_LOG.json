@@ -1,0 +1,163 @@
+{
+  "project": "CARE-ASR",
+  "deadline": "2026-07-31",
+  "total_tasks_whole_team": 21,
+  "your_role": "Ankit - Integration & Coding Lead",
+  "last_updated": "FILL_IN_DATE",
+  "tasks": [
+    {
+      "id": "S3",
+      "owner": "Ankit",
+      "desc": "Whisper output/scores probe",
+      "day": 1,
+      "depends_on": [
+        "S1"
+      ],
+      "status": "not_started",
+      "task_check": "pending",
+      "integration_check": "n/a"
+    },
+    {
+      "id": "T1",
+      "owner": "Ankit",
+      "desc": "Baseline harness - WER/M-WER/Recall",
+      "day": "1-2",
+      "depends_on": [
+        "S3"
+      ],
+      "status": "not_started",
+      "task_check": "pending",
+      "integration_check": "n/a"
+    },
+    {
+      "id": "T3",
+      "owner": "Ankit+Mahi",
+      "desc": "Entropy gate (Tsallis)",
+      "day": "2-4",
+      "depends_on": [
+        "T1",
+        "S3"
+      ],
+      "status": "not_started",
+      "task_check": "pending",
+      "integration_check": "pending_at_T5"
+    },
+    {
+      "id": "T5",
+      "owner": "whole_team",
+      "desc": "First integration checkpoint",
+      "day": 4,
+      "depends_on": [
+        "T1",
+        "T2",
+        "T3",
+        "T4"
+      ],
+      "status": "not_started",
+      "task_check": "n/a",
+      "integration_check": "pending"
+    },
+    {
+      "id": "T7",
+      "owner": "Ankit+Mahi",
+      "desc": "Real correction step (Qwen2.5-7B few-shot)",
+      "day": "5-7",
+      "depends_on": [
+        "T5"
+      ],
+      "status": "not_started",
+      "task_check": "pending",
+      "integration_check": "pending_at_T9"
+    },
+    {
+      "id": "T9",
+      "owner": "whole_team",
+      "desc": "Second integration checkpoint - first ablation number",
+      "day": 7,
+      "depends_on": [
+        "T6",
+        "T7",
+        "T8"
+      ],
+      "status": "not_started",
+      "task_check": "n/a",
+      "integration_check": "pending"
+    },
+    {
+      "id": "T10",
+      "owner": "Ankit+Mahi",
+      "desc": "UNSURE fallback (3-way)",
+      "day": "8-10",
+      "depends_on": [
+        "T9"
+      ],
+      "status": "not_started",
+      "task_check": "pending",
+      "integration_check": "pending_at_T15"
+    },
+    {
+      "id": "T13",
+      "owner": "Ankit+Mahi",
+      "desc": "OPTIONAL QLoRA - conditional",
+      "day": "9-12",
+      "depends_on": [
+        "T9",
+        "capacity_check"
+      ],
+      "status": "decision_pending",
+      "task_check": "n/a",
+      "integration_check": "n/a"
+    },
+    {
+      "id": "T15",
+      "owner": "whole_team",
+      "desc": "Third integration checkpoint",
+      "day": 12,
+      "depends_on": [
+        "T10",
+        "T11",
+        "T12",
+        "T14"
+      ],
+      "status": "not_started",
+      "task_check": "n/a",
+      "integration_check": "pending"
+    },
+    {
+      "id": "T16",
+      "owner": "Ankit+Aarth",
+      "desc": "Ablation table freeze + numeric corrections",
+      "day": 13,
+      "depends_on": [
+        "T15"
+      ],
+      "status": "not_started",
+      "task_check": "pending",
+      "integration_check": "n/a"
+    },
+    {
+      "id": "T17",
+      "owner": "whole_team",
+      "desc": "Report/claims draft",
+      "day": "13-14",
+      "depends_on": [
+        "T16"
+      ],
+      "status": "not_started",
+      "task_check": "n/a",
+      "integration_check": "n/a"
+    },
+    {
+      "id": "T18",
+      "owner": "whole_team",
+      "desc": "Final system check + demo rehearsal",
+      "day": 14,
+      "depends_on": [
+        "T17"
+      ],
+      "status": "not_started",
+      "task_check": "n/a",
+      "integration_check": "n/a"
+    }
+  ]
+}

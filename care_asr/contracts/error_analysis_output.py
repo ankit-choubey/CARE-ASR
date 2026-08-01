@@ -121,6 +121,22 @@ class ErrorAnalysisAuditOutput(BaseModel):
     overall_metrics: OverallMetrics = Field(..., description="Aggregate evaluation metrics")
     category_breakdown: CategoryBreakdown = Field(..., description="Per-category metric breakdown")
     error_taxonomy: ErrorTaxonomy = Field(..., description="Failure root cause taxonomy counts")
-    failed_instances: list[FailedInstance] = Field(
-        default_factory=list, description="Failed entity instances"
-    )
+    failed_instances: list[FailedInstance] = Field(default_factory=list, description="Failed entity instances")
+
+
+class NEREntity(BaseModel):
+    """Represents a clinical entity extracted by BioBERT NER.
+
+    Attributes:
+        word (str): Entity text string.
+        category (str): Entity category (MED, COND, ANA, TTP, PHI).
+        start (int): Start token/word index.
+        end (int): End token/word index.
+        score (float): Confidence score in [0.0, 1.0].
+    """
+
+    word: str = Field(..., description="Entity text string")
+    category: str = Field(default="MED", description="Entity category label")
+    start: int = Field(default=0, ge=0, description="Start token index")
+    end: int = Field(default=0, ge=0, description="End token index")
+    score: float = Field(default=1.0, ge=0.0, le=1.0, description="Confidence score")
