@@ -71,8 +71,8 @@ def mock_asr_input() -> ASRTranscriptInput:
 
 
 def test_span_aligner_interface() -> None:
-    """Tests that SpanAligner exposes expected static methods."""
-    assert hasattr(SpanAligner, "align_subtokens_to_words")
+    """Tests that SpanAligner exposes expected instance methods."""
+    assert hasattr(SpanAligner, "align_entities_to_words")
 
 
 def test_biobert_extractor_initialization() -> None:

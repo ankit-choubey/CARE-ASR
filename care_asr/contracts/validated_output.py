@@ -39,9 +39,7 @@ class AppliedThresholds(BaseModel):
 
     min_asr_conf_threshold: float = Field(..., description="Minimum ASR confidence threshold")
     min_sim_threshold: float = Field(..., description="Minimum semantic similarity threshold")
-    max_phonetic_dist_threshold: float = Field(
-        ..., description="Maximum phonetic distance threshold"
-    )
+    max_phonetic_dist_threshold: float = Field(..., description="Maximum phonetic distance threshold")
 
 
 class ValidatedCandidate(BaseModel):
@@ -63,13 +61,9 @@ class ValidatedCandidate(BaseModel):
     cui: str = Field(..., description="UMLS CUI code")
     candidate_source: CandidateSourceType = Field(..., description="Retrieval source engine")
     composite_utility_score: float = Field(..., description="Weighted composite utility score")
-    semantic_similarity: float | None = Field(
-        default=None, description="Semantic cosine similarity"
-    )
+    semantic_similarity: float | None = Field(default=None, description="Semantic cosine similarity")
     phonetic_distance: float | None = Field(default=None, description="Phonetic edit distance")
-    passes_category_threshold: bool = Field(
-        ..., description="True if satisfies category thresholds"
-    )
+    passes_category_threshold: bool = Field(..., description="True if satisfies category thresholds")
 
 
 class DetectedEntity(BaseModel):
@@ -95,15 +89,9 @@ class DetectedEntity(BaseModel):
     end_char: int = Field(..., ge=0, description="End character offset")
     primary_asr_confidence: float = Field(..., ge=0.0, le=1.0, description="Primary ASR confidence")
     asr_entropy: float = Field(..., ge=0.0, description="Primary ASR logit entropy")
-    requires_recovery: bool = Field(
-        ..., description="True if retrieval candidate recovery is triggered"
-    )
-    validated_candidates: list[ValidatedCandidate] = Field(
-        default_factory=list, description="Ranked candidates"
-    )
-    applied_thresholds: AppliedThresholds = Field(
-        ..., description="Threshold configuration applied"
-    )
+    requires_recovery: bool = Field(..., description="True if retrieval candidate recovery is triggered")
+    validated_candidates: list[ValidatedCandidate] = Field(default_factory=list, description="Ranked candidates")
+    applied_thresholds: AppliedThresholds = Field(..., description="Threshold configuration applied")
 
 
 class ProcessingMetadata(BaseModel):
@@ -117,9 +105,7 @@ class ProcessingMetadata(BaseModel):
     """
 
     ner_execution_time_ms: float = Field(..., ge=0.0, description="NER execution time in ms")
-    validation_execution_time_ms: float = Field(
-        ..., ge=0.0, description="Validation execution time in ms"
-    )
+    validation_execution_time_ms: float = Field(..., ge=0.0, description="Validation execution time in ms")
     entities_count: int = Field(..., ge=0, description="Total entities detected")
     high_entropy_entities_count: int = Field(..., ge=0, description="High-entropy entities count")
 
@@ -134,9 +120,21 @@ class ValidatedCandidatesOutput(BaseModel):
     """
 
     transcript_id: UUID = Field(..., description="Unique transaction UUID")
-    detected_entities: list[DetectedEntity] = Field(
-        ..., description="List of detected and validated entities"
-    )
-    processing_metadata: ProcessingMetadata = Field(
-        ..., description="Processing telemetry metadata"
-    )
+    detected_entities: list[DetectedEntity] = Field(..., description="List of detected and validated entities")
+    processing_metadata: ProcessingMetadata = Field(..., description="Processing telemetry metadata")
+
+
+class CorrectionOutput(BaseModel):
+    """Represents classification and correction decision output.
+
+    Attributes:
+        original_token (str): Original token string from ASR transcript.
+        corrected_token (str): Selected replacement candidate or original token if UNSURE.
+        label (Literal["CORRECT", "WRONG", "UNSURE"]): Decision classification label.
+        confidence (float): Confidence score in [0.0, 1.0].
+    """
+
+    original_token: str = Field(..., description="Original token string")
+    corrected_token: str = Field(..., description="Corrected or fallback token string")
+    label: Literal["CORRECT", "WRONG", "UNSURE"] = Field(..., description="Decision classification label")
+    confidence: float = Field(default=1.0, ge=0.0, le=1.0, description="Confidence score")

@@ -82,18 +82,16 @@ class CandidateEvaluator:
             validated_cands = []
             if query:
                 merged_candidates = self._merge_candidates(query)
-                validated_cands = self._validate_and_rank(
-                    merged_candidates, category, asr_conf, entropy
-                )
+                validated_cands = self._validate_and_rank(merged_candidates, category, asr_conf, entropy)
 
             if category not in self.threshold_engine.thresholds:
                 raise ThresholdConfigurationError(f"Unknown category: {category}")
 
             threshold_rules = self.threshold_engine.thresholds[category]
             requires_recovery = False
-            if asr_conf < threshold_rules.get(
-                "min_asr_confidence", 0.0
-            ) or entropy > threshold_rules.get("max_entropy", 1.0):
+            if asr_conf < threshold_rules.get("min_asr_confidence", 0.0) or entropy > threshold_rules.get(
+                "max_entropy", 1.0
+            ):
                 requires_recovery = True
                 high_entropy_count += 1
 
@@ -111,9 +109,7 @@ class CandidateEvaluator:
                     applied_thresholds=AppliedThresholds(
                         min_asr_conf_threshold=threshold_rules.get("min_asr_confidence", 0.0),
                         min_sim_threshold=threshold_rules.get("min_semantic_similarity", 0.0),
-                        max_phonetic_dist_threshold=threshold_rules.get(
-                            "max_phonetic_distance", 0.0
-                        ),
+                        max_phonetic_dist_threshold=threshold_rules.get("max_phonetic_distance", 0.0),
                     ),
                 )
             )
@@ -134,9 +130,7 @@ class CandidateEvaluator:
             high_entropy_count,
         )
 
-    def _find_matching_query(
-        self, entity_data: dict[str, Any], queries: list[EntityQuery]
-    ) -> EntityQuery | None:
+    def _find_matching_query(self, entity_data: dict[str, Any], queries: list[EntityQuery]) -> EntityQuery | None:
         """Matches an entity to a FAISS EntityQuery using character offsets."""
         start_char = entity_data.get("start_char")
         end_char = entity_data.get("end_char")
@@ -186,9 +180,7 @@ class CandidateEvaluator:
         )
         return res.accepted
 
-    def _compute_score(
-        self, sem_sim: float, phon_dist: float, asr_conf: float, entropy: float
-    ) -> float:
+    def _compute_score(self, sem_sim: float, phon_dist: float, asr_conf: float, entropy: float) -> float:
         """Computes weighted score with non-linear normalization for distance metrics."""
         phon_sim = 1.0 / (1.0 + phon_dist)
         ent_sim = 1.0 / (1.0 + entropy)
@@ -247,9 +239,7 @@ class CandidateEvaluator:
             cand["composite_score"] = score
             evaluated.append(cand)
 
-        logger.info(
-            f"Validated {len(evaluated)} candidates for category {category}. Accepted: {accepted_count}."
-        )
+        logger.info(f"Validated {len(evaluated)} candidates for category {category}. Accepted: {accepted_count}.")
         return self._rank_candidates(evaluated)
 
     def _build_output(

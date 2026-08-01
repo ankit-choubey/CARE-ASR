@@ -55,9 +55,7 @@ class PhoneticCandidate(BaseModel):
     concept_id: str = Field(..., description="Concept unique identifier")
     canonical_name: str = Field(..., description="Canonical medical name")
     phonetic_distance: float = Field(..., ge=0.0, description="Phonetic string edit distance")
-    phonetic_encoding: str | None = Field(
-        default=None, description="Phonetic encoding representation"
-    )
+    phonetic_encoding: str | None = Field(default=None, description="Phonetic encoding representation")
     cui: str = Field(..., description="UMLS CUI code")
 
 
@@ -79,12 +77,8 @@ class EntityQuery(BaseModel):
     category: CategoryType = Field(..., description="Official CARE-ASR category")
     start_char: int = Field(..., ge=0, description="Start character offset")
     end_char: int = Field(..., ge=0, description="End character offset")
-    semantic_candidates: list[SemanticCandidate] = Field(
-        default_factory=list, description="Semantic candidates"
-    )
-    phonetic_candidates: list[PhoneticCandidate] = Field(
-        default_factory=list, description="Phonetic candidates"
-    )
+    semantic_candidates: list[SemanticCandidate] = Field(default_factory=list, description="Semantic candidates")
+    phonetic_candidates: list[PhoneticCandidate] = Field(default_factory=list, description="Phonetic candidates")
 
 
 class RetrievalCandidatesInput(BaseModel):
@@ -96,6 +90,18 @@ class RetrievalCandidatesInput(BaseModel):
     """
 
     transcript_id: UUID = Field(..., description="Unique transaction UUID")
-    entity_queries: list[EntityQuery] = Field(
-        ..., description="List of entity queries with candidates"
-    )
+    entity_queries: list[EntityQuery] = Field(..., description="List of entity queries with candidates")
+
+
+class RetrievalCandidate(BaseModel):
+    """Unified candidate schema for pipeline fusion.
+
+    Attributes:
+        candidate (str): Candidate concept name.
+        score (float): Candidate score.
+        source (str): Candidate retrieval source ("semantic", "phonetic", "rrf").
+    """
+
+    candidate: str = Field(..., description="Candidate name")
+    score: float = Field(..., description="Candidate relevance/similarity score")
+    source: str = Field(default="semantic", description="Retrieval channel source")
