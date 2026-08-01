@@ -10,7 +10,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Optional
 
 import torch
 
@@ -40,10 +39,10 @@ class AudioInput:
         session_id: Unique identifier for the transaction run.
     """
 
-    file_path: Optional[str] = None
-    audio_bytes: Optional[bytes] = None
+    file_path: str | None = None
+    audio_bytes: bytes | None = None
     sample_rate: int = 16000
-    speaker_id: Optional[str] = "unknown"
+    speaker_id: str | None = "unknown"
     session_id: str = field(default_factory=lambda: "session_0000")
 
 
@@ -52,7 +51,7 @@ class WordTiming:
     word: str
     start_time: float
     end_time: float
-    token_indices: List[int]
+    token_indices: list[int]
 
 
 @dataclass(frozen=True)
@@ -70,10 +69,10 @@ class Transcript:
     """
 
     raw_text: str
-    tokens: List[str]
-    token_ids: List[int]
+    tokens: list[str]
+    token_ids: list[int]
     logits: torch.Tensor
-    word_timings: List[WordTiming]
+    word_timings: list[WordTiming]
     language: str = "en"
 
 
@@ -90,10 +89,10 @@ class ConfidenceScore:
         threshold_tau: Entropy cutoff threshold tau used for flagging.
     """
 
-    token_entropies: List[float]
-    word_entropies: List[float]
-    is_uncertain_token: List[bool]
-    is_uncertain_word: List[bool]
+    token_entropies: list[float]
+    word_entropies: list[float]
+    is_uncertain_token: list[bool]
+    is_uncertain_word: list[bool]
     q_parameter: float = 0.5
     threshold_tau: float = 0.45
 
@@ -159,8 +158,8 @@ class FusionCandidate:
     concept_id: str
     concept_name: str
     rrf_score: float
-    semantic_rank: Optional[int]
-    phonetic_rank: Optional[int]
+    semantic_rank: int | None
+    phonetic_rank: int | None
     final_rank: int
 
 
@@ -184,9 +183,9 @@ class CorrectionResult:
     proposed_span: str
     final_span: str
     is_edited: bool
-    rejection_reason: Optional[str] = None
+    rejection_reason: str | None = None
     levenshtein_distance: int = 0
-    selected_candidate: Optional[FusionCandidate] = None
+    selected_candidate: FusionCandidate | None = None
 
 
 @dataclass(frozen=True)
@@ -207,7 +206,7 @@ class PipelineOutput:
     session_id: str
     raw_transcript: str
     corrected_transcript: str
-    entity_spans: List[EntitySpan]
-    corrections: List[CorrectionResult]
+    entity_spans: list[EntitySpan]
+    corrections: list[CorrectionResult]
     total_latency_seconds: float
-    latency_breakdown: Dict[str, float]
+    latency_breakdown: dict[str, float]

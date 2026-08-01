@@ -1,0 +1,33 @@
+version: 1
+disable_existing_loggers: false
+
+formatters:
+  standard:
+    format: "%(asctime)s [%(levelname)s] %(name)s (%(filename)s:%(lineno)d): %(message)s"
+    datefmt: "%Y-%m-%dT%H:%M:%S%z"
+  json:
+    class: "logging.Formatter"
+    format: '{"timestamp": "%(asctime)s", "level": "%(levelname)s", "logger": "%(name)s", "file": "%(filename)s", "line": %(lineno)d, "message": "%(message)s"}'
+
+handlers:
+  console:
+    class: "logging.StreamHandler"
+    level: "INFO"
+    formatter: "standard"
+    stream: "ext://sys.stdout"
+  file_json:
+    class: "logging.FileHandler"
+    level: "DEBUG"
+    formatter: "json"
+    filename: "care_asr_module.log"
+    encoding: "utf-8"
+
+loggers:
+  care_asr:
+    level: "DEBUG"
+    handlers: ["console", "file_json"]
+    propagate: false
+
+root:
+  level: "INFO"
+  handlers: ["console"]

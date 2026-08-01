@@ -6,7 +6,7 @@ Reserves placeholder interfaces for M-WER (Medical WER) and per-category Recall
 to be implemented in Task T4 when entity spans become available.
 """
 
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any
 
 import jiwer
 
@@ -30,8 +30,8 @@ def normalize_text(text: str) -> str:
 
 
 def compute_wer(
-    predictions: Union[List[Dict[str, Any]], List[str]],
-    references: Optional[List[str]] = None,
+    predictions: list[dict[str, Any]] | list[str],
+    references: list[str] | None = None,
 ) -> float:
     """
     Computes Word Error Rate (WER) using jiwer across prediction and reference pairs.
@@ -56,8 +56,8 @@ def compute_wer(
 
 
 def compute_cer(
-    predictions: Union[List[Dict[str, Any]], List[str]],
-    references: Optional[List[str]] = None,
+    predictions: list[dict[str, Any]] | list[str],
+    references: list[str] | None = None,
 ) -> float:
     """
     Computes Character Error Rate (CER) using jiwer across prediction and reference pairs.
@@ -80,9 +80,7 @@ def compute_cer(
     return float(jiwer.cer(reference=norm_refs, hypothesis=norm_preds))
 
 
-def compute_mwer(
-    predictions: List[Dict[str, Any]], entity_spans: Optional[List[Any]] = None
-) -> float:
+def compute_mwer(predictions: list[dict[str, Any]], entity_spans: list[Any] | None = None) -> float:
     """
     Placeholder interface for Medical-WER (M-WER).
 
@@ -98,14 +96,13 @@ def compute_mwer(
         NotImplementedError: Always raised in T1 to preserve interface contract for T4.
     """
     raise NotImplementedError(
-        "M-WER requires clinical entity spans produced by Task T4. "
-        "This interface is reserved for T4 implementation."
+        "M-WER requires clinical entity spans produced by Task T4. " "This interface is reserved for T4 implementation."
     )
 
 
 def compute_category_recall(
-    predictions: List[Dict[str, Any]], ground_truth_entities: Optional[List[Any]] = None
-) -> Dict[str, float]:
+    predictions: list[dict[str, Any]], ground_truth_entities: list[Any] | None = None
+) -> dict[str, float]:
     """
     Placeholder interface for per-category medical entity Recall.
 
@@ -125,7 +122,7 @@ def compute_category_recall(
     )
 
 
-def evaluate_baseline(predictions: List[Dict[str, Any]]) -> Dict[str, Any]:
+def evaluate_baseline(predictions: list[dict[str, Any]]) -> dict[str, Any]:
     """
     Runs baseline evaluation suite over all predictions and constructs
     the official baseline scoreboard summary dictionary.
@@ -155,15 +152,11 @@ def evaluate_baseline(predictions: List[Dict[str, Any]]) -> Dict[str, Any]:
 
 
 def _extract_texts(
-    predictions: Union[List[Dict[str, Any]], List[str]],
-    references: Optional[List[str]] = None,
-) -> Tuple[List[str], List[str]]:
+    predictions: list[dict[str, Any]] | list[str],
+    references: list[str] | None = None,
+) -> tuple[list[str], list[str]]:
     """Helper to parse prediction and reference texts from list of dicts or strings."""
-    if (
-        isinstance(predictions, list)
-        and len(predictions) > 0
-        and isinstance(predictions[0], dict)
-    ):
+    if isinstance(predictions, list) and len(predictions) > 0 and isinstance(predictions[0], dict):
         preds_text = [str(item.get("prediction", "")) for item in predictions]
         refs_text = [str(item.get("reference", "")) for item in predictions]
     else:

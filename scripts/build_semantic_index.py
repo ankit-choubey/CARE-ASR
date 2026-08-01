@@ -97,13 +97,13 @@ def load_configs() -> SemanticIndexConfig:
     for path in (CONFIG_MODEL_PATH, CONFIG_PIPELINE_PATH, CONFIG_RETRIEVAL_PATH):
         _check_path(path)
 
-    with open(CONFIG_MODEL_PATH, "r", encoding="utf-8") as f:
+    with open(CONFIG_MODEL_PATH, encoding="utf-8") as f:
         model_cfg = yaml.safe_load(f)
 
-    with open(CONFIG_PIPELINE_PATH, "r", encoding="utf-8") as f:
+    with open(CONFIG_PIPELINE_PATH, encoding="utf-8") as f:
         yaml.safe_load(f)  # parse to validate YAML is well-formed
 
-    with open(CONFIG_RETRIEVAL_PATH, "r", encoding="utf-8") as f:
+    with open(CONFIG_RETRIEVAL_PATH, encoding="utf-8") as f:
         retrieval_cfg = yaml.safe_load(f)
 
     clinical_bert_checkpoint = model_cfg["models"]["clinical_bert"]["checkpoint"]
@@ -183,9 +183,7 @@ def load_concepts() -> list[ConceptDict]:
             f"Failed to load dataset 'nishanth-augustai/rxnorm_data': {exc}"
         ) from exc
 
-    filtered = dataset.filter(
-        lambda row: row["LAT"] == "ENG" and row["SUPPRESS"] == "N"
-    )
+    filtered = dataset.filter(lambda row: row["LAT"] == "ENG" and row["SUPPRESS"] == "N")
     return [
         ConceptDict(
             concept_id=str(row["RXCUI"]),
@@ -273,9 +271,7 @@ def encode_concepts(
             all_embeddings.append(normalized.cpu().numpy().astype(np.float32))
 
     except Exception as exc:
-        raise RuntimeError(
-            f"Failed to encode concepts with ClinicalBERT: {exc}"
-        ) from exc
+        raise RuntimeError(f"Failed to encode concepts with ClinicalBERT: {exc}") from exc
 
     embeddings = np.concatenate(all_embeddings, axis=0)
 
@@ -333,8 +329,7 @@ def build_faiss_index(
 
     if embeddings.shape[1] != dimension:
         raise ValueError(
-            f"Embedding dimension mismatch: expected {dimension}, "
-            f"got {embeddings.shape[1]}."
+            f"Embedding dimension mismatch: expected {dimension}, " f"got {embeddings.shape[1]}."
         )
 
     try:

@@ -1,0 +1,103 @@
+version: "2.0"
+
+model:
+  name_or_path: "d4data/biomedical-ner-all"
+  device: "cuda"
+  max_seq_length: 512
+  batch_size: 16
+  subtoken_pooling: "first"
+  confidence_aggregation_strategy: "mean"
+
+taxonomy_mapping:
+  # Core mappings for d4data/biomedical-ner-all
+  DISEASE_DISORDER: COND
+  SIGN_SYMPTOM: COND
+  CLINICAL_EVENT: COND
+  MEDICATION: MED
+  DOSAGE: MED
+  BIOLOGICAL_STRUCTURE: ANA
+  DIAGNOSTIC_PROCEDURE: TTP
+  THERAPEUTIC_PROCEDURE: TTP
+  LAB_VALUE: TTP
+  DATE: PHI
+  AGE: PHI
+  SEX: PHI
+  FAMILY_HISTORY: PHI
+  HISTORY: PHI
+  SUBJECT: PHI
+  # Mapped to null (skipped by the extractor)
+  ACTIVITY: null
+  ADMINISTRATION: null
+  AREA: null
+  BIOLOGICAL_ATTRIBUTE: null
+  COLOR: null
+  COREFERENCE: null
+  DETAILED_DESCRIPTION: null
+  DISTANCE: null
+  DURATION: null
+  FREQUENCY: null
+  HEIGHT: null
+  MASS: null
+  "NON[BIOLOGICAL](DETAILED_DESCRIPTION": null
+  NONBIOLOGICAL_LOCATION: null
+  OCCUPATION: null
+  OTHER_ENTITY: null
+  OTHER_EVENT: null
+  OUTCOME: null
+  "PERSONAL_[BACK](BIOLOGICAL_STRUCTURE": null
+  PERSONAL_BACKGROUND: null
+  QUALITATIVE_CONCEPT: null
+  QUANTITATIVE_CONCEPT: null
+  SEVERITY: null
+  SHAPE: null
+  TEXTURE: null
+  TIME: null
+  VOLUME: null
+  WEIGHT: null
+
+thresholds:
+  MED:
+    description: "Medications, drugs, chemical compounds"
+    min_asr_confidence: 0.75
+    max_entropy: 0.45
+    min_semantic_similarity: 0.85
+    max_phonetic_distance: 2.0
+    risk_level: "HIGH"
+
+  COND:
+    description: "Medical conditions, diseases, symptoms, disorders"
+    min_asr_confidence: 0.60
+    max_entropy: 0.70
+    min_semantic_similarity: 0.78
+    max_phonetic_distance: 3.0
+    risk_level: "MEDIUM"
+
+  ANA:
+    description: "Anatomical sites, body structures, organs"
+    min_asr_confidence: 0.65
+    max_entropy: 0.65
+    min_semantic_similarity: 0.80
+    max_phonetic_distance: 2.5
+    risk_level: "MEDIUM"
+
+  TTP:
+    description: "Tests, Treatments, Procedures, lab panels"
+    min_asr_confidence: 0.80
+    max_entropy: 0.40
+    min_semantic_similarity: 0.88
+    max_phonetic_distance: 1.5
+    risk_level: "HIGH"
+
+  PHI:
+    description: "Protected Health Information (names, dates, IDs)"
+    min_asr_confidence: 0.85
+    max_entropy: 0.30
+    min_semantic_similarity: 0.92
+    max_phonetic_distance: 1.0
+    risk_level: "CRITICAL"
+
+weights:
+  semantic_similarity: 0.50
+  phonetic_similarity: 0.25
+  asr_confidence: 0.15
+  entropy: 0.10

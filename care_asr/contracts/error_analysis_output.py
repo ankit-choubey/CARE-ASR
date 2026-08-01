@@ -1,0 +1,126 @@
+"""Error Analysis & Audit Output Contract Schema.
+
+Why It Exists:
+    Enforces runtime validation for offline diagnostic audit reports emitted to Mahi
+    for system-level evaluation, category breakdown, and quality gate assertion.
+
+Teammate Dependencies:
+    - Mahi (Testing & QA Lead): Consumes reports conforming to this schema to verify
+      benchmark precision, recall, and F1 gains across MED, COND, ANA, TTP, and PHI.
+
+Imported By:
+    - `care_asr.evaluation.metrics_calculator`
+
+TODOs:
+    - Add JSON serialization helper for test artifact exporting.
+"""
+
+import logging
+
+from pydantic import BaseModel, Field
+
+logger = logging.getLogger(__name__)
+
+
+class CategoryMetric(BaseModel):
+    """Performance evaluation metrics for a single CARE-ASR entity category.
+
+    Attributes:
+        precision (float): Entity-level precision score in [0.0, 1.0].
+        recall (float): Entity-level recall score in [0.0, 1.0].
+        f1_score (float): Harmonic mean F1 score in [0.0, 1.0].
+        support (int): Total ground-truth entity instances in benchmark dataset.
+    """
+
+    precision: float = Field(..., ge=0.0, le=1.0, description="Precision score")
+    recall: float = Field(..., ge=0.0, le=1.0, description="Recall score")
+    f1_score: float = Field(..., ge=0.0, le=1.0, description="F1 score")
+    support: int = Field(..., ge=0, description="Ground truth sample count")
+
+
+class CategoryBreakdown(BaseModel):
+    """Metrics breakdown across the 5 official CARE-ASR entity categories.
+
+    Attributes:
+        MED (CategoryMetric): Metrics for Medication entities.
+        COND (CategoryMetric): Metrics for Medical Condition entities.
+        ANA (CategoryMetric): Metrics for Anatomical Site entities.
+        TTP (CategoryMetric): Metrics for Test/Treatment/Procedure entities.
+        PHI (CategoryMetric): Metrics for Protected Health Information entities.
+    """
+
+    MED: CategoryMetric = Field(..., description="Metrics for Medication entities")
+    COND: CategoryMetric = Field(..., description="Metrics for Medical Condition entities")
+    ANA: CategoryMetric = Field(..., description="Metrics for Anatomical Site entities")
+    TTP: CategoryMetric = Field(..., description="Metrics for Test/Treatment/Procedure entities")
+    PHI: CategoryMetric = Field(..., description="Metrics for PHI entities")
+
+
+class ErrorTaxonomy(BaseModel):
+    """Classification counts for recovery failure root causes.
+
+    Attributes:
+        phonetic_distortion_count (int): Acoustic distortion failures.
+        oov_error_count (int): Out-of-vocabulary entity failures.
+        ner_boundary_mismatch_count (int): BioBERT span boundary misalignment failures.
+        retrieval_miss_count (int): Candidate missing from FAISS index.
+    """
+
+    phonetic_distortion_count: int = Field(..., ge=0, description="Phonetic distortion count")
+    oov_error_count: int = Field(..., ge=0, description="OOV error count")
+    ner_boundary_mismatch_count: int = Field(..., ge=0, description="NER boundary mismatch count")
+    retrieval_miss_count: int = Field(..., ge=0, description="Retrieval candidate miss count")
+
+
+class OverallMetrics(BaseModel):
+    """Aggregate dataset-level recovery metrics.
+
+    Attributes:
+        raw_asr_f1 (float): F1 score of raw uncorrected Whisper ASR text.
+        rectified_f1 (float): F1 score after candidate retrieval recovery.
+        precision_gain (float): Absolute precision improvement (rectified - raw).
+        recall_gain (float): Absolute recall improvement (rectified - raw).
+    """
+
+    raw_asr_f1: float = Field(..., ge=0.0, le=1.0, description="Raw ASR F1 score")
+    rectified_f1: float = Field(..., ge=0.0, le=1.0, description="Rectified F1 score")
+    precision_gain: float = Field(..., description="Precision gain delta")
+    recall_gain: float = Field(..., description="Recall gain delta")
+
+
+class FailedInstance(BaseModel):
+    """Represents a single unrecovered entity instance for diagnostic review.
+
+    Attributes:
+        transcript_id (str): Unique transaction identifier.
+        ground_truth (str): Ground-truth target entity text.
+        predicted (str): Predicted or raw ASR entity text.
+        failure_type (str): Categorized error taxonomy root cause.
+    """
+
+    transcript_id: str = Field(..., description="Transaction ID")
+    ground_truth: str = Field(..., description="Ground truth text")
+    predicted: str = Field(..., description="Predicted entity text")
+    failure_type: str = Field(..., description="Categorized failure root cause")
+
+
+class ErrorAnalysisAuditOutput(BaseModel):
+    """Final audit report contract emitted to Mahi for QA evaluation.
+
+    Attributes:
+        batch_id (str): Unique benchmark evaluation run identifier.
+        total_samples (int): Total number of evaluation transcript samples.
+        overall_metrics (OverallMetrics): Aggregate performance gains.
+        category_breakdown (CategoryBreakdown): Per-category metrics (MED, COND, ANA, TTP, PHI).
+        error_taxonomy (ErrorTaxonomy): Root cause failure breakdown.
+        failed_instances (list[FailedInstance]): Detailed list of unrecovered entity cases.
+    """
+
+    batch_id: str = Field(..., description="Evaluation run ID")
+    total_samples: int = Field(..., ge=0, description="Total evaluation samples")
+    overall_metrics: OverallMetrics = Field(..., description="Aggregate evaluation metrics")
+    category_breakdown: CategoryBreakdown = Field(..., description="Per-category metric breakdown")
+    error_taxonomy: ErrorTaxonomy = Field(..., description="Failure root cause taxonomy counts")
+    failed_instances: list[FailedInstance] = Field(
+        default_factory=list, description="Failed entity instances"
+    )

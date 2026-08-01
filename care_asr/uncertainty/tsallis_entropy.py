@@ -23,15 +23,11 @@ BEGINNER-FRIENDLY EXPLANATION:
 --------------------------------------------------------------------------------
 """
 
-from typing import List, Union
-
 import numpy as np
 import torch
 
 
-def softmax(
-    logits: Union[torch.Tensor, np.ndarray], dim: int = -1
-) -> Union[torch.Tensor, np.ndarray]:
+def softmax(logits: torch.Tensor | np.ndarray, dim: int = -1) -> torch.Tensor | np.ndarray:
     """
     Converts unnormalized model logits into a valid probability distribution.
 
@@ -68,21 +64,17 @@ def softmax(
         )
 
 
-def _validate_probs(probs: Union[torch.Tensor, np.ndarray]) -> float:
+def _validate_probs(probs: torch.Tensor | np.ndarray) -> float:
     """Validates input probabilities and returns total sum."""
     if isinstance(probs, torch.Tensor):
         if probs.numel() == 0:
-            raise ValueError(
-                "Cannot compute Tsallis entropy on empty probability tensor."
-            )
+            raise ValueError("Cannot compute Tsallis entropy on empty probability tensor.")
         if torch.any(probs < 0.0):
             raise ValueError("Probability distribution contains negative values.")
         prob_sum = torch.sum(probs).item()
     elif isinstance(probs, np.ndarray):
         if probs.size == 0:
-            raise ValueError(
-                "Cannot compute Tsallis entropy on empty probability array."
-            )
+            raise ValueError("Cannot compute Tsallis entropy on empty probability array.")
         if np.any(probs < 0.0):
             raise ValueError("Probability distribution contains negative values.")
         prob_sum = float(np.sum(probs))
@@ -92,15 +84,13 @@ def _validate_probs(probs: Union[torch.Tensor, np.ndarray]) -> float:
         )
 
     if abs(prob_sum - 1.0) > 1e-2:
-        raise ValueError(
-            f"Probabilities must sum to approximately 1.0 (got sum={prob_sum:.4f})."
-        )
+        raise ValueError(f"Probabilities must sum to approximately 1.0 (got sum={prob_sum:.4f}).")
     return prob_sum
 
 
 def compute_tsallis_entropy(
-    probs: Union[torch.Tensor, np.ndarray], alpha: float = 1 / 3, eps: float = 1e-12
-) -> Union[torch.Tensor, float]:
+    probs: torch.Tensor | np.ndarray, alpha: float = 1 / 3, eps: float = 1e-12
+) -> torch.Tensor | float:
     """
     Computes Tsallis non-extensive entropy H_alpha(P) for a probability distribution.
 
@@ -144,8 +134,8 @@ def compute_tsallis_entropy(
 
 
 def compute_batch_entropy(
-    scores: Union[List[torch.Tensor], torch.Tensor, np.ndarray], alpha: float = 1 / 3
-) -> Union[torch.Tensor, np.ndarray]:
+    scores: list[torch.Tensor] | torch.Tensor | np.ndarray, alpha: float = 1 / 3
+) -> torch.Tensor | np.ndarray:
     """
     Computes Tsallis entropy across a sequence or batch of logit/probability tensors.
 
@@ -173,10 +163,7 @@ def compute_batch_entropy(
                 if isinstance(step_score, torch.Tensor)
                 else np.sum(step_score)
             )
-            if abs(step_sum - 1.0) > 1e-2:
-                prob_step = softmax(step_score)
-            else:
-                prob_step = step_score
+            prob_step = softmax(step_score) if abs(step_sum - 1.0) > 0.01 else step_score
 
             ent = compute_tsallis_entropy(prob_step, alpha=alpha)
             entropies.append(ent)
@@ -193,14 +180,8 @@ def compute_batch_entropy(
         prob_scores = (
             softmax(scores)
             if (
-                (
-                    isinstance(scores, torch.Tensor)
-                    and abs(torch.sum(scores[0]).item() - 1.0) > 1e-2
-                )
-                or (
-                    isinstance(scores, np.ndarray)
-                    and abs(float(np.sum(scores[0])) - 1.0) > 1e-2
-                )
+                (isinstance(scores, torch.Tensor) and abs(torch.sum(scores[0]).item() - 1.0) > 1e-2)
+                or (isinstance(scores, np.ndarray) and abs(float(np.sum(scores[0])) - 1.0) > 1e-2)
             )
             else scores
         )
