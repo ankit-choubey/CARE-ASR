@@ -6,11 +6,14 @@ faiss:
   index_file: "data/indices/faiss_umls.index"
   mapping_file: "data/indices/cui_mapping.json"
   encoding_batch_size: 64
+  query_batch_size: 32
+  embedding_cache_maxsize: 1000
 
 phonetic:
   algorithm: "double_metaphone"
   vocab_file: "data/indices/medical_vocab.json"
   max_phonetic_distance: 2
+  encoding_cache_maxsize: 1000
 
 rrf_fusion:
   constant_k: 60

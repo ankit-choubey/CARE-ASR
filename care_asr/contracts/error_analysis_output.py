@@ -6,16 +6,18 @@ Why It Exists:
 
 Teammate Dependencies:
     - Mahi (Testing & QA Lead): Consumes reports conforming to this schema to verify
-      benchmark precision, recall, and F1 gains across MED, COND, ANA, TTP, and PHI.
+      benchmark precision, recall, and F1 gains across MED, COND, ANA, TTP, and PHI.    Imported By:
+        - `care_asr.evaluation.metrics_calculator`
 
-Imported By:
-    - `care_asr.evaluation.metrics_calculator`
-
-TODOs:
-    - Add JSON serialization helper for test artifact exporting.
+    Serialization:
+        - `audit_report_to_dict()` converts a report into a plain dict.
+        - `save_audit_report()` writes a report to a JSON file.
 """
 
+import json
 import logging
+from pathlib import Path
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -140,3 +142,46 @@ class NEREntity(BaseModel):
     start: int = Field(default=0, ge=0, description="Start token index")
     end: int = Field(default=0, ge=0, description="End token index")
     score: float = Field(default=1.0, ge=0.0, le=1.0, description="Confidence score")
+
+
+def audit_report_to_dict(report: ErrorAnalysisAuditOutput) -> dict[str, Any]:
+    """Converts an audit report into a plain JSON-serializable dictionary.
+
+    Uses the Pydantic ``model_dump()`` representation so the contract remains
+    the single source of truth for the serialized shape.
+
+    Args:
+        report (ErrorAnalysisAuditOutput): The audit report to serialize.
+
+    Returns:
+        dict[str, Any]: JSON-serializable report payload.
+    """
+    return report.model_dump()
+
+
+def save_audit_report(
+    report: ErrorAnalysisAuditOutput,
+    output_path: Path | str,
+) -> None:
+    """Writes an audit report to a JSON file following project conventions.
+
+    Parent directories are created automatically. The payload is written with
+    ``indent=2`` and ``ensure_ascii=False`` to match existing evaluation output.
+
+    Args:
+        report (ErrorAnalysisAuditOutput): The audit report to serialize.
+        output_path (Path | str): Destination file path.
+
+    Raises:
+        RuntimeError: If the file cannot be written or does not exist afterwards.
+    """
+    path = Path(output_path)
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(audit_report_to_dict(report), f, indent=2, ensure_ascii=False)
+    except Exception as exc:
+        raise RuntimeError(f"Failed to write audit report to '{path}': {exc}") from exc
+
+    if not path.is_file():
+        raise RuntimeError(f"Audit report file was not created at '{path}'.")

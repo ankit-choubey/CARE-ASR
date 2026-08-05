@@ -192,3 +192,72 @@ def test_unknown_category(evaluator, base_retrieval_input):
 
     with pytest.raises(ThresholdConfigurationError):
         evaluator.evaluate_candidates(aligned_entities, base_retrieval_input)
+
+
+def test_requires_recovery_low_confidence(
+    evaluator: CandidateEvaluator, base_retrieval_input: RetrievalCandidatesInput
+) -> None:
+    """requires_recovery=True when DecisionRouter triggers on low ASR confidence."""
+    aligned_entities = [
+        {
+            "entity": {
+                "entity_id": "span-6",
+                "entity_text": "Metformin",
+                "category": "MED",
+                "start_char": 0,
+                "end_char": 9,
+            },
+            "average_asr_confidence": 0.50,  # below MED min_asr_confidence (0.75)
+            "maximum_entropy": 0.10,
+        }
+    ]
+
+    output = evaluator.evaluate_candidates(aligned_entities, base_retrieval_input)
+
+    assert output.detected_entities[0].requires_recovery is True
+
+
+def test_requires_recovery_high_entropy(
+    evaluator: CandidateEvaluator, base_retrieval_input: RetrievalCandidatesInput
+) -> None:
+    """requires_recovery=True when DecisionRouter triggers on high ASR entropy."""
+    aligned_entities = [
+        {
+            "entity": {
+                "entity_id": "span-7",
+                "entity_text": "Metformin",
+                "category": "MED",
+                "start_char": 0,
+                "end_char": 9,
+            },
+            "average_asr_confidence": 0.90,
+            "maximum_entropy": 0.80,  # above MED max_entropy (0.45)
+        }
+    ]
+
+    output = evaluator.evaluate_candidates(aligned_entities, base_retrieval_input)
+
+    assert output.detected_entities[0].requires_recovery is True
+
+
+def test_no_requires_recovery_within_tolerance(
+    evaluator: CandidateEvaluator, base_retrieval_input: RetrievalCandidatesInput
+) -> None:
+    """requires_recovery=False when DecisionRouter returns False for within-tolerance metrics."""
+    aligned_entities = [
+        {
+            "entity": {
+                "entity_id": "span-8",
+                "entity_text": "Metformin",
+                "category": "MED",
+                "start_char": 0,
+                "end_char": 9,
+            },
+            "average_asr_confidence": 0.90,
+            "maximum_entropy": 0.10,
+        }
+    ]
+
+    output = evaluator.evaluate_candidates(aligned_entities, base_retrieval_input)
+
+    assert output.detected_entities[0].requires_recovery is False
