@@ -1,0 +1,7 @@
+model_name: "Qwen/Qwen2.5-7B-Instruct"
+quantization: "4bit"
+max_new_tokens: 30
+temperature: 0.0
+do_sample: false
+fallback_model: "Qwen/Qwen2.5-3B-Instruct"
+structured_output: true

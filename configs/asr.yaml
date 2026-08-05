@@ -1,0 +1,8 @@
+model_name: "openai/whisper-medium"
+device: "auto"
+language: "en"
+return_timestamps: "word"
+output_scores: true
+return_dict_in_generate: true
+max_new_tokens: 448
+task: "transcribe"

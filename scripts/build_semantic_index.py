@@ -149,9 +149,7 @@ def load_clinical_bert(
         tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(checkpoint)
         model: PreTrainedModel = AutoModel.from_pretrained(checkpoint)
     except Exception as e:
-        raise RuntimeError(
-            f"Failed to load ClinicalBERT model from checkpoint " f"'{checkpoint}': {e}"
-        ) from e
+        raise RuntimeError(f"Failed to load ClinicalBERT model from checkpoint " f"'{checkpoint}': {e}") from e
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = model.to(device)
     model.eval()
@@ -179,9 +177,7 @@ def load_concepts() -> list[ConceptDict]:
             split="train",
         )
     except Exception as exc:
-        raise RuntimeError(
-            f"Failed to load dataset 'nishanth-augustai/rxnorm_data': {exc}"
-        ) from exc
+        raise RuntimeError(f"Failed to load dataset 'nishanth-augustai/rxnorm_data': {exc}") from exc
 
     filtered = dataset.filter(lambda row: row["LAT"] == "ENG" and row["SUPPRESS"] == "N")
     return [
@@ -317,8 +313,7 @@ def build_faiss_index(
 
     if index_type != "IndexFlatIP":
         raise ValueError(
-            f"Unsupported FAISS index type: '{index_type}'. "
-            f"Currently only 'IndexFlatIP' is supported."
+            f"Unsupported FAISS index type: '{index_type}'. " f"Currently only 'IndexFlatIP' is supported."
         )
 
     if embeddings.ndim != 2:
@@ -328,17 +323,14 @@ def build_faiss_index(
         raise ValueError(f"Embeddings dtype must be float32, got {embeddings.dtype}.")
 
     if embeddings.shape[1] != dimension:
-        raise ValueError(
-            f"Embedding dimension mismatch: expected {dimension}, " f"got {embeddings.shape[1]}."
-        )
+        raise ValueError(f"Embedding dimension mismatch: expected {dimension}, " f"got {embeddings.shape[1]}.")
 
     try:
         index = faiss.IndexFlatIP(config.faiss_dimension)
         index.add(embeddings)
     except Exception as exc:
         raise RuntimeError(
-            f"Failed to build FAISS index (type='IndexFlatIP', "
-            f"dim={config.faiss_dimension}): {exc}"
+            f"Failed to build FAISS index (type='IndexFlatIP', " f"dim={config.faiss_dimension}): {exc}"
         ) from exc
 
     if index.ntotal != embeddings.shape[0]:

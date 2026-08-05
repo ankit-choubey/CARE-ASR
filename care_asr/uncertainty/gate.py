@@ -129,8 +129,6 @@ class TsallisUncertaintyGate:
             raise ValueError(f"Threshold must be non-negative. Got {new_threshold}.")
         self.threshold = new_threshold
 
-    def evaluate(
-        self, token_scores: list[torch.Tensor] | torch.Tensor | np.ndarray
-    ) -> dict[str, Any]:
+    def evaluate(self, token_scores: list[torch.Tensor] | torch.Tensor | np.ndarray) -> dict[str, Any]:
         """Runs gating evaluation using stored threshold and alpha settings."""
         return gate_tokens(token_scores, threshold=self.threshold, alpha=self.alpha)

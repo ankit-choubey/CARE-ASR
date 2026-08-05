@@ -59,9 +59,7 @@ def softmax(logits: torch.Tensor | np.ndarray, dim: int = -1) -> torch.Tensor | 
         probs = exps / np.sum(exps, axis=dim, keepdims=True)
         return probs
     else:
-        raise TypeError(
-            f"Unsupported logits type: {type(logits)}. Expected torch.Tensor or np.ndarray."
-        )
+        raise TypeError(f"Unsupported logits type: {type(logits)}. Expected torch.Tensor or np.ndarray.")
 
 
 def _validate_probs(probs: torch.Tensor | np.ndarray) -> float:
@@ -79,9 +77,7 @@ def _validate_probs(probs: torch.Tensor | np.ndarray) -> float:
             raise ValueError("Probability distribution contains negative values.")
         prob_sum = float(np.sum(probs))
     else:
-        raise TypeError(
-            f"Unsupported probs type: {type(probs)}. Expected torch.Tensor or np.ndarray."
-        )
+        raise TypeError(f"Unsupported probs type: {type(probs)}. Expected torch.Tensor or np.ndarray.")
 
     if abs(prob_sum - 1.0) > 1e-2:
         raise ValueError(f"Probabilities must sum to approximately 1.0 (got sum={prob_sum:.4f}).")
@@ -111,13 +107,9 @@ def compute_tsallis_entropy(
         float or torch.Tensor: Scalar Tsallis entropy value.
     """
     if alpha <= 0.0:
-        raise ValueError(
-            f"Alpha parameter must be strictly positive (alpha > 0). Got alpha={alpha}."
-        )
+        raise ValueError(f"Alpha parameter must be strictly positive (alpha > 0). Got alpha={alpha}.")
     if abs(alpha - 1.0) < 1e-6:
-        raise ValueError(
-            "Alpha parameter cannot be exactly 1.0 for Tsallis entropy (use Shannon entropy limit)."
-        )
+        raise ValueError("Alpha parameter cannot be exactly 1.0 for Tsallis entropy (use Shannon entropy limit).")
 
     _validate_probs(probs)
 
@@ -158,11 +150,7 @@ def compute_batch_entropy(
         entropies = []
         for _step_idx, step_score in enumerate(scores):
             # Check if input is logits (max prob != 1.0 sum) or already normalized probs
-            step_sum = (
-                torch.sum(step_score).item()
-                if isinstance(step_score, torch.Tensor)
-                else np.sum(step_score)
-            )
+            step_sum = torch.sum(step_score).item() if isinstance(step_score, torch.Tensor) else np.sum(step_score)
             prob_step = softmax(step_score) if abs(step_sum - 1.0) > 0.01 else step_score
 
             ent = compute_tsallis_entropy(prob_step, alpha=alpha)

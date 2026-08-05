@@ -61,13 +61,9 @@ class BioBertNERExtractor:
         yaml_config = self.settings.load_yaml_config()
         model_config = yaml_config.get("model", {})
 
-        self.model_name: str = str(
-            model_config.get("name_or_path", self.settings.biobert_model_name_or_path)
-        )
+        self.model_name: str = str(model_config.get("name_or_path", self.settings.biobert_model_name_or_path))
         self.device: torch.device = self._detect_device(self.settings.torch_device)
-        self.aggregation_strategy: str = str(
-            model_config.get("confidence_aggregation_strategy", "mean")
-        )
+        self.aggregation_strategy: str = str(model_config.get("confidence_aggregation_strategy", "mean"))
         self.taxonomy_mapping: dict[str, str] = yaml_config.get("taxonomy_mapping", {})
 
         self.tokenizer: Any | None = tokenizer
@@ -84,9 +80,7 @@ class BioBertNERExtractor:
 
     def _detect_device(self, requested_device: str) -> Any:
         if torch is None:
-            logger.warning(
-                "PyTorch is not installed in the current environment. Defaulting device to 'cpu'."
-            )
+            logger.warning("PyTorch is not installed in the current environment. Defaulting device to 'cpu'.")
             return "cpu"
 
         if requested_device.lower() == "cuda":
@@ -107,9 +101,7 @@ class BioBertNERExtractor:
         logger.info(f"Starting BioBERT model loading pipeline for '{self.model_name}'...")
 
         if AutoTokenizer is None or AutoModelForTokenClassification is None:
-            logger.error(
-                "HuggingFace 'transformers' package is missing. Install requirements.txt to load models."
-            )
+            logger.error("HuggingFace 'transformers' package is missing. Install requirements.txt to load models.")
             raise ModelInferenceError("HuggingFace 'transformers' package is not installed.")
 
         try:
@@ -139,9 +131,7 @@ class BioBertNERExtractor:
         except InvalidCheckpointError:
             raise
         except Exception as e:
-            logger.error(
-                f"Failed to initialize BioBERT model '{self.model_name}': {e}", exc_info=True
-            )
+            logger.error(f"Failed to initialize BioBERT model '{self.model_name}': {e}", exc_info=True)
             raise ModelInferenceError(
                 f"Failed to load BioBERT tokenizer or model weights for '{self.model_name}': {e}"
             ) from e
@@ -183,9 +173,7 @@ class BioBertNERExtractor:
         category = self.taxonomy_mapping.get(clean_label)
         if category is None:
             if not self._unknown_label_warned:
-                logger.warning(
-                    f"Unknown label encountered during inference: '{raw_label}'. Skipping."
-                )
+                logger.warning(f"Unknown label encountered during inference: '{raw_label}'. Skipping.")
                 self._unknown_label_warned = True
             return None
 
@@ -193,18 +181,12 @@ class BioBertNERExtractor:
 
     def extract_entities(self, asr_input: ASRTranscriptInput) -> list[dict[str, Any]]:
         if self.model is None or self.tokenizer is None:
-            logger.error(
-                "Attempted to run extract_entities() without initializing model or tokenizer."
-            )
-            raise ModelInferenceError(
-                "BioBERT model and tokenizer must be loaded before running inference."
-            )
+            logger.error("Attempted to run extract_entities() without initializing model or tokenizer.")
+            raise ModelInferenceError("BioBERT model and tokenizer must be loaded before running inference.")
 
         raw_transcript = asr_input.raw_transcript
         if not raw_transcript or not raw_transcript.strip():
-            logger.info(
-                f"Empty transcript received for ID '{asr_input.transcript_id}'. Returning empty entity list."
-            )
+            logger.info(f"Empty transcript received for ID '{asr_input.transcript_id}'. Returning empty entity list.")
             return []
 
         start_time = time.perf_counter()
@@ -324,19 +306,11 @@ class BioBertNERExtractor:
 
             # Decision logic for merging or starting new entity span
             if current_entity is None:
-                current_entity = self._create_entity_dict(
-                    raw_label, category, start_char, end_char, idx, conf_score
-                )
-            elif (
-                is_b_tag
-                or category != current_entity["category"]
-                or start_char > current_entity["end_char"] + 2
-            ):
+                current_entity = self._create_entity_dict(raw_label, category, start_char, end_char, idx, conf_score)
+            elif is_b_tag or category != current_entity["category"] or start_char > current_entity["end_char"] + 2:
                 # New entity boundary detected
                 self._finalize_entity(current_entity, raw_transcript, extracted_entities)
-                current_entity = self._create_entity_dict(
-                    raw_label, category, start_char, end_char, idx, conf_score
-                )
+                current_entity = self._create_entity_dict(raw_label, category, start_char, end_char, idx, conf_score)
             else:
                 # Continuation of current entity span (I-tag or subword token)
                 current_entity["end_char"] = max(current_entity["end_char"], end_char)

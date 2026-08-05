@@ -101,13 +101,9 @@ def run_probe(
     model.eval()
 
     print("[run_probe] Processing audio input features...")
-    input_features = processor(
-        audio_data, sampling_rate=sample_rate, return_tensors="pt"
-    ).input_features
+    input_features = processor(audio_data, sampling_rate=sample_rate, return_tensors="pt").input_features
 
-    print(
-        "[run_probe] Executing model.generate(return_dict_in_generate=True, output_scores=True)..."
-    )
+    print("[run_probe] Executing model.generate(return_dict_in_generate=True, output_scores=True)...")
     with torch.no_grad():
         outputs = model.generate(input_features, return_dict_in_generate=True, output_scores=True)
 
@@ -179,12 +175,8 @@ def inspect_scores(outputs: Any, processor: WhisperProcessor) -> dict[str, Any]:
     print(
         f"   VERIFICATION MATCH: len(outputs.scores) == generated_content_tokens ({num_decoder_steps} == {num_total_tokens - num_prompt_tokens}): {is_equal}"
     )
-    print(
-        "   Explanation: outputs.scores contains logit tensors for each autoregressive generation step."
-    )
-    print(
-        "   Initial prompt tokens are pre-filled in the decoder, so outputs.scores length strictly equals"
-    )
+    print("   Explanation: outputs.scores contains logit tensors for each autoregressive generation step.")
+    print("   Initial prompt tokens are pre-filled in the decoder, so outputs.scores length strictly equals")
     print("   the number of generated decoder steps (excluding initial prompt tokens).")
 
     print("\n6. First Token Probability Distribution Statistics:")

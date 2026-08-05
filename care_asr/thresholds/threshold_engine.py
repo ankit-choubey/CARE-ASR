@@ -106,9 +106,7 @@ class CategoryThresholdEngine:
             if not isinstance(rules[key], (int, float)):
                 raise ThresholdConfigurationError(f"Threshold '{key}' for category '{category}' must be numeric.")
 
-    def _check_semantic_similarity(
-        self, value: float, threshold: float, reasons: list[str]
-    ) -> None:
+    def _check_semantic_similarity(self, value: float, threshold: float, reasons: list[str]) -> None:
         """Evaluates semantic similarity against the minimum threshold."""
         if value < threshold:
             reasons.append("semantic_similarity_below_threshold")
@@ -181,12 +179,8 @@ class CategoryThresholdEngine:
         rejection_reasons: list[str] = []
 
         # Evaluate all rules independently without short-circuiting
-        self._check_semantic_similarity(
-            semantic_similarity, rules["min_semantic_similarity"], rejection_reasons
-        )
-        self._check_phonetic_distance(
-            phonetic_distance, rules["max_phonetic_distance"], rejection_reasons
-        )
+        self._check_semantic_similarity(semantic_similarity, rules["min_semantic_similarity"], rejection_reasons)
+        self._check_phonetic_distance(phonetic_distance, rules["max_phonetic_distance"], rejection_reasons)
         self._check_asr_confidence(asr_confidence, rules["min_asr_confidence"], rejection_reasons)
         self._check_entropy(entropy, rules["max_entropy"], rejection_reasons)
 
