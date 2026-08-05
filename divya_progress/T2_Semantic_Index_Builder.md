@@ -1,8 +1,21 @@
 # CARE-ASR Task T2: Semantic Index Builder
 
-**Status**: Completed & Verified  
+**Status**: Completed & Verified ✅  
 **Module**: `scripts`  
 **Target Audience**: Project maintainers and teammates reviewing the PR  
+
+---
+
+## 0. Post-Task Update (T12)
+
+Task T12 (Latency Optimization) extended the runtime consumer `src/retrieval/semantic.py` with:
+
+- `retrieve_many()` — batched FAISS search over many query tokens in a single `index.search()`.
+- `_embed_batch()` — batched ClinicalBERT embedding (one tokenizer call + one forward pass).
+- A bounded per-instance query-embedding cache (`faiss.embedding_cache_maxsize` in `configs/retrieval.yaml`, additive keys only).
+- Lazy `transformers` imports so the module stays importable when the install is broken.
+
+These changes do NOT alter the T2 index builder (`scripts/build_semantic_index.py`) or its artifacts (`faiss_umls.index`, `cui_mapping.json`). Retrieval results are identical; only latency improved.
 
 ---
 

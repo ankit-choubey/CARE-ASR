@@ -1,8 +1,24 @@
 # CARE-ASR Task T6: Phonetic Index Builder
 
-**Status**: Implementation Complete (~95–100%); Runtime Blocked by Environment + External Dependency  
+**Status**: Implementation Complete (~95–100%) ✅; Runtime Blocked by Environment + External Dependency  
 **Module**: `scripts` + `src/retrieval`  
 **Target Audience**: Project maintainers and teammates reviewing the PR  
+
+---
+
+## 0. Post-Task Updates
+
+### T12 (Latency Optimization)
+
+- `PhoneticRetriever.retrieve_many()` added — batched phonetic lookup with duplicate-token deduplication, order/duplicate preservation, and `top_k` support.
+- A single shared `DoubleMetaphone` instance per retriever replaces per-query construction.
+- A bounded per-instance encoding cache (`phonetic.encoding_cache_maxsize`, default 1000) caches normalized token → metaphone codes.
+- `retrieve()` now delegates to `retrieve_many([token])` — behavior unchanged.
+
+### AfriSpeech Download Utility (S1a / reproducibility)
+
+- `scripts/download_afrispeech.py` is now implemented (previously an empty stub): downloads `intronhealth/afrispeech-200` (config `all`, split `test`), validates non-empty + required columns (`audio`, `transcript`), and optionally persists via `Dataset.save_to_disk()` to `data/raw/afrispeech` with `--save-to-disk` / `--overwrite`.
+- **Note**: the same upstream blocker applies — `datasets==5.0.0` rejects the dataset's legacy loading script (`afrispeech-200.py`), so the live download currently fails gracefully with a descriptive `RuntimeError` (exit 1) in this environment. This is an upstream dataset compatibility issue, not a script defect (ruff/black/mypy strict all pass on the script).
 
 ---
 
@@ -165,6 +181,6 @@ The pipeline successfully reaches the following stages:
 
 ## 13. Final Implementation Status
 
-- **Implementation**: Complete
+- **Implementation**: Complete ✅
 - **Runtime**: Blocked by environment + external dependency
 - **No implementation defects found.**
