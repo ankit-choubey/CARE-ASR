@@ -11,6 +11,8 @@ faiss:
 
 phonetic:
   algorithm: "double_metaphone"
+  index_file: "data/indices/phonetic_index.faiss"
+  metadata_file: "data/indices/phonetic_labels.json"
   vocab_file: "data/indices/medical_vocab.json"
   max_phonetic_distance: 2
   encoding_cache_maxsize: 1000

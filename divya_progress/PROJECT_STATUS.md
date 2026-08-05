@@ -87,4 +87,5 @@ Concretely:
 4. **Environment / upstream blockers** (not implementation):
    - `transformers`/`tokenizers` version incompatibility in the local environment.
    - `datasets==5.0.0` removed support for the legacy `afrispeech-200.py` loading script — affects live AfriSpeech download (`scripts/download_afrispeech.py`) and phonetic index runtime build. Resolution options: pin compatible `datasets`, or migrate the dataset to a Parquet-based mirror.
-5. **Runtime artifact regeneration** (when blockers clear): phonetic index (`faiss_phonetic.index`, `utterance_metadata.json`) and real NER reference spans over the actual AfriSpeech test set (current script runs on mock transcripts).
+5. **Runtime artifact regeneration** (when blockers clear): phonetic index (`phonetic_index.faiss`, `phonetic_labels.json`) and real NER reference spans over the actual AfriSpeech test set (current script runs on mock transcripts).
+6. **Phonetic artifact filename alignment** (completed): builder defaults, `configs/retrieval.yaml`, and `PhoneticRetriever` now all use the canonical `phonetic_index.faiss` + `phonetic_labels.json` names.
