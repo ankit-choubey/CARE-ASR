@@ -94,3 +94,60 @@ def test_invalid_config_type(monkeypatch):
 
     with pytest.raises(ThresholdConfigurationError, match="must be numeric"):
         CategoryThresholdEngine()
+
+
+def test_update_category_thresholds_valid(engine: CategoryThresholdEngine) -> None:
+    """Runtime override applies and takes effect in subsequent evaluations."""
+    engine.update_category_thresholds("MED", {"min_asr_confidence": 0.82})
+
+    assert engine.thresholds["MED"]["min_asr_confidence"] == 0.82
+
+    # 0.80 is now below the raised minimum and must be rejected
+    res = engine.evaluate_candidate_acceptance("MED", 0.90, 1.0, 0.80, 0.20)
+    assert res.accepted is False
+    assert "asr_confidence_below_threshold" in res.rejection_reasons
+    assert res.thresholds_used["min_asr_confidence"] == 0.82
+
+
+def test_update_category_thresholds_partial(engine: CategoryThresholdEngine) -> None:
+    """Only the supplied keys change; all other thresholds remain untouched."""
+    engine.update_category_thresholds("MED", {"min_asr_confidence": 0.82})
+
+    rules = engine.thresholds["MED"]
+    assert rules["min_asr_confidence"] == 0.82
+    assert rules["max_entropy"] == 0.45
+    assert rules["min_semantic_similarity"] == 0.85
+    assert rules["max_phonetic_distance"] == 2.0
+
+
+def test_update_category_thresholds_unknown_category(engine: CategoryThresholdEngine) -> None:
+    """Unknown categories raise ThresholdConfigurationError without mutating state."""
+    with pytest.raises(ThresholdConfigurationError, match="Unknown category: INVALID"):
+        engine.update_category_thresholds("INVALID", {"min_asr_confidence": 0.82})
+
+    assert "INVALID" not in engine.thresholds
+
+
+def test_update_category_thresholds_invalid_key(engine: CategoryThresholdEngine) -> None:
+    """Unknown threshold keys raise ThresholdConfigurationError without mutating state."""
+    with pytest.raises(ThresholdConfigurationError, match="Unknown threshold key"):
+        engine.update_category_thresholds("MED", {"min_asr_confidence_typo": 0.82})
+
+    assert engine.thresholds["MED"]["min_asr_confidence"] == 0.75
+
+
+def test_update_category_thresholds_invalid_value_type(engine: CategoryThresholdEngine) -> None:
+    """Non-numeric threshold values raise the same error as engine initialization."""
+    with pytest.raises(ThresholdConfigurationError, match="must be numeric"):
+        engine.update_category_thresholds("MED", {"min_asr_confidence": "NOT_NUMERIC"})
+
+    assert engine.thresholds["MED"]["min_asr_confidence"] == 0.75
+
+
+def test_update_category_thresholds_validation_failure(engine: CategoryThresholdEngine) -> None:
+    """Merged rules failing validation raise the missing-key error without applying."""
+    # Simulate a category whose in-memory rules lost a required key
+    del engine.thresholds["MED"]["min_asr_confidence"]
+
+    with pytest.raises(ThresholdConfigurationError, match="missing required threshold"):
+        engine.update_category_thresholds("MED", {"max_entropy": 0.50})

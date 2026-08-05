@@ -30,22 +30,28 @@ from care_asr.contracts.validated_output import (
 )
 from care_asr.thresholds.threshold_engine import CategoryThresholdEngine
 from care_asr.utils.exceptions import ThresholdConfigurationError
+from care_asr.validation.decision_router import DecisionRouter
 
 logger = logging.getLogger(__name__)
 
 
 class CandidateEvaluator:
-    """Evaluates and ranks retrieval candidates using category thresholds and composite scoring."""
+    """Evaluates and ranks retrieval candidates using category thresholds and composite scoring.
+
+    Recovery decisions (requires_recovery) are delegated to ``DecisionRouter``, which
+    evaluates the primary ASR confidence and entropy against the category thresholds.
+    """
 
     def __init__(self, threshold_engine: CategoryThresholdEngine) -> None:
         self.threshold_engine = threshold_engine
+        self.decision_router = DecisionRouter(threshold_engine)
         self.settings = get_settings()
         self.weights = self._load_weights()
 
     def _load_weights(self) -> dict[str, float]:
         """Loads normalization weights for composite scoring from config.yaml."""
         yaml_config = self.settings.load_yaml_config()
-        weights = yaml_config.get(
+        weights: dict[str, float] = yaml_config.get(
             "weights",
             {
                 "semantic_similarity": 0.50,
@@ -88,12 +94,15 @@ class CandidateEvaluator:
                 raise ThresholdConfigurationError(f"Unknown category: {category}")
 
             threshold_rules = self.threshold_engine.thresholds[category]
-            requires_recovery = False
-            if asr_conf < threshold_rules.get("min_asr_confidence", 0.0) or entropy > threshold_rules.get(
-                "max_entropy", 1.0
-            ):
-                requires_recovery = True
-                high_entropy_count += 1
+
+requires_recovery = self.decision_router.should_trigger_recovery(
+    category=category,
+    asr_confidence=asr_conf,
+    asr_entropy=entropy,
+)
+
+if requires_recovery:
+    high_entropy_count += 1
 
             detected_entities.append(
                 DetectedEntity(
