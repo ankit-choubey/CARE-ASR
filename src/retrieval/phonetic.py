@@ -358,4 +358,3 @@ class PhoneticRetriever:
                 results.append(RetrievalCandidate(candidate=term, score=1.0, source="phonetic"))
 
         return results[:top_k]
-
