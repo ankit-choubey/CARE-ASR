@@ -115,7 +115,7 @@ All dataset acquisition, index construction, evaluation, tuning, and benchmarkin
 | Script | Purpose | Input(s) | Output(s) | When to use | Required for reproduction |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `scripts/build_semantic_index.py` | Builds the semantic FAISS index over medical concepts using RxNorm + Bio_ClinicalBERT. | HuggingFace `nishanth-augustai/rxnorm_data`; checkpoint `emilyalsentzer/Bio_ClinicalBERT`. | `data/indices/faiss_umls.index`, `data/indices/cui_mapping.json`. | Once, before any semantic retrieval or evaluation. | **Yes** |
-| `scripts/build_phonetic_index.py` | Builds the phonetic FAISS index over audio utterances using HuBERT embeddings. | HuggingFace `facebook/hubert-base-ls960`; AfriSpeech-200 test set (`intronhealth/afrispeech-200`). | Phonetic FAISS index (`data/indices/faiss_phonetic.index`), utterance metadata (`data/indices/utterance_metadata.json`). | Once, before any phonetic retrieval or evaluation. | **Yes** |
+| `scripts/build_phonetic_index.py` | Builds the phonetic FAISS index over audio utterances using HuBERT embeddings. | HuggingFace `facebook/hubert-base-ls960`; AfriSpeech-200 test set (`intronhealth/afrispeech-200`). | Phonetic FAISS index (`data/indices/phonetic_index.faiss`), phonetic labels (`data/indices/phonetic_labels.json`). | Once, before any phonetic retrieval or evaluation. | **Yes** |
 | `scripts/run_ner_extraction.py` | Generates reference NER annotations (MED, COND, ANA, TTP, PHI) used for entity-level evaluation. | Reference transcripts; BioBERT checkpoint `d4data/biomedical-ner-all`. | `data/processed/afrispeech_reference_ner_tags.json`. | Before M-WER / error-analysis evaluation. | **Yes** |
 | `scripts/run_eval.py` | Runs the complete Week-1 evaluation pipeline across all 6 ablation modes. | Saved AfriSpeech dataset (`--data-path`, via `load_from_disk`); `openai/whisper-medium`. | `{mode}_predictions.json`, `{mode}_metrics.json` per mode. | For the main ablation / evaluation scoreboard. | **Yes** |
 | `scripts/run_india_eval.py` | Runs inference on the India medical datasets (EKA + Svarah) using the frozen pipeline. | HuggingFace `ekacare/eka-medical-asr-evaluation-dataset` (config `en`) and `ai4bharat/Svarah`; local JSON or `--synthetic`. | India context table, `{dataset}_predictions.json`, `{dataset}_metrics.json` under `outputs/metrics/india/`. | For the India context evaluation sweep. | **Yes** |
@@ -192,9 +192,9 @@ This section documents every external dataset, index, and generated artifact use
 - **Where it comes from**: Local generation — HuBERT (`facebook/hubert-base-ls960`) embeddings computed over the AfriSpeech-200 test set.
 - **Script**: `scripts/build_phonetic_index.py` (delegates to the builders in `src/retrieval/phonetic.py`).
 - **Input(s)**: HF `facebook/hubert-base-ls960`; AfriSpeech-200 audio (`intronhealth/afrispeech-200`).
-- **Output location**: `data/indices/faiss_phonetic.index`, `data/indices/utterance_metadata.json`.
+- **Output location**: `data/indices/phonetic_index.faiss`, `data/indices/phonetic_labels.json`.
 - **Commit vs regenerate**: **Regenerate** — not currently committed.
-- **Note**: `PhoneticRetriever` reads `phonetic_index.faiss`, `phonetic_labels.json`, and `medical_vocab.json` from `data/indices/`; verify these names align with the builder's outputs before running evaluation.
+- **Note**: `PhoneticRetriever` loads `phonetic_index.faiss`, `phonetic_labels.json`, and `medical_vocab.json` from `data/indices/`; these names are aligned with the builder's outputs in `configs/retrieval.yaml`.
 
 ### NER Reference Data
 
@@ -239,4 +239,4 @@ Regenerate everything from scratch by running these steps in order from the repo
 - **Scripts that build indexes**: `scripts/build_semantic_index.py` (semantic FAISS + CUI mapping), `scripts/build_phonetic_index.py` (phonetic FAISS + utterance metadata).
 - **Scripts that generate evaluation artifacts**: `scripts/run_ner_extraction.py` (NER reference tags), `scripts/run_eval.py` (ablation predictions/metrics), `scripts/run_tuning_eval.py` (threshold tuning + audit reports), `scripts/run_latency_benchmark.py` (latency reports), `scripts/run_india_eval.py` (India context table + predictions/metrics).
 - **Generated files required for integration**: `data/indices/faiss_umls.index` and `data/indices/cui_mapping.json` — the semantic index consumed by `src/retrieval/semantic.py`; currently committed so the pipeline works out of the box.
-- **Files that can safely be regenerated instead of committed**: raw datasets (`data/raw/`), the phonetic index + metadata (`data/indices/faiss_phonetic.index`, `utterance_metadata.json`), NER reference tags (`data/processed/`), and all `outputs/` artifacts (audit reports, latency reports, India metrics).
+- **Files that can safely be regenerated instead of committed**: raw datasets (`data/raw/`), the phonetic index + labels (`data/indices/phonetic_index.faiss`, `data/indices/phonetic_labels.json`), NER reference tags (`data/processed/`), and all `outputs/` artifacts (audit reports, latency reports, India metrics).

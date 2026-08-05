@@ -73,8 +73,8 @@ class PhoneticIndexConfig:
 
 CONFIG_MODEL_PATH = Path("configs/model.yaml")
 CONFIG_RETRIEVAL_PATH = Path("configs/retrieval.yaml")
-DEFAULT_FAISS_INDEX_PATH = Path("data/indices/faiss_phonetic.index")
-DEFAULT_FAISS_METADATA_PATH = Path("data/indices/utterance_metadata.json")
+DEFAULT_FAISS_INDEX_PATH = Path("data/indices/phonetic_index.faiss")
+DEFAULT_FAISS_METADATA_PATH = Path("data/indices/phonetic_labels.json")
 
 
 def _check_path(path: Path) -> None:
