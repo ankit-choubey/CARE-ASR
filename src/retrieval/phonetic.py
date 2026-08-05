@@ -4,9 +4,8 @@ Phonetic retrieval engine for CARE-ASR (Task T6).
 The phonetic retrieval engine recovers medical terms that match the
 acoustic/phonetic sound of mistranscribed ASR spans, complementing the
 semantic retrieval engine. HuBERT model loading, audio dataset loading,
-phonetic embedding extraction, FAISS index construction, and index
-persistence are implemented; retrieval remains reserved for a subsequent
-T6 subtask.
+phonetic embedding extraction, FAISS index construction, index
+persistence, and Double Metaphone query retrieval are implemented.
 
 Phonetic retrieval query engine.
 Uses HuBERT FAISS index when available, with automatic Double Metaphone CPU fallback.
@@ -15,8 +14,10 @@ Uses HuBERT FAISS index when available, with automatic Double Metaphone CPU fall
 from __future__ import annotations
 
 import json
+import logging
+from collections import OrderedDict
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import faiss
 import numpy as np
@@ -25,12 +26,17 @@ import yaml
 from datasets import Dataset, load_dataset
 from numpy.typing import NDArray
 from tqdm import tqdm
-from transformers import AutoFeatureExtractor, FeatureExtractionMixin, HubertModel
 
 from care_asr.contracts.retrieval_input import RetrievalCandidate
 
+if TYPE_CHECKING:
+    from abydos.phonetic import DoubleMetaphone
+    from transformers import FeatureExtractionMixin, HubertModel
+
 HUBERT_CHECKPOINT = "facebook/hubert-base-ls960"
 AFRISPEECH_DATASET = "intronhealth/afrispeech-200"
+
+logger = logging.getLogger(__name__)
 
 
 def load_hubert() -> tuple[FeatureExtractionMixin, HubertModel]:
@@ -52,6 +58,10 @@ def load_hubert() -> tuple[FeatureExtractionMixin, HubertModel]:
     """
     checkpoint = HUBERT_CHECKPOINT
     try:
+        # Lazy import: the module stays importable even when the transformers
+        # install is broken; the model is only needed at load time.
+        from transformers import AutoFeatureExtractor
+
         feature_extractor: FeatureExtractionMixin = AutoFeatureExtractor.from_pretrained(checkpoint)
         model: HubertModel = HubertModel.from_pretrained(checkpoint)
     except Exception as e:
@@ -305,16 +315,40 @@ def save_index(
 
 
 class PhoneticRetriever:
-    """Queries phonetic index or Double Metaphone fuzzy vocabulary matching."""
+    """Queries phonetic index or Double Metaphone fuzzy vocabulary matching.
+
+    T12: A single Double Metaphone instance is shared across queries and encoded
+    query tokens are cached in a bounded per-instance cache so identical tokens
+    are encoded exactly once.
+    """
+
+    faiss_available: bool
+    index: Any
+    labels: list[str]
+    metaphone_vocab: dict[str, list[str]]
+    max_distance: int
+    _dm: DoubleMetaphone | None
+    _encoding_cache: OrderedDict[str, tuple[str, ...]]
+    _encoding_cache_maxsize: int
 
     def __init__(self, config_path: str = "configs/retrieval.yaml") -> None:
         try:
             with open(config_path) as f:
                 cfg = yaml.safe_load(f).get("phonetic", {})
         except Exception:
-            cfg = {"max_phonetic_distance": 2}
+            cfg = {"max_phonetic_distance": 2, "encoding_cache_maxsize": 1000}
 
         self.max_distance = cfg.get("max_phonetic_distance", 2)
+        self._encoding_cache_maxsize = max(0, int(cfg.get("encoding_cache_maxsize", 1000)))
+        self._encoding_cache: OrderedDict[str, tuple[str, ...]] = OrderedDict()
+
+        try:
+            from abydos.phonetic import DoubleMetaphone
+
+            self._dm = DoubleMetaphone()
+        except Exception:
+            self._dm = None
+
         phonetic_index_path = "data/indices/phonetic_index.faiss"
         phonetic_labels_path = "data/indices/phonetic_labels.json"
         vocab_path = "data/indices/medical_vocab.json"
@@ -326,12 +360,12 @@ class PhoneticRetriever:
 
                 self.index = faiss.read_index(phonetic_index_path)
                 with open(phonetic_labels_path) as f:
-                    self.labels: list[str] = json.load(f)
+                    self.labels = json.load(f)
                 self.faiss_available = True
             except Exception:
                 self.faiss_available = False
 
-        self.metaphone_vocab: dict = {}
+        self.metaphone_vocab: dict[str, list[str]] = {}
         if Path(vocab_path).exists():
             try:
                 with open(vocab_path) as f:
@@ -339,22 +373,114 @@ class PhoneticRetriever:
             except Exception:
                 self.metaphone_vocab = {}
 
+        logger.info(
+            "PhoneticRetriever ready: max_distance=%s, faiss_available=%s, "
+            "vocab_terms=%d, encoding_cache_maxsize=%d",
+            self.max_distance,
+            self.faiss_available,
+            len(self.metaphone_vocab),
+            self._encoding_cache_maxsize,
+        )
+
+    def retrieve_many(self, tokens: list[str], top_k: int = 5) -> list[list[RetrievalCandidate]]:
+        """Retrieves phonetic candidates for many tokens, deduplicating encodings.
+
+        Identical tokens are encoded exactly once, cached encodings are reused
+        across calls, and results are mapped back to the original input order
+        with duplicate outputs preserved.
+
+        Args:
+            tokens (list[str]): Query tokens; duplicates are allowed.
+            top_k (int): Maximum number of candidates per token.
+
+        Returns:
+            list[list[RetrievalCandidate]]: Candidates per input token, in input order.
+        """
+        if not tokens:
+            return []
+        logger.debug("Retrieving phonetic candidates for %d tokens (top_k=%d)", len(tokens), top_k)
+        try:
+            positions_by_token: dict[str, list[int]] = {}
+            for position, token in enumerate(tokens):
+                positions_by_token.setdefault(self._normalize_token(token), []).append(position)
+
+            results: list[list[RetrievalCandidate] | None] = [None] * len(tokens)
+            for key, positions in positions_by_token.items():
+                candidates = self._metaphone_retrieve(key, top_k)
+                for position in positions:
+                    results[position] = list(candidates)
+            return [result if result is not None else [] for result in results]
+        except Exception:
+            return [[] for _ in tokens]
+
     def retrieve(self, token: str, top_k: int = 5) -> list[RetrievalCandidate]:
-        """Retrieves phonetic candidate matches."""
-        return self._metaphone_retrieve(token, top_k)
+        """Retrieves top_k phonetic candidates for a single token.
+
+        Delegates to ``retrieve_many``; the public signature and behavior are
+        unchanged.
+
+        Args:
+            token (str): Query token.
+            top_k (int): Maximum number of candidates.
+
+        Returns:
+            list[RetrievalCandidate]: Ranked phonetic candidates.
+        """
+        results = self.retrieve_many([token], top_k)
+        return results[0] if results else []
 
     def _metaphone_retrieve(self, token: str, top_k: int) -> list[RetrievalCandidate]:
-        try:
-            from abydos.phonetic import DoubleMetaphone
+        """Retrieves Double Metaphone vocabulary matches for a single token.
 
-            dm = DoubleMetaphone()
-            query_codes = set(dm.encode(token))
+        Uses the cached encoding when available and returns an empty list when
+        Double Metaphone is unavailable or the token cannot be encoded.
+        """
+        try:
+            query_codes = self._encode_query(token)
+            if query_codes is None:
+                return []
+            query_code_set = set(query_codes)
+            results: list[RetrievalCandidate] = []
+            for term, codes in self.metaphone_vocab.items():
+                if query_code_set & set(codes):
+                    results.append(RetrievalCandidate(candidate=term, score=1.0, source="phonetic"))
+            return results[:top_k]
         except Exception:
             return []
 
-        results = []
-        for term, codes in self.metaphone_vocab.items():
-            if query_codes & set(codes):
-                results.append(RetrievalCandidate(candidate=term, score=1.0, source="phonetic"))
+    def _normalize_token(self, token: str) -> str:
+        """Normalizes a query token for deterministic cache keying."""
+        return " ".join(token.lower().strip().split())
 
-        return results[:top_k]
+    def _encode_query(self, token: str) -> tuple[str, ...] | None:
+        """Returns the cached Double Metaphone encoding for a token.
+
+        The cache key is the normalized token, so identical tokens are encoded
+        exactly once. Normalization is case/whitespace-only, which Double
+        Metaphone is insensitive to, so retrieval behavior is unchanged.
+        Returns None when Double Metaphone is unavailable or the token cannot
+        be encoded.
+        """
+        if self._dm is None:
+            return None
+        key = self._normalize_token(token)
+        if key in self._encoding_cache:
+            self._encoding_cache.move_to_end(key)
+            return self._encoding_cache[key]
+        try:
+            codes = tuple(self._dm.encode(key))
+        except Exception:
+            return None
+        self._cache_encoding(key, codes)
+        return codes
+
+    def _cache_encoding(self, key: str, codes: tuple[str, ...]) -> None:
+        """Stores a token encoding in the bounded cache, evicting the oldest entry when full."""
+        if self._encoding_cache_maxsize <= 0:
+            return
+        if key in self._encoding_cache:
+            self._encoding_cache.move_to_end(key)
+            return
+        if len(self._encoding_cache) >= self._encoding_cache_maxsize:
+            self._encoding_cache.popitem(last=False)
+        self._encoding_cache[key] = codes

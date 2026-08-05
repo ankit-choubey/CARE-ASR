@@ -9,6 +9,7 @@ import pytest
 import torch
 
 from care_asr.contracts.retrieval_input import RetrievalCandidate
+from src.retrieval.phonetic import PhoneticRetriever
 from src.retrieval.semantic import SemanticRetriever
 
 # Token texts whose ord-sums produce distinct FakeTokenizer codes:
@@ -173,3 +174,137 @@ def test_cache_is_bounded(retriever: SemanticRetriever) -> None:
 
     retriever.retrieve_many([TOKEN_CODE_ZERO], top_k=2)
     assert retriever.model.forward_calls == 2
+
+
+class CountingDoubleMetaphone:
+    """Fake Double Metaphone that records every encode() call."""
+
+    def __init__(self, code_map: dict[str, tuple[str, ...]]) -> None:
+        self.code_map = code_map
+        self.encode_calls: list[str] = []
+
+    def encode(self, token: str) -> tuple[str, ...]:
+        self.encode_calls.append(token)
+        return self.code_map.get(token, ("", ""))
+
+
+@pytest.fixture
+def phonetic_retriever() -> PhoneticRetriever:
+    """Builds a PhoneticRetriever around a counting Double Metaphone and vocab."""
+    retriever = PhoneticRetriever.__new__(PhoneticRetriever)
+    retriever.max_distance = 2
+    retriever.faiss_available = False
+    retriever._encoding_cache = OrderedDict()
+    retriever._encoding_cache_maxsize = 1000
+    retriever._dm = CountingDoubleMetaphone(
+        {
+            "aspirin": ("ASPRN", ""),
+            "ibuprofen": ("APRFN", "APRFR"),
+            "metformin": ("MTFRM", "MTFRN"),
+        }
+    )
+    retriever.metaphone_vocab = {
+        "aspirin": ["ASPRN", ""],
+        "asparin": ["ASPRN", ""],
+        "asperin": ["ASPRN", ""],
+        "ibuprofen": ["APRFN", "APRFR"],
+        "metformin": ["MTFRM", "MTFRN"],
+    }
+    return retriever
+
+
+def test_phonetic_retrieve_many_matches_sequential(phonetic_retriever: PhoneticRetriever) -> None:
+    """Batched retrieval returns the same candidates as per-token retrieve()."""
+    tokens = ["aspirin", "ibuprofen"]
+    batched = phonetic_retriever.retrieve_many(tokens, top_k=3)
+    sequential = [phonetic_retriever.retrieve(token, top_k=3) for token in tokens]
+    assert [names(results) for results in batched] == [names(results) for results in sequential]
+    assert all(candidate.source == "phonetic" for result in batched for candidate in result)
+
+
+def test_phonetic_duplicate_tokens_encode_once(phonetic_retriever: PhoneticRetriever) -> None:
+    """Identical tokens are encoded exactly once."""
+    phonetic_retriever.retrieve_many(["aspirin", "ibuprofen", "aspirin", "aspirin"], top_k=3)
+    assert phonetic_retriever._dm.encode_calls == ["aspirin", "ibuprofen"]
+
+
+def test_phonetic_cache_hit_avoids_recomputation(phonetic_retriever: PhoneticRetriever) -> None:
+    """Repeated queries reuse cached encodings instead of re-encoding."""
+    phonetic_retriever.retrieve_many(["aspirin"], top_k=3)
+    phonetic_retriever.retrieve_many(["aspirin"], top_k=3)
+    phonetic_retriever.retrieve("aspirin", top_k=3)
+    assert phonetic_retriever._dm.encode_calls == ["aspirin"]
+
+
+def test_phonetic_empty_input_returns_empty_list(phonetic_retriever: PhoneticRetriever) -> None:
+    """An empty token list yields no results and no encodings."""
+    assert phonetic_retriever.retrieve_many([]) == []
+    assert phonetic_retriever._dm.encode_calls == []
+
+
+def test_phonetic_ordering_preserved(phonetic_retriever: PhoneticRetriever) -> None:
+    """Results are mapped back to the original input order."""
+    results = phonetic_retriever.retrieve_many(["ibuprofen", "aspirin", "ibuprofen"], top_k=3)
+    assert names(results[0]) == ["ibuprofen"]
+    assert names(results[1]) == ["aspirin", "asparin", "asperin"]
+    assert names(results[2]) == names(results[0])
+
+
+def test_phonetic_duplicate_outputs_preserved(phonetic_retriever: PhoneticRetriever) -> None:
+    """Duplicate tokens yield duplicate, independent result lists."""
+    results = phonetic_retriever.retrieve_many(["aspirin", "aspirin"], top_k=3)
+    assert len(results) == 2
+    assert names(results[0]) == names(results[1]) == ["aspirin", "asparin", "asperin"]
+    assert results[0] is not results[1]
+
+
+def test_phonetic_top_k_respected(phonetic_retriever: PhoneticRetriever) -> None:
+    """Each token returns at most top_k candidates."""
+    limited = phonetic_retriever.retrieve_many(["aspirin"], top_k=2)
+    assert len(limited[0]) == 2
+    full = phonetic_retriever.retrieve_many(["aspirin"], top_k=10)
+    assert len(full[0]) == 3
+
+
+def test_phonetic_retrieve_backward_compatible(phonetic_retriever: PhoneticRetriever) -> None:
+    """retrieve() keeps its signature and delegates to retrieve_many."""
+    single = phonetic_retriever.retrieve("aspirin", top_k=3)
+    assert isinstance(single, list)
+    assert all(isinstance(candidate, RetrievalCandidate) for candidate in single)
+    assert names(single) == names(phonetic_retriever.retrieve_many(["aspirin"], top_k=3)[0])
+
+
+def test_phonetic_cache_eviction(phonetic_retriever: PhoneticRetriever) -> None:
+    """The oldest cache entry is evicted when the cache reaches its max size."""
+    phonetic_retriever._encoding_cache_maxsize = 2
+    phonetic_retriever.retrieve_many(["aspirin", "ibuprofen", "metformin"], top_k=3)
+    assert len(phonetic_retriever._encoding_cache) == 2
+    assert "aspirin" not in phonetic_retriever._encoding_cache
+    assert "ibuprofen" in phonetic_retriever._encoding_cache
+    assert "metformin" in phonetic_retriever._encoding_cache
+
+
+def test_phonetic_cache_size_respected(phonetic_retriever: PhoneticRetriever) -> None:
+    """The cache never exceeds its configured max size."""
+    phonetic_retriever._encoding_cache_maxsize = 1
+    phonetic_retriever.retrieve_many(["aspirin", "ibuprofen"], top_k=3)
+    assert len(phonetic_retriever._encoding_cache) == 1
+    assert "ibuprofen" in phonetic_retriever._encoding_cache
+
+
+def test_phonetic_config_driven_cache_size(tmp_path) -> None:
+    """The encoding cache size is read from the phonetic config block."""
+    config = tmp_path / "retrieval.yaml"
+    config.write_text("phonetic:\n  encoding_cache_maxsize: 3\n  max_phonetic_distance: 2\n")
+    retriever = PhoneticRetriever(config_path=str(config))
+    assert retriever._encoding_cache_maxsize == 3
+    assert retriever.max_distance == 2
+
+
+def test_phonetic_unavailable_returns_empty() -> None:
+    """Retrievers without Double Metaphone return empty results without encoding."""
+    retriever = PhoneticRetriever.__new__(PhoneticRetriever)
+    retriever._dm = None
+    retriever.metaphone_vocab = {"aspirin": ["ASPRN", ""]}
+    assert retriever.retrieve("aspirin") == []
+    assert retriever.retrieve_many(["aspirin", "metformin"]) == [[], []]
