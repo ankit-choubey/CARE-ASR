@@ -18,7 +18,7 @@ Design Rationale:
 
 import logging
 import time
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from pydantic import BaseModel
@@ -63,10 +63,17 @@ class CategoryThresholdEngine:
             ThresholdConfigurationError: If the 'thresholds' block is missing.
         """
         yaml_config = self.settings.load_yaml_config()
-        thresholds = yaml_config.get("thresholds")
+        thresholds: dict[str, Any] | None = yaml_config.get("thresholds")
         if thresholds is None:
             raise ThresholdConfigurationError("Missing 'thresholds' block in configuration.")
         return thresholds
+
+    _REQUIRED_KEYS: tuple[str, ...] = (
+        "min_semantic_similarity",
+        "max_phonetic_distance",
+        "min_asr_confidence",
+        "max_entropy",
+    )
 
     def _validate_configuration(self) -> None:
         """Validates that all required metrics exist and are numeric for each configured category.
@@ -74,25 +81,30 @@ class CategoryThresholdEngine:
         Raises:
             ThresholdConfigurationError: If any configuration value is missing or invalid.
         """
-        required_keys = [
-            "min_semantic_similarity",
-            "max_phonetic_distance",
-            "min_asr_confidence",
-            "max_entropy",
-        ]
         if not self.thresholds:
             raise ThresholdConfigurationError("Thresholds configuration is empty.")
 
         for category, rules in self.thresholds.items():
-            for key in required_keys:
-                if key not in rules:
-                    raise ThresholdConfigurationError(
-                        f"Category '{category}' is missing required threshold '{key}'."
-                    )
-                if not isinstance(rules[key], (int, float)):
-                    raise ThresholdConfigurationError(
-                        f"Threshold '{key}' for category '{category}' must be numeric."
-                    )
+            self._validate_category_rules(category, rules)
+
+    def _validate_category_rules(self, category: str, rules: dict[str, Any]) -> None:
+        """Validates that all required threshold keys exist and are numeric for a category.
+
+        Shared by engine initialization and runtime threshold overrides so the same
+        validation errors are raised in both paths.
+
+        Args:
+            category (str): The entity category (e.g., MED, COND).
+            rules (dict[str, Any]): The category threshold rules to validate.
+
+        Raises:
+            ThresholdConfigurationError: If a required threshold is missing or non-numeric.
+        """
+        for key in self._REQUIRED_KEYS:
+            if key not in rules:
+                raise ThresholdConfigurationError(f"Category '{category}' is missing required threshold '{key}'.")
+            if not isinstance(rules[key], (int, float)):
+                raise ThresholdConfigurationError(f"Threshold '{key}' for category '{category}' must be numeric.")
 
     def _check_semantic_similarity(
         self, value: float, threshold: float, reasons: list[str]
@@ -131,7 +143,7 @@ class CategoryThresholdEngine:
             category=category,
             thresholds_used=thresholds_used,
             input_metrics=input_metrics,
-            decision_timestamp=datetime.now(UTC),
+            decision_timestamp=datetime.now(timezone.utc),
         )
 
     def evaluate_candidate_acceptance(
@@ -209,3 +221,39 @@ class CategoryThresholdEngine:
             thresholds_used=thresholds_used,
             input_metrics=input_metrics,
         )
+
+    def update_category_thresholds(self, category: str, rules: dict[str, float]) -> None:
+        """Applies a runtime override of one or more category thresholds in memory.
+
+        Only the supplied keys are updated; every other threshold for the category
+        remains unchanged. The merged rules are validated with the same checks used
+        during engine initialization, and nothing is persisted to disk.
+
+        Args:
+            category (str): The entity category (e.g., MED, COND).
+            rules (dict[str, float]): Threshold overrides keyed by threshold name,
+                e.g. ``{"min_asr_confidence": 0.82}``.
+
+        Raises:
+            ThresholdConfigurationError: If the category is unknown, a supplied key is
+                not a known threshold, or the merged rules fail validation.
+
+        Examples:
+            >>> engine = CategoryThresholdEngine()
+            >>> engine.update_category_thresholds("MED", {"min_asr_confidence": 0.82})
+        """
+        if category not in self.thresholds:
+            logger.error(f"Unknown category updated: {category}")
+            raise ThresholdConfigurationError(f"Unknown category: {category}")
+
+        unknown_keys = set(rules.keys()) - set(self._REQUIRED_KEYS)
+        if unknown_keys:
+            key = sorted(unknown_keys)[0]
+            logger.error(f"Unknown threshold key '{key}' for category '{category}'.")
+            raise ThresholdConfigurationError(f"Unknown threshold key '{key}' for category '{category}'.")
+
+        merged_rules = {**self.thresholds[category], **rules}
+        self._validate_category_rules(category, merged_rules)
+
+        self.thresholds[category] = merged_rules
+        logger.info(f"Updated thresholds for category '{category}': {rules}")
