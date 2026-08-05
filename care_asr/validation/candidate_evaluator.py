@@ -94,15 +94,13 @@ class CandidateEvaluator:
                 raise ThresholdConfigurationError(f"Unknown category: {category}")
 
             threshold_rules = self.threshold_engine.thresholds[category]
-
-requires_recovery = self.decision_router.should_trigger_recovery(
-    category=category,
-    asr_confidence=asr_conf,
-    asr_entropy=entropy,
-)
-
-if requires_recovery:
-    high_entropy_count += 1
+            requires_recovery = self.decision_router.should_trigger_recovery(
+                category=category,
+                asr_confidence=asr_conf,
+                asr_entropy=entropy,
+            )
+            if requires_recovery:
+                high_entropy_count += 1
 
             detected_entities.append(
                 DetectedEntity(

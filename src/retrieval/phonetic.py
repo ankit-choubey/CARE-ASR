@@ -1,5 +1,4 @@
 """
-
 Phonetic retrieval engine for CARE-ASR (Task T6).
 
 The phonetic retrieval engine recovers medical terms that match the
@@ -8,24 +7,27 @@ semantic retrieval engine. HuBERT model loading, audio dataset loading,
 phonetic embedding extraction, FAISS index construction, and index
 persistence are implemented; retrieval remains reserved for a subsequent
 T6 subtask.
-=======
+
 Phonetic retrieval query engine.
 Uses HuBERT FAISS index when available, with automatic Double Metaphone CPU fallback.
+"""
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
-
 from typing import Any
 
 import faiss
 import numpy as np
 import torch
+import yaml
 from datasets import Dataset, load_dataset
 from numpy.typing import NDArray
 from tqdm import tqdm
 from transformers import AutoFeatureExtractor, FeatureExtractionMixin, HubertModel
+
+from care_asr.contracts.retrieval_input import RetrievalCandidate
 
 HUBERT_CHECKPOINT = "facebook/hubert-base-ls960"
 AFRISPEECH_DATASET = "intronhealth/afrispeech-200"
@@ -302,11 +304,6 @@ def save_index(
         raise RuntimeError(f"Utterance metadata file was not created at '{metadata_path}'.")
 
 
-import yaml
-
-from care_asr.contracts.retrieval_input import RetrievalCandidate
-
-
 class PhoneticRetriever:
     """Queries phonetic index or Double Metaphone fuzzy vocabulary matching."""
 
@@ -361,4 +358,3 @@ class PhoneticRetriever:
                 results.append(RetrievalCandidate(candidate=term, score=1.0, source="phonetic"))
 
         return results[:top_k]
-
