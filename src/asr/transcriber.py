@@ -66,7 +66,7 @@ class WhisperTranscriber:
                 return_dict_in_generate=True,
                 output_scores=True,
                 language=self.cfg.get("language", "en"),
-                max_new_tokens=self.cfg.get("max_new_tokens", 448),
+                max_new_tokens=self.cfg.get("max_new_tokens", 440),
             )
 
         sequences = result.sequences[0]
