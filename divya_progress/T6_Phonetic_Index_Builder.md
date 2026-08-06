@@ -20,6 +20,10 @@
 - `scripts/download_afrispeech.py` is now implemented (previously an empty stub): downloads `intronhealth/afrispeech-200` (config `all`, split `test`), validates non-empty + required columns (`audio`, `transcript`), and optionally persists via `Dataset.save_to_disk()` to `data/raw/afrispeech` with `--save-to-disk` / `--overwrite`.
 - **Note**: the same upstream blocker applies — `datasets==5.0.0` rejects the dataset's legacy loading script (`afrispeech-200.py`), so the live download currently fails gracefully with a descriptive `RuntimeError` (exit 1) in this environment. This is an upstream dataset compatibility issue, not a script defect (ruff/black/mypy strict all pass on the script).
 
+### Phonetic Artifact Filename Alignment
+
+- The builder defaults, `configs/retrieval.yaml`, and `PhoneticRetriever` now all use the canonical artifact names `data/indices/phonetic_index.faiss` + `data/indices/phonetic_labels.json` (previously the builder wrote `faiss_phonetic.index` + `utterance_metadata.json`, which the retriever never looked for).
+
 ---
 
 ## 1. Objective
@@ -123,8 +127,8 @@ All static and smoke validations completed successfully:
 
 The pipeline generates:
 
-- `data/indices/faiss_phonetic.index`
-- `data/indices/utterance_metadata.json`
+- `data/indices/phonetic_index.faiss`
+- `data/indices/phonetic_labels.json`
 
 ---
 

@@ -63,6 +63,11 @@ class ASRTranscriptInput(BaseModel):
     def validate_offsets(self) -> bool:
         """Validates that word character offsets lie within raw_transcript bounds.
 
+        Checks every word's ``start_char``/``end_char`` against the length of
+        ``raw_transcript`` and verifies ``start_char <= end_char``. Offsets are
+        treated as 0-based half-open (``[start_char, end_char)``) character
+        ranges, so ``end_char == len(raw_transcript)`` is permitted.
+
         Returns:
             bool: True if offsets are valid.
 
@@ -74,7 +79,17 @@ class ASRTranscriptInput(BaseModel):
             >>> payload.validate_offsets()
             True
         """
-        pass
+        transcript_len = len(self.raw_transcript)
+        for word in self.words:
+            if word.start_char > word.end_char:
+                raise ValueError(
+                    f"Word '{word.word}' has start_char > end_char " f"({word.start_char} > {word.end_char})."
+                )
+            if word.end_char > transcript_len:
+                raise ValueError(
+                    f"Word '{word.word}' end_char {word.end_char} exceeds raw_transcript " f"length {transcript_len}."
+                )
+        return True
 
 
 class TokenScore(BaseModel):
