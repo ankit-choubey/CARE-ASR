@@ -15,7 +15,7 @@ import subprocess
 from pathlib import Path
 
 # Setup logging to /kaggle/working/execution.log
-working_dir = Path("/kaggle/working")
+working_dir = Path(os.environ.get("KAGGLE_WORKING_DIR", "/tmp/kaggle_working"))
 working_dir.mkdir(parents=True, exist_ok=True)
 log_file = working_dir / "execution.log"
 err_file = working_dir / "error_log.txt"
