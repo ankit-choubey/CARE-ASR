@@ -17,6 +17,7 @@ Outputs generated:
 import os
 import sys
 import json
+import shutil
 import traceback
 import subprocess
 from pathlib import Path
@@ -195,5 +196,18 @@ try:
         print("✅ Saved india_context_table.json")
 except Exception as e:
     print(f"❌ Stage 4 Error: {e}")
+
+# STAGE 5: Copy all outputs directly to top-level /kaggle/working/
+print("\n=== STAGE 5: COPYING ALL ARTIFACTS TO TOP-LEVEL KAGGLE OUTPUT ===")
+try:
+    if (repo_dir / "results").exists():
+        shutil.copytree(repo_dir / "results", working_dir / "results", dirs_exist_ok=True)
+    if (repo_dir / "data" / "indices").exists():
+        shutil.copytree(repo_dir / "data" / "indices", working_dir / "data" / "indices", dirs_exist_ok=True)
+    if (repo_dir / "outputs" / "metrics").exists():
+        shutil.copytree(repo_dir / "outputs" / "metrics", working_dir / "outputs" / "metrics", dirs_exist_ok=True)
+    print("✅ All result, index, and metric directories copied to /kaggle/working/")
+except Exception as e:
+    print(f"❌ Stage 5 Copy Error: {e}")
 
 print("\n=== CARE-ASR KAGGLE GPU RUN COMPLETE ===")
