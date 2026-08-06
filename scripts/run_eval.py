@@ -65,7 +65,7 @@ def main():
         from care_asr.uncertainty.gate import TsallisUncertaintyGate
 
         gate_obj = TsallisUncertaintyGate()
-        pipeline.entropy_gate = lambda t: gate_obj.gate_tokens(t.token_scores)["uncertain_flags"]
+        pipeline.entropy_gate = lambda t: gate_obj.evaluate(t.token_scores)["uncertain_flags"]
 
     if args.mode == "unsure_gate":
         from src.safety.unsure_gate import UnsureGate
