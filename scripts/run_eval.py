@@ -36,8 +36,8 @@ def main():
         ds = load_from_disk(args.data_path)
     except Exception:
         from datasets import load_dataset
-        print(f"Data path {args.data_path} not found; loading intronhealth/afrispeech-200 directly from HuggingFace...")
-        ds = load_dataset("intronhealth/afrispeech-200", split="test", trust_remote_code=True)
+        print(f"Data path {args.data_path} not found; loading intronhealth/afrispeech-200 (parquet revision) directly from HuggingFace...")
+        ds = load_dataset("intronhealth/afrispeech-200", revision="refs/convert/parquet", split="test")
 
     from src.pipeline.pipeline import CARPipeline
 

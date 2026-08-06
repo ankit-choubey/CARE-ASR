@@ -129,9 +129,9 @@ try:
     print("\n=== STAGE 2: DOWNLOADING AFRISPEECH-200 TEST DATASET ===")
     data_dir = working_dir / "afrispeech_clinical_test"
     from datasets import load_dataset, Dataset
-    print("Downloading AfriSpeech-200 test split from HuggingFace...")
+    print("Downloading AfriSpeech-200 test split from HuggingFace (parquet revision)...")
     try:
-        ds = load_dataset("intronhealth/afrispeech-200", split="test", trust_remote_code=True)
+        ds = load_dataset("intronhealth/afrispeech-200", revision="refs/convert/parquet", split="test")
     except Exception as e_hf:
         print(f"HuggingFace dataset download warning: {e_hf}; trying default load_dataset...")
         ds = load_dataset("intronhealth/afrispeech-200", split="test")
