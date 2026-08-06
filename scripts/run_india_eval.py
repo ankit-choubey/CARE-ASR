@@ -207,6 +207,10 @@ def _load_from_hf(dataset_key: str, max_samples: int, config: str | None) -> tup
                 raw_dataset = load_dataset(spec.hf_id, resolved_config, split="test")
             else:
                 raw_dataset = load_dataset(spec.hf_id, split="test")
+
+        from datasets import Audio
+        if spec.audio_field in raw_dataset.column_names:
+            raw_dataset = raw_dataset.cast_column(spec.audio_field, Audio(decode=False))
     except Exception as exc:
         logger.warning("HuggingFace load failed for '%s': %s", dataset_key, exc)
         return [], "hf"
