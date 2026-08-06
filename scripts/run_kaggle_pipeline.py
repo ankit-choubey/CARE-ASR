@@ -116,20 +116,26 @@ except Exception as e:
     print(f"❌ Stage 1 Error: {e}")
     traceback.print_exc()
 
-# STAGE 2: Fix run_eval.py gate API
-print("\n=== STAGE 2: FIXING RUN_EVAL.PY GATE API ===")
+# STAGE 2: Download AfriSpeech Dataset
+print("\n=== STAGE 2: DOWNLOADING AFRISPEECH-200 TEST DATASET ===")
+data_dir = working_dir / "afrispeech_clinical_test"
 try:
-    eval_script_path = Path("scripts/run_eval.py")
-    if eval_script_path.exists():
-        with open(eval_script_path) as f:
-            eval_code = f.read()
-        if "gate_tokens(" in eval_code:
-            eval_code = eval_code.replace('gate_obj.gate_tokens(t.token_scores)["uncertain_flags"]', 'gate_obj.evaluate(t.token_scores)["uncertain_flags"]')
-            with open(eval_script_path, "w") as f:
-                f.write(eval_code)
-            print("✅ Fixed scripts/run_eval.py gate API call")
+    from datasets import load_dataset
+    print("Downloading AfriSpeech-200 test split from HuggingFace...")
+    ds = load_dataset("intronhealth/afrispeech-200", split="test")
+    print(f"Loaded dataset: {len(ds)} samples")
+    if "domain" in ds.column_names:
+        clinical_ds = ds.filter(lambda x: x.get("domain") == "clinical")
+        if len(clinical_ds) > 0:
+            ds = clinical_ds
+            print(f"Filtered clinical domain: {len(ds)} samples")
+    
+    ds = ds.select(range(min(200, len(ds))))
+    ds.save_to_disk(str(data_dir))
+    print(f"✅ Saved AfriSpeech clinical test split to {data_dir}")
 except Exception as e:
-    print(f"❌ Stage 2 Error: {e}")
+    print(f"❌ Stage 2 Error downloading dataset: {e}")
+    traceback.print_exc()
 
 # STAGE 3: Run 6-mode Ablation Evaluation
 print("\n=== STAGE 3: RUNNING 6-MODE ABLATION SWEEP ===")
@@ -139,7 +145,7 @@ ablation_results = []
 for m in modes:
     print(f"\n---> Running Ablation Mode: {m}")
     try:
-        proc = subprocess.run([sys.executable, "scripts/run_eval.py", "--mode", m, "--out-dir", "results/ablation"], capture_output=True, text=True)
+        proc = subprocess.run([sys.executable, "scripts/run_eval.py", "--mode", m, "--data-path", str(data_dir), "--out-dir", "results/ablation"], capture_output=True, text=True)
         print(proc.stdout)
         if proc.returncode != 0:
             print(f"⚠️ Mode {m} warning/error: {proc.stderr[:300]}")

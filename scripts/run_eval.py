@@ -32,7 +32,12 @@ def main():
     args = parser.parse_args()
 
     Path(args.out_dir).mkdir(exist_ok=True, parents=True)
-    ds = load_from_disk(args.data_path)
+    try:
+        ds = load_from_disk(args.data_path)
+    except Exception:
+        from datasets import load_dataset
+        print(f"Data path {args.data_path} not found; loading intronhealth/afrispeech-200 directly from HuggingFace...")
+        ds = load_dataset("intronhealth/afrispeech-200", split="test")
 
     from src.pipeline.pipeline import CARPipeline
 
