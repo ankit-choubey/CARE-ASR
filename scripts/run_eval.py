@@ -5,7 +5,11 @@ Runs all 6 ablation rows on Kaggle GPU P100.
 
 import argparse
 import json
+import os
+import sys
 from pathlib import Path
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import jiwer
 import numpy as np
