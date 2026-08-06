@@ -88,14 +88,34 @@ def main():
         device=device_id,
     )
 
+    def extract_audio(audio_data):
+        if isinstance(audio_data, dict):
+            if "array" in audio_data:
+                return {
+                    "array": np.array(audio_data["array"], dtype=np.float32),
+                    "sampling_rate": audio_data.get("sampling_rate", 16000),
+                }
+            elif "bytes" in audio_data and audio_data["bytes"]:
+                import io, soundfile as sf
+                arr, sr = sf.read(io.BytesIO(audio_data["bytes"]))
+                return {
+                    "array": arr.astype(np.float32),
+                    "sampling_rate": sr,
+                }
+            elif "path" in audio_data and audio_data["path"]:
+                import soundfile as sf
+                arr, sr = sf.read(audio_data["path"])
+                return {
+                    "array": arr.astype(np.float32),
+                    "sampling_rate": sr,
+                }
+        raise ValueError(f"Unrecognized audio format: {type(audio_data)}")
+
     refs, hyps, preds = [], [], []
     unsure_count, wrong_count, total_corrections = 0, 0, 0
 
     for sample in ds.select(range(min(200, len(ds)))):
-        audio = {
-            "array": np.array(sample["audio"]["array"], dtype=np.float32),
-            "sampling_rate": sample["audio"]["sampling_rate"],
-        }
+        audio = extract_audio(sample["audio"])
         if args.mode == "baseline":
             res = asr(audio)
             hyp = res["text"].lower().strip()

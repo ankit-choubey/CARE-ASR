@@ -139,8 +139,15 @@ def _normalize_sample(raw: dict[str, Any], spec: IndiaDatasetSpec, default_id: s
     else:
         audio_info = raw.get(spec.audio_field)
         if isinstance(audio_info, dict):
-            audio_array = audio_info.get("array", np.zeros(0, dtype=np.float32))
-            sample_rate = audio_info.get("sampling_rate", SAMPLE_RATE)
+            if "array" in audio_info:
+                audio_array = audio_info["array"]
+                sample_rate = audio_info.get("sampling_rate", SAMPLE_RATE)
+            elif "bytes" in audio_info and audio_info["bytes"]:
+                import io, soundfile as sf
+                audio_array, sample_rate = sf.read(io.BytesIO(audio_info["bytes"]))
+            else:
+                audio_array = np.zeros(0, dtype=np.float32)
+                sample_rate = SAMPLE_RATE
         elif isinstance(audio_info, (list, np.ndarray)):
             audio_array = audio_info
             sample_rate = raw.get("sample_rate", SAMPLE_RATE)
@@ -190,15 +197,16 @@ def _load_from_hf(dataset_key: str, max_samples: int, config: str | None) -> tup
     try:
         from datasets import load_dataset
 
-        if resolved_config:
-            raw_dataset = load_dataset(
-                spec.hf_id,
-                resolved_config,
-                split="test",
-                trust_remote_code=True,
-            )
-        else:
-            raw_dataset = load_dataset(spec.hf_id, split="test", trust_remote_code=True)
+        try:
+            if resolved_config:
+                raw_dataset = load_dataset(spec.hf_id, resolved_config, split="test", revision="refs/convert/parquet")
+            else:
+                raw_dataset = load_dataset(spec.hf_id, split="test", revision="refs/convert/parquet")
+        except Exception:
+            if resolved_config:
+                raw_dataset = load_dataset(spec.hf_id, resolved_config, split="test")
+            else:
+                raw_dataset = load_dataset(spec.hf_id, split="test")
     except Exception as exc:
         logger.warning("HuggingFace load failed for '%s': %s", dataset_key, exc)
         return [], "hf"
