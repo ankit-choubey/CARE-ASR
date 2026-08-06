@@ -38,17 +38,27 @@ class LLMCorrector:
 
         if torch.cuda.is_available():
             try:
-                bnb = BitsAndBytesConfig(
-                    load_in_4bit=True, bnb_4bit_use_double_quant=True,
-                    bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=torch.float16,
-                )
-                self.tokenizer = AutoTokenizer.from_pretrained(cfg["model_name"])
-                self.model = AutoModelForCausalLM.from_pretrained(
-                    cfg["model_name"],
-                    quantization_config=bnb,
-                    device_map="auto",
-                    trust_remote_code=True,
-                )
+                try:
+                    bnb = BitsAndBytesConfig(
+                        load_in_4bit=True, bnb_4bit_use_double_quant=True,
+                        bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=torch.float16,
+                    )
+                    self.tokenizer = AutoTokenizer.from_pretrained(cfg["model_name"])
+                    self.model = AutoModelForCausalLM.from_pretrained(
+                        cfg["model_name"],
+                        quantization_config=bnb,
+                        device_map="auto",
+                        trust_remote_code=True,
+                    )
+                except Exception as bnb_err:
+                    print(f"BitsAndBytes quantization load failed ({bnb_err}); trying float16 fallback...")
+                    self.tokenizer = AutoTokenizer.from_pretrained(cfg["model_name"])
+                    self.model = AutoModelForCausalLM.from_pretrained(
+                        cfg["model_name"],
+                        torch_dtype=torch.float16,
+                        device_map="auto",
+                        trust_remote_code=True,
+                    )
                 self.model.eval()
 
                 # Outlines constrained generator setup if available
