@@ -37,7 +37,7 @@ def main():
     except Exception:
         from datasets import load_dataset
         print(f"Data path {args.data_path} not found; loading intronhealth/afrispeech-200 directly from HuggingFace...")
-        ds = load_dataset("intronhealth/afrispeech-200", split="test")
+        ds = load_dataset("intronhealth/afrispeech-200", split="test", trust_remote_code=True)
 
     from src.pipeline.pipeline import CARPipeline
 
