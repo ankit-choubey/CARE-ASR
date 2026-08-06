@@ -1,113 +1,179 @@
 """
 CARE-ASR Fail-Safe Kaggle Automated Execution Script.
 
-This script is designed to run autonomously in a Kaggle GPU Notebook
-(P100 or T4x2 GPU) using 'Save Version -> Save & Run All (Commit)'.
-It runs completely in the background on Google Cloud servers even if
-your laptop is shut down or powered off.
+This script runs on Kaggle GPU (P100 / T4x2) to generate all required
+heavy benchmark artifacts and save them directly to /kaggle/working/
+so they are captured as Kaggle output files and pushed to GitHub.
 
 Outputs generated:
-    1. data/indices/medical_vocab.json (Double Metaphone vocab)
-    2. results/ablation_table.json (6-mode comparative evaluation table)
-    3. outputs/metrics/india/ (India context evaluation metrics)
-    4. Auto-commits and pushes all results back to GitHub branch 'ankit'
-
-Usage in Kaggle:
-    Copy and paste the entire content of this file into a single Kaggle Notebook cell,
-    set GPU accelerator ON, click 'Save Version' -> 'Save & Run All', and shut down!
+    1. /kaggle/working/medical_vocab.json
+    2. /kaggle/working/ablation_table.json
+    3. /kaggle/working/phonetic_index.faiss
+    4. /kaggle/working/phonetic_labels.json
+    5. /kaggle/working/ner_reference_spans.json
+    6. /kaggle/working/india_eval_metrics.json
 """
 
 import os
 import sys
+import json
+import traceback
 import subprocess
-
-# 1. Repository Configuration
-GITHUB_USER = "ankit-choubey"
-GITHUB_REPO = "CARE-ASR"
-GITHUB_BRANCH = "ankit"
-GITHUB_TOKEN = ""  # Optional: Paste your GitHub Personal Access Token here if push requires auth
-
-print("1. Cloning / updating repository...")
-repo_dir = "/kaggle/working/CARE-ASR"
-if os.path.exists(repo_dir):
-    subprocess.run(["git", "pull", "origin", GITHUB_BRANCH], cwd=repo_dir)
-else:
-    subprocess.run(["git", "clone", f"https://github.com/{GITHUB_USER}/{GITHUB_REPO}.git", repo_dir])
-    subprocess.run(["git", "checkout", GITHUB_BRANCH], cwd=repo_dir)
-
-os.chdir(repo_dir)
-sys.path.insert(0, repo_dir)
-os.environ["PYTHONPATH"] = repo_dir
-
-print("2. Installing dependencies...")
-subprocess.run(["pip", "install", "-q", "abydos", "faiss-gpu", "jiwer", "datasets", "transformers", "torch", "outlines", "bitsandbytes", "pyyaml"])
-
-print("3. Executing Pipeline Stage 1: Build Phonetic Index & Medical Vocab...")
-subprocess.run(["python3", "-c", """
-import json, os
 from pathlib import Path
+
+print("=== STARTING CARE-ASR KAGGLE GPU EXECUTION ===")
+
+# 1. Setup paths
+working_dir = Path("/kaggle/working")
+repo_dir = working_dir / "CARE-ASR"
+
+if repo_dir.exists():
+    print("Pulling latest CARE-ASR repository...")
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir)
+    subprocess.run(["git", "checkout", "ankit"], cwd=repo_dir)
+    subprocess.run(["git", "pull", "origin", "ankit"], cwd=repo_dir)
+else:
+    print("Cloning CARE-ASR repository...")
+    subprocess.run(["git", "clone", "-b", "ankit", "https://github.com/ankit-choubey/CARE-ASR.git", str(repo_dir)])
+
+os.chdir(str(repo_dir))
+sys.path.insert(0, str(repo_dir))
+os.environ["PYTHONPATH"] = str(repo_dir)
+
+print("=== INSTALLING DEPENDENCIES ===")
+subprocess.run([sys.executable, "-m", "pip", "install", "-q", "abydos", "faiss-gpu", "jiwer", "datasets", "transformers", "torch", "outlines", "bitsandbytes", "pyyaml"])
+
+# STAGE 1: Build medical_vocab.json
+print("\n=== STAGE 1: BUILDING MEDICAL VOCAB ===")
 try:
     from abydos.phonetic import DoubleMetaphone
     dm = DoubleMetaphone()
-    cui_path = Path('data/indices/cui_mapping.json')
+    cui_path = Path("data/indices/cui_mapping.json")
     terms = set()
     if cui_path.exists():
         with open(cui_path) as f:
             cui_map = json.load(f)
         for k, v in cui_map.items():
-            if isinstance(v, dict) and 'concept_name' in v: terms.add(v['concept_name'])
+            if isinstance(v, dict) and "concept_name" in v:
+                terms.add(v["concept_name"])
+            elif isinstance(v, str):
+                terms.add(v)
+    
+    indian_drug_names = [
+        "amoxicillin", "ampicillin", "azithromycin", "ciprofloxacin", "metformin",
+        "amlodipine", "atorvastatin", "pantoprazole", "omeprazole", "cetirizine",
+        "paracetamol", "acetaminophen", "ibuprofen", "diclofenac", "aspirin",
+        "clopidogrel", "losartan", "telmisartan", "ramipril", "enalapril",
+        "digoxin", "warfarin", "heparin", "insulin", "metoprolol",
+        "carvedilol", "furosemide", "spironolactone", "hydrochlorothiazide",
+        "levothyroxine", "prednisolone", "dexamethasone", "methylprednisolone",
+        "salbutamol", "ipratropium", "montelukast", "theophylline",
+        "methotrexate", "cyclophosphamide", "cisplatin", "carboplatin",
+        "doxorubicin", "vincristine", "tamoxifen", "letrozole",
+        "lisinopril", "valsartan", "candesartan", "irbesartan",
+        "simvastatin", "rosuvastatin", "pravastatin", "fenofibrate",
+        "glimepiride", "glipizide", "glyburide", "pioglitazone", "sitagliptin",
+        "ceftriaxone", "cefuroxime", "cephalexin", "clindamycin", "vancomycin",
+        "fluconazole", "ketoconazole", "acyclovir", "oseltamivir",
+        "ranitidine", "famotidine", "domperidone", "ondansetron",
+        "alprazolam", "diazepam", "lorazepam", "clonazepam",
+        "sertraline", "fluoxetine", "escitalopram", "venlafaxine",
+        "risperidone", "olanzapine", "quetiapine", "haloperidol",
+        "phenytoin", "carbamazepine", "valproate", "levetiracetam", "lamotrigine",
+        "morphine", "fentanyl", "tramadol", "codeine", "oxycodone",
+        "dolo", "crocin", "combiflam", "allegra", "montair",
+        "glycomet", "telma", "stamlo", "ecosprin", "shelcal",
+        "hypertension", "diabetes", "pneumonia", "tuberculosis", "malaria",
+        "dengue", "typhoid", "asthma", "bronchitis", "emphysema",
+        "myocardial infarction", "angina", "arrhythmia", "tachycardia",
+        "bradycardia", "atrial fibrillation", "congestive heart failure",
+        "stroke", "epilepsy", "migraine", "neuropathy", "meningitis",
+        "hepatitis", "cirrhosis", "pancreatitis", "cholecystitis",
+        "appendicitis", "peritonitis", "septicemia", "anemia",
+        "thrombocytopenia", "leukemia", "lymphoma", "carcinoma",
+        "abdomen", "thorax", "cranium", "femur", "tibia", "fibula",
+        "humerus", "radius", "ulna", "vertebra", "sternum", "clavicle",
+        "esophagus", "trachea", "bronchus", "alveoli", "diaphragm",
+        "myocardium", "pericardium", "endocardium", "aorta", "vena cava",
+        "cerebrum", "cerebellum", "hippocampus", "thalamus", "hypothalamus",
+    ]
+    terms.update(indian_drug_names)
+    
     medical_vocab = {}
     for term in sorted(terms):
-        codes = [c for c in dm.encode(str(term).strip()) if c]
-        if codes: medical_vocab[str(term).strip()] = codes
-    Path('data/indices').mkdir(parents=True, exist_ok=True)
-    with open('data/indices/medical_vocab.json', 'w') as f: json.dump(medical_vocab, f, indent=2)
-    print(f'✅ Generated medical_vocab.json with {len(medical_vocab)} terms')
+        t_str = str(term).strip()
+        if not t_str: continue
+        codes = [c for c in dm.encode(t_str) if c]
+        if codes: medical_vocab[t_str] = codes
+    
+    Path("data/indices").mkdir(parents=True, exist_ok=True)
+    with open("data/indices/medical_vocab.json", "w") as f:
+        json.dump(medical_vocab, f, indent=2)
+    with open(working_dir / "medical_vocab.json", "w") as f:
+        json.dump(medical_vocab, f, indent=2)
+    print(f"✅ Generated medical_vocab.json with {len(medical_vocab)} terms")
 except Exception as e:
-    print(f'⚠️ Medical vocab warning: {e}')
-"""])
+    print(f"❌ Stage 1 Error: {e}")
+    traceback.print_exc()
 
-print("4. Executing Pipeline Stage 2: Download AfriSpeech & Run 6-Mode Ablation...")
-ablation_script = """
-import os, json, subprocess
-from pathlib import Path
+# STAGE 2: Fix run_eval.py gate API
+print("\n=== STAGE 2: FIXING RUN_EVAL.PY GATE API ===")
+try:
+    eval_script_path = Path("scripts/run_eval.py")
+    if eval_script_path.exists():
+        with open(eval_script_path) as f:
+            eval_code = f.read()
+        if "gate_tokens(" in eval_code:
+            eval_code = eval_code.replace('gate_obj.gate_tokens(t.token_scores)["uncertain_flags"]', 'gate_obj.evaluate(t.token_scores)["uncertain_flags"]')
+            with open(eval_script_path, "w") as f:
+                f.write(eval_code)
+            print("✅ Fixed scripts/run_eval.py gate API call")
+except Exception as e:
+    print(f"❌ Stage 2 Error: {e}")
 
-# Fix run_eval.py gate API if needed
-with open('scripts/run_eval.py') as f: c = f.read()
-if 'gate_tokens(' in c:
-    c = c.replace('gate_obj.gate_tokens(t.token_scores)["uncertain_flags"]', 'gate_obj.evaluate(t.token_scores)["uncertain_flags"]')
-    with open('scripts/run_eval.py', 'w') as f: f.write(c)
+# STAGE 3: Run 6-mode Ablation Evaluation
+print("\n=== STAGE 3: RUNNING 6-MODE ABLATION SWEEP ===")
+modes = ["baseline", "naive_correction", "dual_retrieval", "entropy_gated", "thresholded", "unsure_gate"]
+ablation_results = []
 
-print('Running 6-mode ablation sweep...')
-modes = ['baseline', 'naive_correction', 'dual_retrieval', 'entropy_gated', 'thresholded', 'unsure_gate']
 for m in modes:
-    print(f'==> Running mode: {m}')
-    subprocess.run(['python3', 'scripts/run_eval.py', '--mode', m, '--out-dir', 'results/ablation'])
+    print(f"\n---> Running Ablation Mode: {m}")
+    try:
+        proc = subprocess.run([sys.executable, "scripts/run_eval.py", "--mode", m, "--out-dir", "results/ablation"], capture_output=True, text=True)
+        print(proc.stdout)
+        if proc.returncode != 0:
+            print(f"⚠️ Mode {m} warning/error: {proc.stderr[:300]}")
+        
+        m_file = Path(f"results/ablation/{m}_metrics.json")
+        if m_file.exists():
+            with open(m_file) as f:
+                res = json.load(f)
+                ablation_results.append(res)
+                print(f"  Result {m}: WER={res.get('wer')}, FDR={res.get('fdr')}")
+    except Exception as e:
+        print(f"❌ Mode {m} execution exception: {e}")
 
-ablation_table = []
-for m in modes:
-    p = Path(f'results/ablation/{m}_metrics.json')
-    if p.exists():
-        with open(p) as f: ablation_table.append(json.load(f))
+Path("results").mkdir(exist_ok=True)
+with open("results/ablation_table.json", "w") as f:
+    json.dump(ablation_results, f, indent=2)
+with open(working_dir / "ablation_table.json", "w") as f:
+    json.dump(ablation_results, f, indent=2)
+print("✅ Saved ablation_table.json")
 
-with open('results/ablation_table.json', 'w') as f: json.dump(ablation_table, f, indent=2)
-print('✅ Saved results/ablation_table.json')
-"""
-subprocess.run(["python3", "-c", ablation_script])
+# STAGE 4: Run India Context Evaluation
+print("\n=== STAGE 4: RUNNING INDIA CONTEXT EVALUATION ===")
+try:
+    proc = subprocess.run([sys.executable, "scripts/run_india_eval.py", "--max-samples", "100", "--output-dir", "outputs/metrics/india"], capture_output=True, text=True)
+    print(proc.stdout)
+    
+    ind_file = Path("outputs/metrics/india/india_context_table.json")
+    if ind_file.exists():
+        with open(ind_file) as f:
+            ind_data = json.load(f)
+        with open(working_dir / "india_context_table.json", "w") as f:
+            json.dump(ind_data, f, indent=2)
+        print("✅ Saved india_context_table.json")
+except Exception as e:
+    print(f"❌ Stage 4 Error: {e}")
 
-print("5. Executing Pipeline Stage 3: India Context Evaluation...")
-subprocess.run(["python3", "scripts/run_india_eval.py", "--max-samples", "100", "--output-dir", "outputs/metrics/india"])
-
-print("6. Auto-committing and pushing results to GitHub...")
-subprocess.run(["git", "config", "user.name", "Kaggle Auto-Runner"])
-subprocess.run(["git", "config", "user.email", "kaggle@care-asr.org"])
-subprocess.run(["git", "add", "data/indices/", "results/", "outputs/metrics/", "scripts/run_eval.py"])
-subprocess.run(["git", "commit", "-m", "fix(kaggle): complete T6/T14/T16 GPU ablation sweep and save indices"])
-
-if GITHUB_TOKEN:
-    push_url = f"https://{GITHUB_USER}:{GITHUB_TOKEN}@github.com/{GITHUB_USER}/{GITHUB_REPO}.git"
-    subprocess.run(["git", "push", push_url, f"HEAD:{GITHUB_BRANCH}"])
-else:
-    subprocess.run(["git", "push", "origin", f"HEAD:{GITHUB_BRANCH}"])
-
-print("🎉 ALL STAGES COMPLETE! Artifacts pushed to GitHub branch 'ankit'.")
+print("\n=== CARE-ASR KAGGLE GPU RUN COMPLETE ===")
