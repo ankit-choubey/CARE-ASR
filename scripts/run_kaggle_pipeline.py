@@ -160,11 +160,7 @@ ablation_results = []
 for m in modes:
     print(f"\n---> Running Ablation Mode: {m}")
     try:
-        proc = subprocess.run([sys.executable, "scripts/run_eval.py", "--mode", m, "--data-path", str(data_dir), "--out-dir", "results/ablation"], capture_output=True, text=True)
-        print(proc.stdout)
-        if proc.returncode != 0:
-            print(f"⚠️ Mode {m} warning/error: {proc.stderr[:300]}")
-        
+        proc = subprocess.run([sys.executable, "scripts/run_eval.py", "--mode", m, "--data-path", str(data_dir), "--out-dir", "results/ablation"])
         m_file = Path(f"results/ablation/{m}_metrics.json")
         if m_file.exists():
             with open(m_file) as f:

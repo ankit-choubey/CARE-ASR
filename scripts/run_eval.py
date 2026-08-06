@@ -77,13 +77,15 @@ def main():
 
         pipeline.safety_gate = UnsureGate().apply
 
+    import torch
     from transformers import pipeline as hf_pipeline
 
+    device_id = 0 if torch.cuda.is_available() else -1
     asr = hf_pipeline(
         "automatic-speech-recognition",
         model="openai/whisper-medium",
         return_timestamps=True,
-        device=0,
+        device=device_id,
     )
 
     refs, hyps, preds = [], [], []
