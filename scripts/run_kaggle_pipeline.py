@@ -3,15 +3,7 @@ CARE-ASR Fail-Safe Kaggle Automated Execution Script.
 
 This script runs on Kaggle GPU (P100 / T4x2) to generate all required
 heavy benchmark artifacts and save them directly to /kaggle/working/
-so they are captured as Kaggle output files and pushed to GitHub.
-
-Outputs generated:
-    1. /kaggle/working/medical_vocab.json
-    2. /kaggle/working/ablation_table.json
-    3. /kaggle/working/phonetic_index.faiss
-    4. /kaggle/working/phonetic_labels.json
-    5. /kaggle/working/ner_reference_spans.json
-    6. /kaggle/working/india_eval_metrics.json
+so they are captured as Kaggle output files.
 """
 
 import os
@@ -22,31 +14,50 @@ import traceback
 import subprocess
 from pathlib import Path
 
+# Setup logging to /kaggle/working/execution.log
+working_dir = Path("/kaggle/working")
+log_file = working_dir / "execution.log"
+err_file = working_dir / "error_log.txt"
+
+class Logger(object):
+    def __init__(self, filename):
+        self.terminal = sys.stdout
+        self.log = open(filename, "w", encoding="utf-8")
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+        self.log.flush()
+    def flush(self):
+        self.terminal.flush()
+        self.log.flush()
+
+sys.stdout = Logger(log_file)
+sys.stderr = sys.stdout
+
 print("=== STARTING CARE-ASR KAGGLE GPU EXECUTION ===")
 
-# 1. Setup paths
-working_dir = Path("/kaggle/working")
-repo_dir = working_dir / "CARE-ASR"
-
-if repo_dir.exists():
-    print("Pulling latest CARE-ASR repository...")
-    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir)
-    subprocess.run(["git", "checkout", "ankit"], cwd=repo_dir)
-    subprocess.run(["git", "pull", "origin", "ankit"], cwd=repo_dir)
-else:
-    print("Cloning CARE-ASR repository...")
-    subprocess.run(["git", "clone", "-b", "ankit", "https://github.com/ankit-choubey/CARE-ASR.git", str(repo_dir)])
-
-os.chdir(str(repo_dir))
-sys.path.insert(0, str(repo_dir))
-os.environ["PYTHONPATH"] = str(repo_dir)
-
-print("=== INSTALLING DEPENDENCIES ===")
-subprocess.run([sys.executable, "-m", "pip", "install", "-q", "abydos", "faiss-gpu", "jiwer", "datasets", "transformers", "torch", "outlines", "bitsandbytes", "pyyaml"])
-
-# STAGE 1: Build medical_vocab.json
-print("\n=== STAGE 1: BUILDING MEDICAL VOCAB ===")
 try:
+    # 1. Setup paths
+    repo_dir = working_dir / "CARE-ASR"
+
+    if repo_dir.exists():
+        print("Pulling latest CARE-ASR repository...")
+        subprocess.run(["git", "fetch", "origin"], cwd=repo_dir)
+        subprocess.run(["git", "checkout", "ankit"], cwd=repo_dir)
+        subprocess.run(["git", "pull", "origin", "ankit"], cwd=repo_dir)
+    else:
+        print("Cloning CARE-ASR repository...")
+        subprocess.run(["git", "clone", "-b", "ankit", "https://github.com/ankit-choubey/CARE-ASR.git", str(repo_dir)])
+
+    os.chdir(str(repo_dir))
+    sys.path.insert(0, str(repo_dir))
+    os.environ["PYTHONPATH"] = str(repo_dir)
+
+    print("=== INSTALLING DEPENDENCIES ===")
+    subprocess.run([sys.executable, "-m", "pip", "install", "-q", "abydos", "faiss-gpu", "jiwer", "datasets", "transformers", "torch", "outlines", "bitsandbytes", "pyyaml"])
+
+    # STAGE 1: Build medical_vocab.json
+    print("\n=== STAGE 1: BUILDING MEDICAL VOCAB ===")
     from abydos.phonetic import DoubleMetaphone
     dm = DoubleMetaphone()
     cui_path = Path("data/indices/cui_mapping.json")
@@ -113,20 +124,16 @@ try:
     with open(working_dir / "medical_vocab.json", "w") as f:
         json.dump(medical_vocab, f, indent=2)
     print(f"✅ Generated medical_vocab.json with {len(medical_vocab)} terms")
-except Exception as e:
-    print(f"❌ Stage 1 Error: {e}")
-    traceback.print_exc()
 
-# STAGE 2: Download AfriSpeech Dataset
-print("\n=== STAGE 2: DOWNLOADING AFRISPEECH-200 TEST DATASET ===")
-data_dir = working_dir / "afrispeech_clinical_test"
-try:
+    # STAGE 2: Download AfriSpeech Dataset
+    print("\n=== STAGE 2: DOWNLOADING AFRISPEECH-200 TEST DATASET ===")
+    data_dir = working_dir / "afrispeech_clinical_test"
     from datasets import load_dataset, Dataset
     print("Downloading AfriSpeech-200 test split from HuggingFace...")
     try:
         ds = load_dataset("intronhealth/afrispeech-200", split="test", trust_remote_code=True)
     except Exception as e_hf:
-        print(f"HuggingFace dataset download warning: {e_hf}; falling back to dataset loading...")
+        print(f"HuggingFace dataset download warning: {e_hf}; trying default load_dataset...")
         ds = load_dataset("intronhealth/afrispeech-200", split="test")
 
     print(f"Loaded dataset: {len(ds)} samples")
@@ -139,27 +146,14 @@ try:
     ds = ds.select(range(min(200, len(ds))))
     ds.save_to_disk(str(data_dir))
     print(f"✅ Saved AfriSpeech clinical test split to {data_dir}")
-except Exception as e:
-    print(f"❌ Stage 2 Error downloading dataset: {e}; creating synthetic clinical dataset...")
-    import numpy as np
-    from datasets import Dataset
-    synthetic_samples = [
-        {"id": "utt_001", "audio": {"array": np.zeros(16000, dtype=np.float32), "sampling_rate": 16000}, "transcript": "patient prescribed amoxicillin 500mg twice daily for bacterial infection."},
-        {"id": "utt_002", "audio": {"array": np.zeros(16000, dtype=np.float32), "sampling_rate": 16000}, "transcript": "continue metformin therapy for type 2 diabetes mellitus."},
-        {"id": "utt_003", "audio": {"array": np.zeros(16000, dtype=np.float32), "sampling_rate": 16000}, "transcript": "prescribed lisinopril 10mg daily for hypertension."}
-    ]
-    ds = Dataset.from_list(synthetic_samples)
-    ds.save_to_disk(str(data_dir))
-    print(f"✅ Saved synthetic dataset fallback to {data_dir}")
 
-# STAGE 3: Run 6-mode Ablation Evaluation
-print("\n=== STAGE 3: RUNNING 6-MODE ABLATION SWEEP ===")
-modes = ["baseline", "naive_correction", "dual_retrieval", "entropy_gated", "thresholded", "unsure_gate"]
-ablation_results = []
+    # STAGE 3: Run 6-mode Ablation Evaluation
+    print("\n=== STAGE 3: RUNNING 6-MODE ABLATION SWEEP ===")
+    modes = ["baseline", "naive_correction", "dual_retrieval", "entropy_gated", "thresholded", "unsure_gate"]
+    ablation_results = []
 
-for m in modes:
-    print(f"\n---> Running Ablation Mode: {m}")
-    try:
+    for m in modes:
+        print(f"\n---> Running Ablation Mode: {m}")
         proc = subprocess.run([sys.executable, "scripts/run_eval.py", "--mode", m, "--data-path", str(data_dir), "--out-dir", "results/ablation"])
         m_file = Path(f"results/ablation/{m}_metrics.json")
         if m_file.exists():
@@ -167,22 +161,17 @@ for m in modes:
                 res = json.load(f)
                 ablation_results.append(res)
                 print(f"  Result {m}: WER={res.get('wer')}, FDR={res.get('fdr')}")
-    except Exception as e:
-        print(f"❌ Mode {m} execution exception: {e}")
 
-Path("results").mkdir(exist_ok=True)
-with open("results/ablation_table.json", "w") as f:
-    json.dump(ablation_results, f, indent=2)
-with open(working_dir / "ablation_table.json", "w") as f:
-    json.dump(ablation_results, f, indent=2)
-print("✅ Saved ablation_table.json")
+    Path("results").mkdir(exist_ok=True)
+    with open("results/ablation_table.json", "w") as f:
+        json.dump(ablation_results, f, indent=2)
+    with open(working_dir / "ablation_table.json", "w") as f:
+        json.dump(ablation_results, f, indent=2)
+    print("✅ Saved ablation_table.json")
 
-# STAGE 4: Run India Context Evaluation
-print("\n=== STAGE 4: RUNNING INDIA CONTEXT EVALUATION ===")
-try:
-    proc = subprocess.run([sys.executable, "scripts/run_india_eval.py", "--max-samples", "100", "--output-dir", "outputs/metrics/india"], capture_output=True, text=True)
-    print(proc.stdout)
-    
+    # STAGE 4: Run India Context Evaluation
+    print("\n=== STAGE 4: RUNNING INDIA CONTEXT EVALUATION ===")
+    proc = subprocess.run([sys.executable, "scripts/run_india_eval.py", "--max-samples", "100", "--output-dir", "outputs/metrics/india"])
     ind_file = Path("outputs/metrics/india/india_context_table.json")
     if ind_file.exists():
         with open(ind_file) as f:
@@ -190,12 +179,9 @@ try:
         with open(working_dir / "india_context_table.json", "w") as f:
             json.dump(ind_data, f, indent=2)
         print("✅ Saved india_context_table.json")
-except Exception as e:
-    print(f"❌ Stage 4 Error: {e}")
 
-# STAGE 5: Copy all outputs directly to top-level /kaggle/working/
-print("\n=== STAGE 5: COPYING ALL ARTIFACTS TO TOP-LEVEL KAGGLE OUTPUT ===")
-try:
+    # STAGE 5: Copy all outputs directly to top-level /kaggle/working/
+    print("\n=== STAGE 5: COPYING ALL ARTIFACTS TO TOP-LEVEL KAGGLE OUTPUT ===")
     if (repo_dir / "results").exists():
         shutil.copytree(repo_dir / "results", working_dir / "results", dirs_exist_ok=True)
     if (repo_dir / "data" / "indices").exists():
@@ -203,7 +189,11 @@ try:
     if (repo_dir / "outputs" / "metrics").exists():
         shutil.copytree(repo_dir / "outputs" / "metrics", working_dir / "outputs" / "metrics", dirs_exist_ok=True)
     print("✅ All result, index, and metric directories copied to /kaggle/working/")
-except Exception as e:
-    print(f"❌ Stage 5 Copy Error: {e}")
+    print("\n=== CARE-ASR KAGGLE GPU RUN COMPLETE ===")
 
-print("\n=== CARE-ASR KAGGLE GPU RUN COMPLETE ===")
+except Exception as top_level_err:
+    print(f"\n❌ FATAL TOP LEVEL EXCEPTION: {top_level_err}")
+    traceback.print_exc()
+    with open(err_file, "w") as ef:
+        ef.write(f"Error: {top_level_err}\n")
+        traceback.print_exc(file=ef)
