@@ -35,7 +35,16 @@ This document tracks the progress, implementation details, and outcomes for the 
 
 ---
 
-## 3. Pending Collaborations & Next Steps
+## 3. Technical Highlights & Engineering Choices
+- **HuggingFace Pipeline Engineering:** Safely implemented PyTorch GPU inference with automatic CPU fallback logic to prevent Out-Of-Memory pipeline crashes. 
+- **O(N+M) Span Alignment:** Designed the character-to-word aligner (`SpanAligner`) to operate in linear time without nested loops, successfully converting raw BioBERT character bounds into timestamped Whisper audio boundaries even during partial overlap or multi-word span situations.
+- **Robust Exception Handling:** Implemented a unified error inheritance tree (`CAREASRError`) ensuring any model label mismatches or schema validation failures halt the CI/CD pipeline immediately rather than passing silent corrupted data to Divya's retrieval nodes.
+- **Data Contract Enforcement:** Integrated rigid Pydantic models (`ASRTranscriptInput`, `WordAlignment`) to guarantee type safety between the ASR baseline boundaries and the downstream semantic mapping.
+- **Dynamic Configuration:** Decoupled all medical taxonomy definitions and numeric threshold limits into a central `config.yaml` to allow for rapid ablation tuning without requiring code redeployments.
+
+---
+
+## 4. Pending Collaborations & Next Steps
 - **T2 Validation:** Awaiting Divya's semantic FAISS index to validate it using 5 known drug names.
 - **T6 Validation:** Awaiting Divya's phonetic FAISS index to validate it with known misheard transcriptions.
 - **T11 Threshold Tuning:** Awaiting Ankit's first ablation numbers (T9) to empirically tune the draft thresholds in `config.yaml`.
