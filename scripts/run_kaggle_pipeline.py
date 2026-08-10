@@ -181,39 +181,39 @@ try:
     except Exception as fe:
         print(f"  FAISS build warning: {fe} — Double Metaphone fallback active.")
 
-    # ─── 4. Load Whisper-medium with CUDA fallback guard ──────────────────────
-    print("\n=== STAGE 2: LOADING WHISPER-MEDIUM (single load, CUDA fallback guard) ===")
+    # ─── 4. Load Whisper-medium on GPU with fp16 precision ─────────────────────
+    print("\n=== STAGE 2: LOADING WHISPER-MEDIUM (GPU fp16 engine) ===")
     import torch
     from transformers import pipeline as hf_pipeline
 
-    device_id = 0 if torch.cuda.is_available() else -1
-    gpu_name = torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU"
-    print(f"  Detected device: {gpu_name} | device_id={device_id}")
+    use_gpu = torch.cuda.is_available()
+    device_id = 0 if use_gpu else -1
+    torch_dtype = torch.float16 if use_gpu else torch.float32
+    gpu_name = torch.cuda.get_device_name(0) if use_gpu else "CPU"
+    print(f"  Detected device: {gpu_name} | device_id={device_id} | dtype={torch_dtype}")
 
     try:
         asr = hf_pipeline(
             "automatic-speech-recognition",
             model="openai/whisper-medium",
-            return_timestamps=True,
-            chunk_length_s=30,
-            stride_length_s=5,
+            torch_dtype=torch_dtype,
             device=device_id,
+            generate_kwargs={"task": "transcribe", "language": "english"},
         )
-        # Test a dummy 1s audio array to verify CUDA kernel compatibility (P100 sm_60 check)
-        _ = asr(np.zeros(16000, dtype=np.float32))
-        print(f"  whisper-medium loaded successfully on {gpu_name}")
-    except Exception as cuda_err:
-        print(f"  ⚠️ GPU CUDA kernel execution failed ({cuda_err}); falling back to CPU (device_id=-1)...")
+        # Test dummy forward pass with correct dict schema
+        _ = asr({"array": np.zeros(16000, dtype=np.float32), "sampling_rate": 16000})
+        print(f"  whisper-medium loaded successfully on {gpu_name} (fp16)")
+    except Exception as gpu_err:
+        print(f"  ⚠️ GPU initialization warning ({gpu_err}); using CPU fallback...")
         device_id = -1
         asr = hf_pipeline(
             "automatic-speech-recognition",
             model="openai/whisper-medium",
-            return_timestamps=True,
-            chunk_length_s=30,
-            stride_length_s=5,
+            torch_dtype=torch.float32,
             device=-1,
+            generate_kwargs={"task": "transcribe", "language": "english"},
         )
-        print("  whisper-medium loaded successfully on CPU fallback")
+        print("  whisper-medium loaded on CPU")
 
     # ─── 5. Stream AfriSpeech clinical + accent-stratify 300 samples ──────────
     print("\n=== STAGE 3: STREAMING AFRISPEECH-200 (clinical domain, accent-stratified N=300) ===")
@@ -312,7 +312,7 @@ try:
 
     # ─── 6. Batched baseline Whisper transcription (GPU optimised) ────────────
     print("\n=== STAGE 4: BATCHED BASELINE INFERENCE (batch_size=16, whisper-large-v2) ===")
-    BATCH_SIZE = 16
+    BATCH_SIZE = 8
     raw_results = asr(audio_cache, batch_size=BATCH_SIZE)
     raw_hyps = [r["text"].lower().strip() for r in raw_results]
     baseline_wer = jiwer.wer(refs_all, raw_hyps)
