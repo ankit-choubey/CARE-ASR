@@ -43,6 +43,9 @@ class Logger:
         self.terminal.flush()
         self.log.flush()
 
+    def isatty(self):
+        return False
+
 
 sys.stdout = Logger(log_file)
 sys.stderr = sys.stdout
