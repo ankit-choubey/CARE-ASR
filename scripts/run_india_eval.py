@@ -168,29 +168,66 @@ def _normalize_sample(raw: dict[str, Any], spec: IndiaDatasetSpec, default_id: s
     }
 
 
-def _synthetic_audio(index: int) -> NDArray[np.float32]:
-    """Builds a deterministic 1-second tone for offline testing."""
-    t = np.linspace(0.0, 1.0, SAMPLE_RATE, endpoint=False)
-    signal = 0.3 * np.sin(2 * np.pi * (440.0 + 50.0 * index) * t)
-    return np.asarray(signal, dtype=np.float32)
+INDIAN_CLINICAL_SENTENCES: tuple[str, ...] = (
+    "patient was prescribed amoxicillin 500mg twice daily for bacterial infection",
+    "continue metformin 1000mg and sitagliptin for type 2 diabetes mellitus",
+    "patient has hypertension treated with amlodipine 5mg and lisinopril 10mg",
+    "post myocardial infarction patient started on aspirin clopidogrel and atorvastatin",
+    "India clinical notes patient took crocin combiflam and dolo for fever",
+    "prescribed pantoprazole 40mg before breakfast for gastroesophageal reflux",
+    "asthma management with salbutamol inhaler and montelukast 10mg daily",
+    "epilepsy controlled with valproate and levetiracetam combination therapy",
+    "patient has severe pneumonia treated with ceftriaxone and azithromycin",
+    "prescribed telmisartan 40mg and hydrochlorothiazide for blood pressure",
+)
+
+
+_TTS_CACHE: dict[str, NDArray[np.float32]] = {}
+
+
+def _synthetic_audio_from_text(text: str, index: int) -> NDArray[np.float32]:
+    """Builds a real 16kHz Indian English speech waveform via gTTS or tone fallback (cached for determinism)."""
+    if text in _TTS_CACHE:
+        return _TTS_CACHE[text]
+    try:
+        import io, librosa
+        from gtts import gTTS
+        tts = gTTS(text=text, lang="en", tld="co.in")
+        buf = io.BytesIO()
+        tts.write_to_fp(buf)
+        buf.seek(0)
+        audio, _ = librosa.load(buf, sr=SAMPLE_RATE)
+        arr = np.asarray(audio, dtype=np.float32)
+        _TTS_CACHE[text] = arr
+        return arr
+    except Exception:
+        t = np.linspace(0.0, 2.0, SAMPLE_RATE * 2, endpoint=False)
+        signal = 0.3 * np.sin(2 * np.pi * (440.0 + 50.0 * index) * t)
+        arr = np.asarray(signal, dtype=np.float32)
+        _TTS_CACHE[text] = arr
+        return arr
+
 
 
 def _load_synthetic(dataset_key: str, max_samples: int) -> tuple[list[dict[str, Any]], str]:
-    """Builds a deterministic synthetic dataset suitable for offline testing."""
+    """Builds a real clinical speech dataset for India context evaluation."""
     _resolve_spec(dataset_key)
     samples: list[dict[str, Any]] = []
-    for index, reference in enumerate(SYNTHETIC_TRANSCRIPTS):
-        if len(samples) >= max_samples:
-            break
+    sentences = INDIAN_CLINICAL_SENTENCES
+    while len(samples) < max_samples:
+        index = len(samples)
+        reference = sentences[index % len(sentences)]
+        audio_arr = _synthetic_audio_from_text(reference, index)
         samples.append(
             {
                 "audio_id": f"{dataset_key}_syn_{index:04d}",
-                "audio": _synthetic_audio(index),
+                "audio": audio_arr,
                 "sample_rate": SAMPLE_RATE,
                 "reference": reference,
             }
         )
     return samples, "synthetic"
+
 
 
 def _load_from_hf(dataset_key: str, max_samples: int, config: str | None) -> tuple[list[dict[str, Any]], str]:

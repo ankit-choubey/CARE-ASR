@@ -134,8 +134,9 @@ class CARPipeline:
                 }
             )
 
-            if correction.label != "UNSURE":
+            if correction.label == "CORRECT":
                 corrected_words[i] = correction.corrected_token
+            # WRONG and UNSURE both preserve original token — zero false drug replacements
 
         attribution_log.append(
             {

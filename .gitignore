@@ -124,7 +124,14 @@ documentation/
 docs/
 ankit_progress/
 divya_progress/
+*.docx
+*.docx.txt
+*.pdf
 
-# Scratch and verification scripts
+# Scratch, benchmark results, and verification scripts
 verify_pipeline.py
+generate_reports.py
 scratch*.py
+results/
+*.log
+

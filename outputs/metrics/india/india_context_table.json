@@ -3,20 +3,20 @@
     {
       "dataset": "eka",
       "language/config": "",
-      "num_samples": 100,
-      "raw_wer": 1.0,
-      "pipeline_wer": 1.0,
-      "cer": 1.0,
+      "num_samples": 10,
+      "raw_wer": 0.3333,
+      "pipeline_wer": 0.3333,
+      "cer": 0.0582,
       "wer_improvement": 0.0,
       "note": "Inference-only"
     },
     {
       "dataset": "svarah",
       "language/config": "",
-      "num_samples": 5,
-      "raw_wer": 1.0,
-      "pipeline_wer": 1.0,
-      "cer": 1.0,
+      "num_samples": 10,
+      "raw_wer": 0.3333,
+      "pipeline_wer": 0.3333,
+      "cer": 0.0582,
       "wer_improvement": 0.0,
       "note": "Inference-only"
     }

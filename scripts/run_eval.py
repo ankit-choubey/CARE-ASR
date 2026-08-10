@@ -121,7 +121,7 @@ def main():
     for sample in ds.select(range(min(200, len(ds)))):
         audio = extract_audio(sample["audio"])
         if args.mode == "baseline":
-            res = asr(audio)
+            res = asr(audio["array"])
             hyp = res["text"].lower().strip()
             pred_dict = {
                 "audio_id": sample.get("id", "unk"),

@@ -371,12 +371,12 @@ try:
     cached_transcriber = CachedTranscriber()
 
     for mode in ABLATION_MODES:
-        print(f"\n  ---> Mode: {mode['name']}")
+        print(f"\n  ---> Mode: {mode}")
         hyps, preds = [], []
         unsure_count, wrong_count, total_corrections = 0, 0, 0
 
         for i, (hyp_raw, ref, acc) in enumerate(zip(raw_hyps, refs_all, accents_all)):
-            if mode["name"] == "baseline":
+            if mode == "baseline":
                 hyp = hyp_raw
                 log = []
             else:
@@ -384,15 +384,15 @@ try:
                 pipeline = CARPipeline()
                 pipeline.transcriber = cached_transcriber
                 
-                if mode["name"] in ["naive_correction", "dual_retrieval",
+                if mode in ["naive_correction", "dual_retrieval",
                             "entropy_gated", "thresholded", "unsure_gate"]:
                     pipeline.corrector = corrector.correct
-                if mode["name"] in ["dual_retrieval", "entropy_gated", "thresholded", "unsure_gate"]:
+                if mode in ["dual_retrieval", "entropy_gated", "thresholded", "unsure_gate"]:
                     pipeline.semantic_retrieve = semantic_retriever.retrieve
                     pipeline.phonetic_retrieve = phonetic_retriever.retrieve
-                if mode["name"] in ["entropy_gated", "thresholded", "unsure_gate"] and has_gate:
+                if mode in ["entropy_gated", "thresholded", "unsure_gate"] and has_gate:
                     pipeline.entropy_gate = lambda t: gate_obj.evaluate(t.token_scores)["uncertain_flags"]
-                if mode["name"] == "unsure_gate":
+                if mode == "unsure_gate":
                     pipeline.safety_gate = unsure_gate.apply
                 try:
                     # Pass the text hypothesis directly to our cached transcriber
@@ -435,7 +435,7 @@ try:
                 accent_wers[acc_key] = None
 
         row = {
-            "mode": mode["name"],
+            "mode": mode,
             "wer": round(wer_val, 4),
             "unsure_rate": round(unsure_rate, 4),
             "fdr": round(fdr, 4),
@@ -446,7 +446,7 @@ try:
         }
         print(f"    WER={row['wer']*100:.2f}%  UNSURE={row['unsure_rate']*100:.1f}%  FDR={row['fdr']*100:.2f}%")
         ablation_results.append(row)
-        all_preds[mode["name"]] = preds
+        all_preds[mode] = preds
 
     # Save ablation outputs
     Path("results/ablation").mkdir(parents=True, exist_ok=True)
