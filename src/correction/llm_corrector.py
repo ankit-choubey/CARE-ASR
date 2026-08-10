@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import yaml
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
 from care_asr.contracts.validated_output import CorrectionOutput
 
@@ -38,20 +38,21 @@ class LLMCorrector:
 
         if torch.cuda.is_available():
             try:
+                from transformers import BitsAndBytesConfig
+                bnb = BitsAndBytesConfig(
+                    load_in_4bit=True, bnb_4bit_use_double_quant=True,
+                    bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=torch.float16,
+                )
+                self.tokenizer = AutoTokenizer.from_pretrained(cfg["model_name"])
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    cfg["model_name"],
+                    quantization_config=bnb,
+                    device_map="auto",
+                    trust_remote_code=True,
+                )
+            except Exception as bnb_err:
+                print(f"BitsAndBytes quantization load failed ({bnb_err}); trying float16 fallback...")
                 try:
-                    bnb = BitsAndBytesConfig(
-                        load_in_4bit=True, bnb_4bit_use_double_quant=True,
-                        bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=torch.float16,
-                    )
-                    self.tokenizer = AutoTokenizer.from_pretrained(cfg["model_name"])
-                    self.model = AutoModelForCausalLM.from_pretrained(
-                        cfg["model_name"],
-                        quantization_config=bnb,
-                        device_map="auto",
-                        trust_remote_code=True,
-                    )
-                except Exception as bnb_err:
-                    print(f"BitsAndBytes quantization load failed ({bnb_err}); trying float16 fallback...")
                     self.tokenizer = AutoTokenizer.from_pretrained(cfg["model_name"])
                     self.model = AutoModelForCausalLM.from_pretrained(
                         cfg["model_name"],
@@ -59,18 +60,23 @@ class LLMCorrector:
                         device_map="auto",
                         trust_remote_code=True,
                     )
-                self.model.eval()
+                except Exception as f16_err:
+                    print(f"LLM model float16 load failed ({f16_err}); using stub fallback.")
+                    self.model = None
 
-                # Outlines constrained generator setup if available
-                import outlines
-                self.outlines_model = outlines.models.Transformers(self.model, self.tokenizer)
-                # Regex restricting output to exact schema
-                regex_pattern = r"(CORRECT \| [a-zA-Z0-9_\- ]+|WRONG|UNSURE)"
-                self.generator = outlines.generate.regex(self.outlines_model, regex_pattern)
-                self.use_outlines = True
-            except Exception as e:
-                self.use_outlines = False
-                print(f"Failed to initialize LLM / Outlines: {e}. Falling back to heuristic parser.")
+            if self.model:
+                try:
+                    self.model.eval()
+                    # Outlines constrained generator setup if available
+                    import outlines
+                    self.outlines_model = outlines.models.Transformers(self.model, self.tokenizer)
+                    # Regex restricting output to exact schema
+                    regex_pattern = r"(CORRECT \| [a-zA-Z0-9_\- ]+|WRONG|UNSURE)"
+                    self.generator = outlines.generate.regex(self.outlines_model, regex_pattern)
+                    self.use_outlines = True
+                except Exception as e:
+                    self.use_outlines = False
+                    print(f"Failed to initialize LLM / Outlines: {e}. Falling back to heuristic parser.")
 
     def correct(self, asr_token: str, candidates: list, context: str = "") -> CorrectionOutput:
         cand_names = [c.candidate for c in candidates[:5]]
