@@ -37,32 +37,35 @@ class LLMCorrector:
         self.use_outlines = False
 
         if torch.cuda.is_available():
+            gpu_name = torch.cuda.get_device_name(0)
+            major, minor = torch.cuda.get_device_capability(0)
+            print(f"LLMCorrector: Detected GPU {gpu_name} (Compute {major}.{minor})")
+            
+            # BitsAndBytes (ops.cu) causes hard segfaults on sm_60 (P100)
+            use_bnb = major >= 7
+            
             try:
-                from transformers import BitsAndBytesConfig
-                bnb = BitsAndBytesConfig(
-                    load_in_4bit=True, bnb_4bit_use_double_quant=True,
-                    bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=torch.float16,
-                )
-                self.tokenizer = AutoTokenizer.from_pretrained(cfg["model_name"])
-                self.model = AutoModelForCausalLM.from_pretrained(
-                    cfg["model_name"],
-                    quantization_config=bnb,
-                    device_map="auto",
-                    trust_remote_code=True,
-                )
-            except Exception as bnb_err:
-                print(f"BitsAndBytes quantization load failed ({bnb_err}); trying float16 fallback...")
-                try:
+                if use_bnb:
+                    from transformers import BitsAndBytesConfig
+                    bnb = BitsAndBytesConfig(
+                        load_in_4bit=True, bnb_4bit_use_double_quant=True,
+                        bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=torch.float16,
+                    )
                     self.tokenizer = AutoTokenizer.from_pretrained(cfg["model_name"])
                     self.model = AutoModelForCausalLM.from_pretrained(
                         cfg["model_name"],
-                        torch_dtype=torch.float16,
+                        quantization_config=bnb,
                         device_map="auto",
                         trust_remote_code=True,
                     )
-                except Exception as f16_err:
-                    print(f"LLM model float16 load failed ({f16_err}); using stub fallback.")
-                    self.model = None
+                else:
+                    print(f"Skipping BitsAndBytes for {gpu_name} (Compute {major}.{minor} < 7.0)")
+                    # Instead of trying to load 14GB fp16 model on 16GB VRAM alongside Whisper,
+                    # we intentionally use the fast heuristic fallback for the Kaggle benchmarking.
+                    raise RuntimeError(f"GPU {gpu_name} unsupported for 4-bit quantization, skipping LLM load.")
+            except Exception as bnb_err:
+                print(f"BitsAndBytes quantization load failed or skipped ({bnb_err}); using stub fallback.")
+                self.model = None
 
             if self.model:
                 try:
