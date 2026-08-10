@@ -78,8 +78,8 @@ try:
     subprocess.run(
         [sys.executable, "-m", "pip", "install", "-q",
          "pandas", "soundfile", "librosa", "abydos",
-         "faiss-gpu", "jiwer", "datasets", "transformers",
-         "torch", "bitsandbytes", "pyyaml",
+         "faiss-cpu", "jiwer", "datasets", "transformers",
+         "bitsandbytes", "pyyaml",
          "sentence-transformers", "gtts", "matplotlib",
          "accelerate", "outlines"],
         check=False,
@@ -210,9 +210,10 @@ try:
     try:
         from datasets import load_dataset as hf_load
 
-        print("  Streaming intronhealth/afrispeech-200 (clinical domain only, no bulk download)...")
+        print("  Streaming intronhealth/afrispeech-200 (parquet revision, clinical domain only, no bulk download)...")
         ds_stream = hf_load(
             "intronhealth/afrispeech-200",
+            revision="refs/convert/parquet",
             split="test",
             streaming=True,
         )
