@@ -181,24 +181,39 @@ try:
     except Exception as fe:
         print(f"  FAISS build warning: {fe} — Double Metaphone fallback active.")
 
-    # ─── 4. Load Whisper-large-v2 ONCE ────────────────────────────────────────
-    print("\n=== STAGE 2: LOADING WHISPER-LARGE-V2 (single load, shared across all 6 modes) ===")
+    # ─── 4. Load Whisper-medium with CUDA fallback guard ──────────────────────
+    print("\n=== STAGE 2: LOADING WHISPER-MEDIUM (single load, CUDA fallback guard) ===")
     import torch
     from transformers import pipeline as hf_pipeline
 
     device_id = 0 if torch.cuda.is_available() else -1
     gpu_name = torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU"
-    print(f"  GPU: {gpu_name} | device_id={device_id}")
+    print(f"  Detected device: {gpu_name} | device_id={device_id}")
 
-    asr = hf_pipeline(
-        "automatic-speech-recognition",
-        model="openai/whisper-large-v2",
-        return_timestamps=True,
-        chunk_length_s=30,
-        stride_length_s=5,
-        device=device_id,
-    )
-    print("  whisper-large-v2 loaded successfully")
+    try:
+        asr = hf_pipeline(
+            "automatic-speech-recognition",
+            model="openai/whisper-medium",
+            return_timestamps=True,
+            chunk_length_s=30,
+            stride_length_s=5,
+            device=device_id,
+        )
+        # Test a dummy 1s audio array to verify CUDA kernel compatibility (P100 sm_60 check)
+        _ = asr(np.zeros(16000, dtype=np.float32))
+        print(f"  whisper-medium loaded successfully on {gpu_name}")
+    except Exception as cuda_err:
+        print(f"  ⚠️ GPU CUDA kernel execution failed ({cuda_err}); falling back to CPU (device_id=-1)...")
+        device_id = -1
+        asr = hf_pipeline(
+            "automatic-speech-recognition",
+            model="openai/whisper-medium",
+            return_timestamps=True,
+            chunk_length_s=30,
+            stride_length_s=5,
+            device=-1,
+        )
+        print("  whisper-medium loaded successfully on CPU fallback")
 
     # ─── 5. Stream AfriSpeech clinical + accent-stratify 300 samples ──────────
     print("\n=== STAGE 3: STREAMING AFRISPEECH-200 (clinical domain, accent-stratified N=300) ===")
@@ -403,7 +418,7 @@ try:
             "fdr": round(fdr, 4),
             "num_samples": len(preds),
             "per_accent_wer": accent_wers,
-            "model": "whisper-large-v2",
+            "model": "whisper-medium",
             "gpu": gpu_name,
         }
         print(f"    WER={row['wer']*100:.2f}%  UNSURE={row['unsure_rate']*100:.1f}%  FDR={row['fdr']*100:.2f}%")
@@ -536,7 +551,7 @@ try:
             "eval_split": "india_svarah_gtts",
             "wer": round(wer_val, 4),
             "num_samples": len(india_hyps),
-            "model": "whisper-large-v2",
+            "model": "whisper-medium",
             "accent": "Indian English (gTTS co.in)",
         })
         print(f"    [{mode:20s}]  WER={wer_val * 100:.2f}%")
