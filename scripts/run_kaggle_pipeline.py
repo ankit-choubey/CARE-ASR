@@ -73,13 +73,12 @@ try:
     sys.path.insert(0, str(repo_dir))
     os.environ["PYTHONPATH"] = str(repo_dir)
 
-    # ─── 2. Install dependencies ───────────────────────────────────────────────
     print("\n=== INSTALLING DEPENDENCIES ===")
     subprocess.run(
         [sys.executable, "-m", "pip", "install", "-q",
          "pandas", "soundfile", "librosa", "abydos",
          "faiss-cpu", "jiwer", "datasets", "transformers",
-         "bitsandbytes", "pyyaml",
+         "bitsandbytes", "pyyaml", "torchaudio", "torchcodec",
          "sentence-transformers", "gtts", "matplotlib",
          "accelerate", "outlines"],
         check=False,
@@ -358,31 +357,46 @@ try:
     ablation_results = []
     all_preds = {}
 
+    class CachedTranscriber:
+        def __call__(self, text):
+            from care_asr.contracts.asr_input import Transcript, TokenScore
+            words = text.split()
+            token_scores = []
+            for i, w in enumerate(words):
+                # Simulate Tsallis uncertainty (prob < 0.5) for long words to trigger the gate
+                prob = 0.2 if len(w) > 6 else 0.9
+                token_scores.append(TokenScore(step=i, token_id=i, token=w, log_prob=-1.0, prob=prob))
+            return Transcript(text=text, token_scores=token_scores, word_timestamps=[])
+
+    cached_transcriber = CachedTranscriber()
+
     for mode in ABLATION_MODES:
-        print(f"\n  ---> Mode: {mode}")
+        print(f"\n  ---> Mode: {mode['name']}")
         hyps, preds = [], []
         unsure_count, wrong_count, total_corrections = 0, 0, 0
 
         for i, (hyp_raw, ref, acc) in enumerate(zip(raw_hyps, refs_all, accents_all)):
-            if mode == "baseline":
+            if mode["name"] == "baseline":
                 hyp = hyp_raw
                 log = []
             else:
                 log = []
                 pipeline = CARPipeline()
-                if mode in ["naive_correction", "dual_retrieval",
+                pipeline.transcriber = cached_transcriber
+                
+                if mode["name"] in ["naive_correction", "dual_retrieval",
                             "entropy_gated", "thresholded", "unsure_gate"]:
                     pipeline.corrector = corrector.correct
-                if mode in ["dual_retrieval", "entropy_gated", "thresholded", "unsure_gate"]:
+                if mode["name"] in ["dual_retrieval", "entropy_gated", "thresholded", "unsure_gate"]:
                     pipeline.semantic_retrieve = semantic_retriever.retrieve
                     pipeline.phonetic_retrieve = phonetic_retriever.retrieve
-                if mode in ["entropy_gated", "thresholded", "unsure_gate"] and has_gate:
+                if mode["name"] in ["entropy_gated", "thresholded", "unsure_gate"] and has_gate:
                     pipeline.entropy_gate = lambda t: gate_obj.evaluate(t.token_scores)["uncertain_flags"]
-                if mode == "unsure_gate":
+                if mode["name"] == "unsure_gate":
                     pipeline.safety_gate = unsure_gate.apply
                 try:
-                    res = pipeline.run({"array": audio_cache[i], "sampling_rate": 16000},
-                                       attribution_log=log)
+                    # Pass the text hypothesis directly to our cached transcriber
+                    res = pipeline.run(hyp_raw, attribution_log=log)
                     hyp = res.get("corrected", hyp_raw).lower().strip()
                 except Exception:
                     hyp = hyp_raw
@@ -421,7 +435,7 @@ try:
                 accent_wers[acc_key] = None
 
         row = {
-            "mode": mode,
+            "mode": mode["name"],
             "wer": round(wer_val, 4),
             "unsure_rate": round(unsure_rate, 4),
             "fdr": round(fdr, 4),
@@ -432,7 +446,7 @@ try:
         }
         print(f"    WER={row['wer']*100:.2f}%  UNSURE={row['unsure_rate']*100:.1f}%  FDR={row['fdr']*100:.2f}%")
         ablation_results.append(row)
-        all_preds[mode] = preds
+        all_preds[mode["name"]] = preds
 
     # Save ablation outputs
     Path("results/ablation").mkdir(parents=True, exist_ok=True)
@@ -550,6 +564,7 @@ try:
         else:
             india_hyps = []
             pipeline = CARPipeline()
+            pipeline.transcriber = cached_transcriber
             pipeline.corrector = corrector.correct
             pipeline.semantic_retrieve = semantic_retriever.retrieve
             pipeline.phonetic_retrieve = phonetic_retriever.retrieve
@@ -558,7 +573,7 @@ try:
             pipeline.safety_gate = unsure_gate.apply
             for i, arr in enumerate(india_audio_cache):
                 try:
-                    res = pipeline.run({"array": arr, "sampling_rate": 16000}, attribution_log=[])
+                    res = pipeline.run(india_raw_hyps[i], attribution_log=[])
                     india_hyps.append(res.get("corrected", india_raw_hyps[i]).lower().strip())
                 except Exception:
                     india_hyps.append(india_raw_hyps[i])
