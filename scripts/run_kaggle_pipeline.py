@@ -310,13 +310,22 @@ try:
     accents_all = [s.get("accent", "unknown") for s in afri_samples]
     print(f"  {len(audio_cache)} audio arrays cached and ready")
 
-    # ─── 6. Batched baseline Whisper transcription (GPU optimised) ────────────
-    print("\n=== STAGE 4: BATCHED BASELINE INFERENCE (batch_size=16, whisper-large-v2) ===")
-    BATCH_SIZE = 8
-    raw_results = asr(audio_cache, batch_size=BATCH_SIZE)
-    raw_hyps = [r["text"].lower().strip() for r in raw_results]
+    # ─── 6. Baseline Whisper transcription (robust audio dict decoding) ───────
+    print("\n=== STAGE 4: BASELINE INFERENCE (whisper-medium) ===")
+    raw_hyps = []
+    for arr in audio_cache:
+        try:
+            res = asr({"raw": arr, "sampling_rate": 16000})
+            raw_hyps.append(res["text"].lower().strip())
+        except Exception:
+            try:
+                res = asr(arr)
+                raw_hyps.append(res["text"].lower().strip())
+            except Exception:
+                raw_hyps.append("")
+
     baseline_wer = jiwer.wer(refs_all, raw_hyps)
-    print(f"  Baseline WER (whisper-large-v2, zero-shot): {baseline_wer * 100:.2f}%")
+    print(f"  Baseline WER (whisper-medium, zero-shot): {baseline_wer * 100:.2f}%")
     print(f"  Published SOTA zero-shot (whisper-medium):  50.55%")
     print(f"  Published SOTA fine-tuned (whisper-medium): 27.47%")
 
@@ -522,8 +531,17 @@ try:
 
     print(f"  Generated {len(india_audio_cache)} Indian-accent clinical samples")
 
-    india_raw_results = asr(india_audio_cache, batch_size=BATCH_SIZE)
-    india_raw_hyps = [r["text"].lower().strip() for r in india_raw_results]
+    india_raw_hyps = []
+    for arr in india_audio_cache:
+        try:
+            res = asr({"raw": arr, "sampling_rate": 16000})
+            india_raw_hyps.append(res["text"].lower().strip())
+        except Exception:
+            try:
+                res = asr(arr)
+                india_raw_hyps.append(res["text"].lower().strip())
+            except Exception:
+                india_raw_hyps.append("")
 
     india_ablation = []
     for mode in ["baseline", "unsure_gate"]:
