@@ -74,6 +74,11 @@ try:
     os.environ["PYTHONPATH"] = str(repo_dir)
 
     print("\n=== INSTALLING DEPENDENCIES ===")
+    print("Downgrading PyTorch to 2.1.2 for Tesla P100 (sm_60) compatibility...")
+    subprocess.run("pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cu118", shell=True, check=True)
+
+    print("Installing missing dependencies...")
+    subprocess.run("pip install faiss-cpu jiwer librosa soundfile gtts transformers accelerate outlines datasets torchcodec", shell=True, check=True)
     subprocess.run(
         [sys.executable, "-m", "pip", "install", "-q",
          "pandas", "soundfile", "librosa", "abydos",
