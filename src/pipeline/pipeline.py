@@ -42,7 +42,8 @@ class CARPipeline:
 
     def __init__(self) -> None:
         self.transcriber = stub_transcriber
-        self.entropy_gate = stub_entropy_gate
+        from src.entropy.gate import TsallisEntropyGate
+        self.entropy_gate = TsallisEntropyGate()
         self.ner = stub_ner
         self.semantic_retrieve = stub_semantic_retrieve
         self.phonetic_retrieve = stub_phonetic_retrieve

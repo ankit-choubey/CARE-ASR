@@ -17,7 +17,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.pipeline.pipeline import CARPipeline
+from src.asr.transcriber import WhisperTranscriber
 pipeline = CARPipeline()
+pipeline.transcriber = WhisperTranscriber().transcribe
 
 
 def process_audio(audio_tuple: Any) -> tuple[str, str, str]:

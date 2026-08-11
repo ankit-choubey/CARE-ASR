@@ -119,8 +119,9 @@ models/checkpoints/
 *.bin
 *.safetensors
 
-# Documentation and Progress Reports (Do not push)
-documentation/
+# Documentation and Progress Reports (Do not push except master thesis report)
+documentation/*
+!documentation/CARE_ASR_MASTER_THESIS_REPORT.md
 docs/
 ankit_progress/
 divya_progress/
@@ -133,5 +134,8 @@ verify_pipeline.py
 generate_reports.py
 scratch*.py
 results/
+outputs/
 *.log
+*.index
 
+/graphify-out
