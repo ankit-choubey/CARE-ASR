@@ -225,19 +225,28 @@ try:
         from datasets import load_dataset as hf_load
 
         print("  Streaming intronhealth/afrispeech-200 (parquet revision, clinical domain only, no bulk download)...")
+        import datasets
         ds_stream = hf_load(
             "intronhealth/afrispeech-200",
             revision="refs/convert/parquet",
             split="test",
             streaming=True,
         )
+        # Prevent downloading/decoding audio bytes during metadata filtering!
+        ds_stream = ds_stream.cast_column("audio", datasets.Audio(decode=False))
 
-        # Collect into accent buckets by streaming up to 10k samples
+        # Collect into accent buckets by streaming up to 20k samples
         accent_buckets = defaultdict(list)
-        for row in ds_stream.take(10_000):
+        for row in ds_stream.take(20_000):
             domain = row.get("domain", row.get("topic", ""))
             if "clinical" not in str(domain).lower():
                 continue
+            
+            # Ensure the transcript actually exists (some parquet rows have empty transcripts)
+            txt = row.get("transcript", row.get("sentence", row.get("text", row.get("transcript_clean", ""))))
+            if not txt or len(str(txt).strip()) < 3:
+                continue
+                
             accent = row.get("accent", row.get("speaker_id", "unknown"))
             if len(accent_buckets[accent]) < SAMPLES_PER_ACCENT:
                 accent_buckets[accent].append(row)
@@ -305,7 +314,11 @@ try:
             arr = np.zeros(16000, dtype=np.float32)
         audio_cache.append(arr)
 
-    refs_all = [s.get("transcript", s.get("text", "")).lower().strip() for s in afri_samples]
+    refs_all = []
+    for s in afri_samples:
+        txt = s.get("transcript", s.get("sentence", s.get("text", s.get("transcript_clean", ""))))
+        refs_all.append(str(txt).lower().strip())
+        
     accents_all = [s.get("accent", "unknown") for s in afri_samples]
     print(f"  {len(audio_cache)} audio arrays cached and ready")
 
@@ -531,17 +544,27 @@ try:
 
     india_audio_cache = []
     india_refs_clean = []
+    import time
     for ref in india_clinical_refs:
-        try:
-            tts = gTTS(text=ref, lang="en", tld="co.in")
-            buf = io.BytesIO()
-            tts.write_to_fp(buf)
-            buf.seek(0)
-            arr, _ = librosa.load(buf, sr=16000)
-        except Exception:
-            arr = np.zeros(16000, dtype=np.float32)
-        india_audio_cache.append(arr)
-        india_refs_clean.append(ref.lower().strip())
+        arr = None
+        for attempt in range(3):
+            try:
+                tts = gTTS(text=ref, lang="en", tld="co.in")
+                buf = io.BytesIO()
+                tts.write_to_fp(buf)
+                buf.seek(0)
+                arr, _ = librosa.load(buf, sr=16000)
+                break
+            except Exception as e:
+                time.sleep(2)
+        
+        if arr is not None:
+            india_audio_cache.append(arr)
+            india_refs_clean.append(ref.lower().strip())
+        
+        # Limit to 50 successful samples to avoid Kaggle notebook timeouts and TTS IP bans
+        if len(india_audio_cache) >= 50:
+            break
 
     print(f"  Generated {len(india_audio_cache)} Indian-accent clinical samples")
 
@@ -578,7 +601,11 @@ try:
                 except Exception:
                     india_hyps.append(india_raw_hyps[i])
 
-        wer_val = jiwer.wer(india_refs_clean, india_hyps)
+        if len(india_refs_clean) > 0 and len(india_hyps) > 0:
+            wer_val = jiwer.wer(india_refs_clean, india_hyps)
+        else:
+            wer_val = 0.0
+            
         india_ablation.append({
             "mode": mode,
             "eval_split": "india_svarah_gtts",
