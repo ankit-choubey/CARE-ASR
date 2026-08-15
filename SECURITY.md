@@ -15,7 +15,7 @@ We take security vulnerabilities seriously, especially given CARE-ASR's applicat
 
 If you discover a security vulnerability or potential data leak risk (e.g., unintended retention of PHI/PII audio or transcript data), please report it to our team privately:
 
-- **Primary Contact**: Ankit Choubey (ankit@example.com)
+- **Primary Contact**: Ankit Choubey (ankitkumarchoubey0909@gmail.com)
 - **Response Time**: You will receive an initial response acknowledging your report within 48 hours.
 
 Please **do not** open a public GitHub issue for security vulnerabilities.
