@@ -1,6 +1,7 @@
 """Unit tests for BioBERT NER extractor interface (T4)."""
 
 import pytest
+
 from care_asr.ner.extractor import BioBertNERExtractor
 
 

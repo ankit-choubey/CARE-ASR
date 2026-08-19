@@ -21,26 +21,90 @@ class MedicalNERTagger:
     """
 
     KNOWN_DRUGS = {
-        "amoxicillin", "ampicillin", "azithromycin", "ciprofloxacin", "metformin",
-        "amlodipine", "atorvastatin", "pantoprazole", "omeprazole", "cetirizine",
-        "paracetamol", "acetaminophen", "ibuprofen", "diclofenac", "aspirin",
-        "clopidogrel", "losartan", "telmisartan", "ramipril", "enalapril",
-        "digoxin", "warfarin", "heparin", "insulin", "metoprolol", "lisinopril",
-        "salbutamol", "montelukast", "prednisolone", "dexamethasone", "ceftriaxone",
-        "fluconazole", "sertraline", "fluoxetine", "risperidone", "valproate",
-        "morphine", "fentanyl", "tramadol", "dolo", "crocin", "combiflam",
+        "amoxicillin",
+        "ampicillin",
+        "azithromycin",
+        "ciprofloxacin",
+        "metformin",
+        "amlodipine",
+        "atorvastatin",
+        "pantoprazole",
+        "omeprazole",
+        "cetirizine",
+        "paracetamol",
+        "acetaminophen",
+        "ibuprofen",
+        "diclofenac",
+        "aspirin",
+        "clopidogrel",
+        "losartan",
+        "telmisartan",
+        "ramipril",
+        "enalapril",
+        "digoxin",
+        "warfarin",
+        "heparin",
+        "insulin",
+        "metoprolol",
+        "lisinopril",
+        "salbutamol",
+        "montelukast",
+        "prednisolone",
+        "dexamethasone",
+        "ceftriaxone",
+        "fluconazole",
+        "sertraline",
+        "fluoxetine",
+        "risperidone",
+        "valproate",
+        "morphine",
+        "fentanyl",
+        "tramadol",
+        "dolo",
+        "crocin",
+        "combiflam",
     }
 
     KNOWN_CONDITIONS = {
-        "hypertension", "diabetes", "pneumonia", "tuberculosis", "malaria",
-        "asthma", "bronchitis", "epilepsy", "migraine", "hepatitis", "anemia",
-        "edema", "cardiomegaly", "arrhythmia", "tachycardia", "bradycardia",
+        "hypertension",
+        "diabetes",
+        "pneumonia",
+        "tuberculosis",
+        "malaria",
+        "asthma",
+        "bronchitis",
+        "epilepsy",
+        "migraine",
+        "hepatitis",
+        "anemia",
+        "edema",
+        "cardiomegaly",
+        "arrhythmia",
+        "tachycardia",
+        "bradycardia",
     }
 
     KNOWN_ANATOMY = {
-        "abdomen", "thorax", "cranium", "femur", "tibia", "esophagus", "trachea",
-        "bronchus", "alveoli", "diaphragm", "myocardium", "pericardium", "aorta",
-        "pulmonary", "lobe", "heart", "lung", "liver", "kidney", "brain",
+        "abdomen",
+        "thorax",
+        "cranium",
+        "femur",
+        "tibia",
+        "esophagus",
+        "trachea",
+        "bronchus",
+        "alveoli",
+        "diaphragm",
+        "myocardium",
+        "pericardium",
+        "aorta",
+        "pulmonary",
+        "lobe",
+        "heart",
+        "lung",
+        "liver",
+        "kidney",
+        "brain",
     }
 
     def __init__(self, extractor: Any | None = None) -> None:
@@ -74,8 +138,7 @@ class MedicalNERTagger:
 
         for idx, word in enumerate(words):
             clean_word = word.strip(".,;:!?()")
-            clean_nopunct = clean_word.replace("-", "")
-            
+
             if clean_word in self.KNOWN_DRUGS or self._is_fuzzy_drug_match(clean_word):
                 entities.append(NEREntity(word=word, category="MED", start=idx, end=idx, score=0.95))
             elif clean_word in self.KNOWN_CONDITIONS:

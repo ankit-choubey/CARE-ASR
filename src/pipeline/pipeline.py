@@ -11,7 +11,6 @@ from typing import Any
 from src.fusion.rrf import reciprocal_rank_fusion
 from src.pipeline.stubs import (
     stub_corrector,
-    stub_entropy_gate,
     stub_ner,
     stub_phonetic_retrieve,
     stub_semantic_retrieve,
@@ -43,6 +42,7 @@ class CARPipeline:
     def __init__(self) -> None:
         self.transcriber = stub_transcriber
         from src.entropy.gate import TsallisEntropyGate
+
         self.entropy_gate = TsallisEntropyGate()
         self.ner = stub_ner
         self.semantic_retrieve = stub_semantic_retrieve

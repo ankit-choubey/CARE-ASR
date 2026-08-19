@@ -1,6 +1,7 @@
 """Unit tests for Whisper ASR transcriber interface and confidence score extractor (S3/T1)."""
 
 import pytest
+
 from care_asr.contracts.asr_input import TokenScore, Transcript
 
 
@@ -22,12 +23,14 @@ def test_transcript_creation():
 def test_whisper_transcriber_importable():
     """Verifies WhisperTranscriber class is importable."""
     from src.asr.transcriber import WhisperTranscriber
+
     assert WhisperTranscriber is not None
 
 
 def test_confidence_module_importable():
     """Verifies confidence module functions work as expected."""
-    from src.asr.confidence import extract_low_confidence_tokens, mean_confidence, confidence_summary
+    from src.asr.confidence import confidence_summary, extract_low_confidence_tokens, mean_confidence
+
     t = Transcript(
         text="test",
         token_scores=[TokenScore(step=0, token_id=1, token="test", log_prob=-0.5, prob=0.6)],

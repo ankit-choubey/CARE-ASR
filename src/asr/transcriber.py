@@ -80,10 +80,10 @@ class WhisperTranscriber:
             token_id = int(sequences[step + 1].item())
             log_probs = torch.nn.functional.log_softmax(score_tensor[0], dim=-1)
             probs = torch.exp(log_probs)
-            
+
             log_p = float(log_probs[token_id].item())
             entropy_val = tsallis_entropy(probs)
-            
+
             token_scores.append(
                 TokenScore(
                     step=step,
