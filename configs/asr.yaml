@@ -4,5 +4,6 @@ language: "en"
 return_timestamps: "word"
 output_scores: true
 return_dict_in_generate: true
-max_new_tokens: 448
+max_new_tokens: 400
 task: "transcribe"
+
