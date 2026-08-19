@@ -1,0 +1,1527 @@
+[
+  {
+    "audio_id": "svarah_syn_0000",
+    "prediction": "Patient was prescribed Amoxicillin 500mg twice daily for bacterial infection.",
+    "reference": "patient was prescribed amoxicillin 500mg twice daily for bacterial infection",
+    "word_timestamps": [],
+    "token_scores": [
+      {
+        "step": 0,
+        "token_id": 50259,
+        "token": "<|en|>",
+        "log_prob": -14.921442031860352,
+        "prob": 3.309025089492934e-07
+      },
+      {
+        "step": 1,
+        "token_id": 50359,
+        "token": "<|transcribe|>",
+        "log_prob": -Infinity,
+        "prob": 0.0
+      },
+      {
+        "step": 2,
+        "token_id": 50363,
+        "token": "<|notimestamps|>",
+        "log_prob": -15.435040473937988,
+        "prob": 1.9799175277057657e-07
+      },
+      {
+        "step": 3,
+        "token_id": 25173,
+        "token": " Patient",
+        "log_prob": -17.69293785095215,
+        "prob": 2.0704023384610082e-08
+      },
+      {
+        "step": 4,
+        "token_id": 390,
+        "token": " was",
+        "log_prob": -18.390533447265625,
+        "prob": 1.0306063558118694e-08
+      },
+      {
+        "step": 5,
+        "token_id": 29099,
+        "token": " prescribed",
+        "log_prob": -19.09746551513672,
+        "prob": 5.082485099450196e-09
+      },
+      {
+        "step": 6,
+        "token_id": 2012,
+        "token": " Am",
+        "log_prob": -18.952299118041992,
+        "prob": 5.876531705695243e-09
+      },
+      {
+        "step": 7,
+        "token_id": 5230,
+        "token": "ox",
+        "log_prob": -17.221078872680664,
+        "prob": 3.3187955494895505e-08
+      },
+      {
+        "step": 8,
+        "token_id": 299,
+        "token": "ic",
+        "log_prob": -15.21927261352539,
+        "prob": 2.4567100354033755e-07
+      },
+      {
+        "step": 9,
+        "token_id": 373,
+        "token": "ill",
+        "log_prob": -12.579509735107422,
+        "prob": 3.4418214909237577e-06
+      },
+      {
+        "step": 10,
+        "token_id": 259,
+        "token": "in",
+        "log_prob": -14.928594589233398,
+        "prob": 3.285441891875962e-07
+      },
+      {
+        "step": 11,
+        "token_id": 5923,
+        "token": " 500",
+        "log_prob": -16.6008243560791,
+        "prob": 6.170972000063557e-08
+      },
+      {
+        "step": 12,
+        "token_id": 76,
+        "token": "m",
+        "log_prob": -17.076854705810547,
+        "prob": 3.8336835928021173e-08
+      },
+      {
+        "step": 13,
+        "token_id": 70,
+        "token": "g",
+        "log_prob": -15.357437133789062,
+        "prob": 2.1396849092525372e-07
+      },
+      {
+        "step": 14,
+        "token_id": 6091,
+        "token": " twice",
+        "log_prob": -21.858797073364258,
+        "prob": 3.2125141435912496e-10
+      },
+      {
+        "step": 15,
+        "token_id": 5212,
+        "token": " daily",
+        "log_prob": -17.660621643066406,
+        "prob": 2.1384026993587213e-08
+      },
+      {
+        "step": 16,
+        "token_id": 337,
+        "token": " for",
+        "log_prob": -11.768662452697754,
+        "prob": 7.743456080788746e-06
+      },
+      {
+        "step": 17,
+        "token_id": 35632,
+        "token": " bacterial",
+        "log_prob": -16.050678253173828,
+        "prob": 1.0697419128291585e-07
+      }
+    ],
+    "raw_asr_prediction": " Patient was prescribed Amoxicillin 500mg twice daily for bacterial infection."
+  },
+  {
+    "audio_id": "svarah_syn_0001",
+    "prediction": "Continue Metformin 1000 mg and Citagliptone for type 2 diabetes mellitus.",
+    "reference": "continue metformin 1000mg and sitagliptin for type 2 diabetes mellitus",
+    "word_timestamps": [],
+    "token_scores": [
+      {
+        "step": 0,
+        "token_id": 50259,
+        "token": "<|en|>",
+        "log_prob": -14.008610725402832,
+        "prob": 8.243994216172723e-07
+      },
+      {
+        "step": 1,
+        "token_id": 50359,
+        "token": "<|transcribe|>",
+        "log_prob": -Infinity,
+        "prob": 0.0
+      },
+      {
+        "step": 2,
+        "token_id": 50363,
+        "token": "<|notimestamps|>",
+        "log_prob": -17.108266830444336,
+        "prob": 3.715130958426016e-08
+      },
+      {
+        "step": 3,
+        "token_id": 24472,
+        "token": " Continue",
+        "log_prob": -20.577611923217773,
+        "prob": 1.1567957702851572e-09
+      },
+      {
+        "step": 4,
+        "token_id": 6377,
+        "token": " Met",
+        "log_prob": -16.296485900878906,
+        "prob": 8.366158965600334e-08
+      },
+      {
+        "step": 5,
+        "token_id": 837,
+        "token": "form",
+        "log_prob": -14.644220352172852,
+        "prob": 4.3661225390678737e-07
+      },
+      {
+        "step": 6,
+        "token_id": 259,
+        "token": "in",
+        "log_prob": -11.075124740600586,
+        "prob": 1.5492962120333686e-05
+      },
+      {
+        "step": 7,
+        "token_id": 9714,
+        "token": " 1000",
+        "log_prob": -12.487699508666992,
+        "prob": 3.7727759263361804e-06
+      },
+      {
+        "step": 8,
+        "token_id": 49566,
+        "token": " mg",
+        "log_prob": -14.999116897583008,
+        "prob": 3.061726090436423e-07
+      },
+      {
+        "step": 9,
+        "token_id": 293,
+        "token": " and",
+        "log_prob": -11.901786804199219,
+        "prob": 6.778283022867981e-06
+      },
+      {
+        "step": 10,
+        "token_id": 18435,
+        "token": " Cit",
+        "log_prob": -17.43747329711914,
+        "prob": 2.6730161195587243e-08
+      },
+      {
+        "step": 11,
+        "token_id": 559,
+        "token": "ag",
+        "log_prob": -12.96601390838623,
+        "prob": 2.3384693577099824e-06
+      },
+      {
+        "step": 12,
+        "token_id": 75,
+        "token": "l",
+        "log_prob": -14.839289665222168,
+        "prob": 3.5923480368182936e-07
+      },
+      {
+        "step": 13,
+        "token_id": 22439,
+        "token": "ipt",
+        "log_prob": -18.63612937927246,
+        "prob": 8.061797451830444e-09
+      },
+      {
+        "step": 14,
+        "token_id": 546,
+        "token": "one",
+        "log_prob": -17.457597732543945,
+        "prob": 2.619760763877821e-08
+      },
+      {
+        "step": 15,
+        "token_id": 337,
+        "token": " for",
+        "log_prob": -15.46419906616211,
+        "prob": 1.9230195391628513e-07
+      },
+      {
+        "step": 16,
+        "token_id": 2010,
+        "token": " type",
+        "log_prob": -12.054682731628418,
+        "prob": 5.817251349071739e-06
+      },
+      {
+        "step": 17,
+        "token_id": 568,
+        "token": " 2",
+        "log_prob": -17.693313598632812,
+        "prob": 2.0696244718010348e-08
+      },
+      {
+        "step": 18,
+        "token_id": 13881,
+        "token": " diabetes",
+        "log_prob": -15.05284595489502,
+        "prob": 2.9015635050200217e-07
+      },
+      {
+        "step": 19,
+        "token_id": 385,
+        "token": " me",
+        "log_prob": -14.398465156555176,
+        "prob": 5.582465405495896e-07
+      },
+      {
+        "step": 20,
+        "token_id": 285,
+        "token": "ll",
+        "log_prob": -15.744600296020508,
+        "prob": 1.452803815027437e-07
+      }
+    ],
+    "raw_asr_prediction": " Continue Metformin 1000 mg and Citagliptone for type 2 diabetes mellitus."
+  },
+  {
+    "audio_id": "svarah_syn_0002",
+    "prediction": "Patient has hypertension treated with amlodipine 5 mg and lacinapril 10 mg.",
+    "reference": "patient has hypertension treated with amlodipine 5mg and lisinopril 10mg",
+    "word_timestamps": [],
+    "token_scores": [
+      {
+        "step": 0,
+        "token_id": 50259,
+        "token": "<|en|>",
+        "log_prob": -14.618016242980957,
+        "prob": 4.4820450284532853e-07
+      },
+      {
+        "step": 1,
+        "token_id": 50359,
+        "token": "<|transcribe|>",
+        "log_prob": -Infinity,
+        "prob": 0.0
+      },
+      {
+        "step": 2,
+        "token_id": 50363,
+        "token": "<|notimestamps|>",
+        "log_prob": -13.55123519897461,
+        "prob": 1.302486793974822e-06
+      },
+      {
+        "step": 3,
+        "token_id": 25173,
+        "token": " Patient",
+        "log_prob": -17.823909759521484,
+        "prob": 1.816244754593299e-08
+      },
+      {
+        "step": 4,
+        "token_id": 575,
+        "token": " has",
+        "log_prob": -16.125560760498047,
+        "prob": 9.925626898166229e-08
+      },
+      {
+        "step": 5,
+        "token_id": 46172,
+        "token": " hypertension",
+        "log_prob": -16.843507766723633,
+        "prob": 4.8412502451355977e-08
+      },
+      {
+        "step": 6,
+        "token_id": 8668,
+        "token": " treated",
+        "log_prob": -16.338655471801758,
+        "prob": 8.020696640187452e-08
+      },
+      {
+        "step": 7,
+        "token_id": 365,
+        "token": " with",
+        "log_prob": -20.086318969726562,
+        "prob": 1.890699596884815e-09
+      },
+      {
+        "step": 8,
+        "token_id": 669,
+        "token": " am",
+        "log_prob": -15.5892972946167,
+        "prob": 1.6968920135695953e-07
+      },
+      {
+        "step": 9,
+        "token_id": 75,
+        "token": "l",
+        "log_prob": -17.182552337646484,
+        "prob": 3.449152075063466e-08
+      },
+      {
+        "step": 10,
+        "token_id": 378,
+        "token": "od",
+        "log_prob": -16.47859001159668,
+        "prob": 6.973315436198391e-08
+      },
+      {
+        "step": 11,
+        "token_id": 647,
+        "token": "ip",
+        "log_prob": -12.66766357421875,
+        "prob": 3.1514007332589244e-06
+      },
+      {
+        "step": 12,
+        "token_id": 533,
+        "token": "ine",
+        "log_prob": -11.972029685974121,
+        "prob": 6.31849434284959e-06
+      },
+      {
+        "step": 13,
+        "token_id": 1025,
+        "token": " 5",
+        "log_prob": -12.344558715820312,
+        "prob": 4.353377335064579e-06
+      },
+      {
+        "step": 14,
+        "token_id": 49566,
+        "token": " mg",
+        "log_prob": -17.234146118164062,
+        "prob": 3.2757100143498974e-08
+      },
+      {
+        "step": 15,
+        "token_id": 293,
+        "token": " and",
+        "log_prob": -10.715213775634766,
+        "prob": 2.2204540073289536e-05
+      },
+      {
+        "step": 16,
+        "token_id": 28027,
+        "token": " lac",
+        "log_prob": -13.333239555358887,
+        "prob": 1.6197486729652155e-06
+      },
+      {
+        "step": 17,
+        "token_id": 259,
+        "token": "in",
+        "log_prob": -11.242438316345215,
+        "prob": 1.3106027836329304e-05
+      },
+      {
+        "step": 18,
+        "token_id": 569,
+        "token": "ap",
+        "log_prob": -16.36319923400879,
+        "prob": 7.826234593721892e-08
+      },
+      {
+        "step": 19,
+        "token_id": 24216,
+        "token": "ril",
+        "log_prob": -18.150959014892578,
+        "prob": 1.3095999840118111e-08
+      },
+      {
+        "step": 20,
+        "token_id": 1266,
+        "token": " 10",
+        "log_prob": -13.248584747314453,
+        "prob": 1.7628393607083126e-06
+      }
+    ],
+    "raw_asr_prediction": " Patient has hypertension treated with amlodipine 5 mg and lacinapril 10 mg."
+  },
+  {
+    "audio_id": "svarah_syn_0003",
+    "prediction": "Post myocardial infarction patients started on aspirin, clopidogrel and atovastatin.",
+    "reference": "post myocardial infarction patient started on aspirin clopidogrel and atorvastatin",
+    "word_timestamps": [],
+    "token_scores": [
+      {
+        "step": 0,
+        "token_id": 50259,
+        "token": "<|en|>",
+        "log_prob": -18.148916244506836,
+        "prob": 1.312278019582891e-08
+      },
+      {
+        "step": 1,
+        "token_id": 50359,
+        "token": "<|transcribe|>",
+        "log_prob": -Infinity,
+        "prob": 0.0
+      },
+      {
+        "step": 2,
+        "token_id": 50363,
+        "token": "<|notimestamps|>",
+        "log_prob": -18.62378692626953,
+        "prob": 8.1619155878343e-09
+      },
+      {
+        "step": 3,
+        "token_id": 10223,
+        "token": " Post",
+        "log_prob": -18.20779037475586,
+        "prob": 1.2372490587608809e-08
+      },
+      {
+        "step": 4,
+        "token_id": 452,
+        "token": " my",
+        "log_prob": -18.553424835205078,
+        "prob": 8.7568921003367e-09
+      },
+      {
+        "step": 5,
+        "token_id": 905,
+        "token": "oc",
+        "log_prob": -19.46884536743164,
+        "prob": 3.5058060898762733e-09
+      },
+      {
+        "step": 6,
+        "token_id": 515,
+        "token": "ard",
+        "log_prob": -12.642827987670898,
+        "prob": 3.230647735108505e-06
+      },
+      {
+        "step": 7,
+        "token_id": 831,
+        "token": "ial",
+        "log_prob": -21.105079650878906,
+        "prob": 6.826221254918607e-10
+      },
+      {
+        "step": 8,
+        "token_id": 1536,
+        "token": " inf",
+        "log_prob": -16.54942512512207,
+        "prob": 6.496448179404979e-08
+      },
+      {
+        "step": 9,
+        "token_id": 289,
+        "token": "ar",
+        "log_prob": -16.742582321166992,
+        "prob": 5.3553627310520824e-08
+      },
+      {
+        "step": 10,
+        "token_id": 882,
+        "token": "ction",
+        "log_prob": -20.21694564819336,
+        "prob": 1.6591745755079046e-09
+      },
+      {
+        "step": 11,
+        "token_id": 4209,
+        "token": " patients",
+        "log_prob": -16.256715774536133,
+        "prob": 8.705586651558406e-08
+      },
+      {
+        "step": 12,
+        "token_id": 1409,
+        "token": " started",
+        "log_prob": -22.170692443847656,
+        "prob": 2.3517471303691195e-10
+      },
+      {
+        "step": 13,
+        "token_id": 322,
+        "token": " on",
+        "log_prob": -12.441499710083008,
+        "prob": 3.951166490878677e-06
+      },
+      {
+        "step": 14,
+        "token_id": 20003,
+        "token": " aspir",
+        "log_prob": -12.998141288757324,
+        "prob": 2.2645347144134576e-06
+      },
+      {
+        "step": 15,
+        "token_id": 259,
+        "token": "in",
+        "log_prob": -13.281028747558594,
+        "prob": 1.7065636939150863e-06
+      },
+      {
+        "step": 16,
+        "token_id": 11,
+        "token": ",",
+        "log_prob": -16.420583724975586,
+        "prob": 7.389773060140215e-08
+      },
+      {
+        "step": 17,
+        "token_id": 596,
+        "token": " cl",
+        "log_prob": -15.439823150634766,
+        "prob": 1.9704708620338351e-07
+      },
+      {
+        "step": 18,
+        "token_id": 404,
+        "token": "op",
+        "log_prob": -18.06075096130371,
+        "prob": 1.4332287356921825e-08
+      },
+      {
+        "step": 19,
+        "token_id": 327,
+        "token": "id",
+        "log_prob": -11.517753601074219,
+        "prob": 9.951835636456963e-06
+      },
+      {
+        "step": 20,
+        "token_id": 664,
+        "token": "og",
+        "log_prob": -13.533785820007324,
+        "prob": 1.3254139048513025e-06
+      },
+      {
+        "step": 21,
+        "token_id": 4419,
+        "token": "rel",
+        "log_prob": -12.705732345581055,
+        "prob": 3.0336855161294807e-06
+      },
+      {
+        "step": 22,
+        "token_id": 293,
+        "token": " and",
+        "log_prob": -12.996286392211914,
+        "prob": 2.2687390810460784e-06
+      },
+      {
+        "step": 23,
+        "token_id": 412,
+        "token": " at",
+        "log_prob": -13.849272727966309,
+        "prob": 9.668013944974518e-07
+      },
+      {
+        "step": 24,
+        "token_id": 5179,
+        "token": "ov",
+        "log_prob": -16.199811935424805,
+        "prob": 9.21533356290638e-08
+      },
+      {
+        "step": 25,
+        "token_id": 525,
+        "token": "ast",
+        "log_prob": -17.279088973999023,
+        "prob": 3.1317494375571187e-08
+      }
+    ],
+    "raw_asr_prediction": " Post myocardial infarction patients started on aspirin, clopidogrel and atovastatin."
+  },
+  {
+    "audio_id": "svarah_syn_0004",
+    "prediction": "India Clinical Notes patient took Croissant Comber Flang and Dolophia fever.",
+    "reference": "India clinical notes patient took crocin combiflam and dolo for fever",
+    "word_timestamps": [],
+    "token_scores": [
+      {
+        "step": 0,
+        "token_id": 50259,
+        "token": "<|en|>",
+        "log_prob": -12.469796180725098,
+        "prob": 3.840929366560886e-06
+      },
+      {
+        "step": 1,
+        "token_id": 50359,
+        "token": "<|transcribe|>",
+        "log_prob": -Infinity,
+        "prob": 0.0
+      },
+      {
+        "step": 2,
+        "token_id": 50363,
+        "token": "<|notimestamps|>",
+        "log_prob": -13.963924407958984,
+        "prob": 8.620742733000952e-07
+      },
+      {
+        "step": 3,
+        "token_id": 5282,
+        "token": " India",
+        "log_prob": -14.164091110229492,
+        "prob": 7.056891035972512e-07
+      },
+      {
+        "step": 4,
+        "token_id": 47942,
+        "token": " Clinical",
+        "log_prob": -19.05571746826172,
+        "prob": 5.29916066582814e-09
+      },
+      {
+        "step": 5,
+        "token_id": 41360,
+        "token": " Notes",
+        "log_prob": -11.670400619506836,
+        "prob": 8.542980140191503e-06
+      },
+      {
+        "step": 6,
+        "token_id": 4537,
+        "token": " patient",
+        "log_prob": -13.131254196166992,
+        "prob": 1.9822973627015017e-06
+      },
+      {
+        "step": 7,
+        "token_id": 1890,
+        "token": " took",
+        "log_prob": -14.176933288574219,
+        "prob": 6.966844239286729e-07
+      },
+      {
+        "step": 8,
+        "token_id": 18965,
+        "token": " Cro",
+        "log_prob": -16.554759979248047,
+        "prob": 6.461883828023929e-08
+      },
+      {
+        "step": 9,
+        "token_id": 29492,
+        "token": "issant",
+        "log_prob": -15.266998291015625,
+        "prob": 2.3422157369168417e-07
+      },
+      {
+        "step": 10,
+        "token_id": 2432,
+        "token": " Com",
+        "log_prob": -11.285826683044434,
+        "prob": 1.254953895113431e-05
+      },
+      {
+        "step": 11,
+        "token_id": 607,
+        "token": "ber",
+        "log_prob": -15.543797492980957,
+        "prob": 1.7758837600467814e-07
+      },
+      {
+        "step": 12,
+        "token_id": 3235,
+        "token": " Fl",
+        "log_prob": -12.00044059753418,
+        "prob": 6.141506219137227e-06
+      },
+      {
+        "step": 13,
+        "token_id": 656,
+        "token": "ang",
+        "log_prob": -16.9766788482666,
+        "prob": 4.2376207431971125e-08
+      },
+      {
+        "step": 14,
+        "token_id": 293,
+        "token": " and",
+        "log_prob": -13.202512741088867,
+        "prob": 1.8459569446349633e-06
+      },
+      {
+        "step": 15,
+        "token_id": 18786,
+        "token": " Dol",
+        "log_prob": -17.653196334838867,
+        "prob": 2.1543399952861364e-08
+      },
+      {
+        "step": 16,
+        "token_id": 5317,
+        "token": "oph",
+        "log_prob": -16.813953399658203,
+        "prob": 4.986465640399729e-08
+      },
+      {
+        "step": 17,
+        "token_id": 654,
+        "token": "ia",
+        "log_prob": -15.095078468322754,
+        "prob": 2.781574721666402e-07
+      }
+    ],
+    "raw_asr_prediction": " India Clinical Notes patient took Croissant Comber Flang and Dolophia fever."
+  },
+  {
+    "audio_id": "svarah_syn_0005",
+    "prediction": "Prescribed Pantoprazole 40 mg before breakfast for gastroesophageal reflux",
+    "reference": "prescribed pantoprazole 40mg before breakfast for gastroesophageal reflux",
+    "word_timestamps": [],
+    "token_scores": [
+      {
+        "step": 0,
+        "token_id": 50259,
+        "token": "<|en|>",
+        "log_prob": -16.54191780090332,
+        "prob": 6.545403152813378e-08
+      },
+      {
+        "step": 1,
+        "token_id": 50359,
+        "token": "<|transcribe|>",
+        "log_prob": -Infinity,
+        "prob": 0.0
+      },
+      {
+        "step": 2,
+        "token_id": 50363,
+        "token": "<|notimestamps|>",
+        "log_prob": -11.495672225952148,
+        "prob": 1.0174029739573598e-05
+      },
+      {
+        "step": 3,
+        "token_id": 2718,
+        "token": " Pres",
+        "log_prob": -15.304506301879883,
+        "prob": 2.2559910917152592e-07
+      },
+      {
+        "step": 4,
+        "token_id": 18732,
+        "token": "cribed",
+        "log_prob": -17.900896072387695,
+        "prob": 1.681665651176445e-08
+      },
+      {
+        "step": 5,
+        "token_id": 430,
+        "token": " P",
+        "log_prob": -18.26356315612793,
+        "prob": 1.1701332347513471e-08
+      },
+      {
+        "step": 6,
+        "token_id": 394,
+        "token": "ant",
+        "log_prob": -19.457902908325195,
+        "prob": 3.544379012510035e-09
+      },
+      {
+        "step": 7,
+        "token_id": 404,
+        "token": "op",
+        "log_prob": -16.707429885864258,
+        "prob": 5.54696448773484e-08
+      },
+      {
+        "step": 8,
+        "token_id": 424,
+        "token": "ra",
+        "log_prob": -16.987342834472656,
+        "prob": 4.192670743918825e-08
+      },
+      {
+        "step": 9,
+        "token_id": 4765,
+        "token": "zo",
+        "log_prob": -17.651012420654297,
+        "prob": 2.15905018308149e-08
+      },
+      {
+        "step": 10,
+        "token_id": 306,
+        "token": "le",
+        "log_prob": -16.01650619506836,
+        "prob": 1.1069289485021727e-07
+      },
+      {
+        "step": 11,
+        "token_id": 3356,
+        "token": " 40",
+        "log_prob": -15.518399238586426,
+        "prob": 1.8215656893971754e-07
+      },
+      {
+        "step": 12,
+        "token_id": 49566,
+        "token": " mg",
+        "log_prob": -18.423128128051758,
+        "prob": 9.975556380936723e-09
+      },
+      {
+        "step": 13,
+        "token_id": 949,
+        "token": " before",
+        "log_prob": -12.865957260131836,
+        "prob": 2.5845549771474907e-06
+      },
+      {
+        "step": 14,
+        "token_id": 8201,
+        "token": " breakfast",
+        "log_prob": -17.291542053222656,
+        "prob": 3.0929914629496125e-08
+      },
+      {
+        "step": 15,
+        "token_id": 337,
+        "token": " for",
+        "log_prob": -16.805234909057617,
+        "prob": 5.030130267869026e-08
+      },
+      {
+        "step": 16,
+        "token_id": 17898,
+        "token": " gast",
+        "log_prob": -22.261762619018555,
+        "prob": 2.1470361599718046e-10
+      },
+      {
+        "step": 17,
+        "token_id": 340,
+        "token": "ro",
+        "log_prob": -17.2774658203125,
+        "prob": 3.136836923545161e-08
+      },
+      {
+        "step": 18,
+        "token_id": 279,
+        "token": "es",
+        "log_prob": -16.800966262817383,
+        "prob": 5.0516476335360494e-08
+      },
+      {
+        "step": 19,
+        "token_id": 5317,
+        "token": "oph",
+        "log_prob": -19.340198516845703,
+        "prob": 3.987112862091635e-09
+      },
+      {
+        "step": 20,
+        "token_id": 609,
+        "token": "age",
+        "log_prob": -19.105857849121094,
+        "prob": 5.0400101869740865e-09
+      },
+      {
+        "step": 21,
+        "token_id": 304,
+        "token": "al",
+        "log_prob": -21.709495544433594,
+        "prob": 3.7298031330124104e-10
+      },
+      {
+        "step": 22,
+        "token_id": 1895,
+        "token": " ref",
+        "log_prob": -16.782136917114258,
+        "prob": 5.147668247218462e-08
+      }
+    ],
+    "raw_asr_prediction": " Prescribed Pantoprazole 40 mg before breakfast for gastroesophageal reflux"
+  },
+  {
+    "audio_id": "svarah_syn_0006",
+    "prediction": "Asthma management with Salbutamol inhaler in Montelukast 10 mg daily.",
+    "reference": "asthma management with salbutamol inhaler and montelukast 10mg daily",
+    "word_timestamps": [],
+    "token_scores": [
+      {
+        "step": 0,
+        "token_id": 50259,
+        "token": "<|en|>",
+        "log_prob": -12.181561470031738,
+        "prob": 5.124070412421133e-06
+      },
+      {
+        "step": 1,
+        "token_id": 50359,
+        "token": "<|transcribe|>",
+        "log_prob": -Infinity,
+        "prob": 0.0
+      },
+      {
+        "step": 2,
+        "token_id": 50363,
+        "token": "<|notimestamps|>",
+        "log_prob": -13.802423477172852,
+        "prob": 1.0131731187357218e-06
+      },
+      {
+        "step": 3,
+        "token_id": 12884,
+        "token": " Ast",
+        "log_prob": -13.937050819396973,
+        "prob": 8.855554369802121e-07
+      },
+      {
+        "step": 4,
+        "token_id": 22061,
+        "token": "hma",
+        "log_prob": -18.95298194885254,
+        "prob": 5.872520247862667e-09
+      },
+      {
+        "step": 5,
+        "token_id": 4592,
+        "token": " management",
+        "log_prob": -14.54412841796875,
+        "prob": 4.825755013371236e-07
+      },
+      {
+        "step": 6,
+        "token_id": 365,
+        "token": " with",
+        "log_prob": -15.727106094360352,
+        "prob": 1.4784430391046044e-07
+      },
+      {
+        "step": 7,
+        "token_id": 5996,
+        "token": " Sal",
+        "log_prob": -16.77789878845215,
+        "prob": 5.1695309366550646e-08
+      },
+      {
+        "step": 8,
+        "token_id": 5955,
+        "token": "but",
+        "log_prob": -15.216568946838379,
+        "prob": 2.4633612838442787e-07
+      },
+      {
+        "step": 9,
+        "token_id": 335,
+        "token": "am",
+        "log_prob": -15.632022857666016,
+        "prob": 1.6259183155398205e-07
+      },
+      {
+        "step": 10,
+        "token_id": 401,
+        "token": "ol",
+        "log_prob": -14.478401184082031,
+        "prob": 5.153594884177437e-07
+      },
+      {
+        "step": 11,
+        "token_id": 43157,
+        "token": " inhal",
+        "log_prob": -11.178194999694824,
+        "prob": 1.397563664795598e-05
+      },
+      {
+        "step": 12,
+        "token_id": 260,
+        "token": "er",
+        "log_prob": -7.959057807922363,
+        "prob": 0.0003494822303764522
+      },
+      {
+        "step": 13,
+        "token_id": 294,
+        "token": " in",
+        "log_prob": -12.873184204101562,
+        "prob": 2.5659439870651113e-06
+      },
+      {
+        "step": 14,
+        "token_id": 7947,
+        "token": " Mont",
+        "log_prob": -16.210901260375977,
+        "prob": 9.11370676703882e-08
+      },
+      {
+        "step": 15,
+        "token_id": 338,
+        "token": "el",
+        "log_prob": -12.558979034423828,
+        "prob": 3.5132147786498535e-06
+      },
+      {
+        "step": 16,
+        "token_id": 2034,
+        "token": "uk",
+        "log_prob": -13.30409049987793,
+        "prob": 1.667657784309995e-06
+      },
+      {
+        "step": 17,
+        "token_id": 525,
+        "token": "ast",
+        "log_prob": -16.620073318481445,
+        "prob": 6.053323176047343e-08
+      },
+      {
+        "step": 18,
+        "token_id": 1266,
+        "token": " 10",
+        "log_prob": -10.948575019836426,
+        "prob": 1.7583053704584017e-05
+      },
+      {
+        "step": 19,
+        "token_id": 49566,
+        "token": " mg",
+        "log_prob": -16.918743133544922,
+        "prob": 4.490381400046317e-08
+      }
+    ],
+    "raw_asr_prediction": " Asthma management with Salbutamol inhaler in Montelukast 10 mg daily."
+  },
+  {
+    "audio_id": "svarah_syn_0007",
+    "prediction": "Epilepsy controlled with Valproate and Leviteracetam combination therapy.",
+    "reference": "epilepsy controlled with valproate and levetiracetam combination therapy",
+    "word_timestamps": [],
+    "token_scores": [
+      {
+        "step": 0,
+        "token_id": 50259,
+        "token": "<|en|>",
+        "log_prob": -13.499956130981445,
+        "prob": 1.371019266116491e-06
+      },
+      {
+        "step": 1,
+        "token_id": 50359,
+        "token": "<|transcribe|>",
+        "log_prob": -Infinity,
+        "prob": 0.0
+      },
+      {
+        "step": 2,
+        "token_id": 50363,
+        "token": "<|notimestamps|>",
+        "log_prob": -21.104293823242188,
+        "prob": 6.831588073019645e-10
+      },
+      {
+        "step": 3,
+        "token_id": 9970,
+        "token": " Ep",
+        "log_prob": -17.069904327392578,
+        "prob": 3.860421671220138e-08
+      },
+      {
+        "step": 4,
+        "token_id": 794,
+        "token": "ile",
+        "log_prob": -14.722904205322266,
+        "prob": 4.035747167563386e-07
+      },
+      {
+        "step": 5,
+        "token_id": 29182,
+        "token": "psy",
+        "log_prob": -16.846004486083984,
+        "prob": 4.8291781240550335e-08
+      },
+      {
+        "step": 6,
+        "token_id": 10164,
+        "token": " controlled",
+        "log_prob": -15.905054092407227,
+        "prob": 1.2374360380817961e-07
+      },
+      {
+        "step": 7,
+        "token_id": 365,
+        "token": " with",
+        "log_prob": -13.859965324401855,
+        "prob": 9.565188747728826e-07
+      },
+      {
+        "step": 8,
+        "token_id": 7188,
+        "token": " Val",
+        "log_prob": -13.163203239440918,
+        "prob": 1.9199658254365204e-06
+      },
+      {
+        "step": 9,
+        "token_id": 4318,
+        "token": "pro",
+        "log_prob": -17.83000946044922,
+        "prob": 1.8051999006729602e-08
+      },
+      {
+        "step": 10,
+        "token_id": 473,
+        "token": "ate",
+        "log_prob": -7.135442733764648,
+        "prob": 0.0007963731186464429
+      },
+      {
+        "step": 11,
+        "token_id": 293,
+        "token": " and",
+        "log_prob": -10.422680854797363,
+        "prob": 2.975001734739635e-05
+      },
+      {
+        "step": 12,
+        "token_id": 28471,
+        "token": " Lev",
+        "log_prob": -15.723496437072754,
+        "prob": 1.4837894468655577e-07
+      },
+      {
+        "step": 13,
+        "token_id": 1681,
+        "token": "iter",
+        "log_prob": -20.548805236816406,
+        "prob": 1.1906038377418326e-09
+      },
+      {
+        "step": 14,
+        "token_id": 326,
+        "token": "ac",
+        "log_prob": -13.248320579528809,
+        "prob": 1.763305135682458e-06
+      },
+      {
+        "step": 15,
+        "token_id": 302,
+        "token": "et",
+        "log_prob": -18.893800735473633,
+        "prob": 6.230553406538775e-09
+      },
+      {
+        "step": 16,
+        "token_id": 335,
+        "token": "am",
+        "log_prob": -14.991315841674805,
+        "prob": 3.0857040655973833e-07
+      },
+      {
+        "step": 17,
+        "token_id": 6562,
+        "token": " combination",
+        "log_prob": -15.311532974243164,
+        "prob": 2.2401944477223878e-07
+      }
+    ],
+    "raw_asr_prediction": " Epilepsy controlled with Valproate and Leviteracetam combination therapy."
+  },
+  {
+    "audio_id": "svarah_syn_0008",
+    "prediction": "Patient has severe pneumonia treated with ceftriaxone and azithromycin.",
+    "reference": "patient has severe pneumonia treated with ceftriaxone and azithromycin",
+    "word_timestamps": [],
+    "token_scores": [
+      {
+        "step": 0,
+        "token_id": 50259,
+        "token": "<|en|>",
+        "log_prob": -15.183064460754395,
+        "prob": 2.5472931497461104e-07
+      },
+      {
+        "step": 1,
+        "token_id": 50359,
+        "token": "<|transcribe|>",
+        "log_prob": -Infinity,
+        "prob": 0.0
+      },
+      {
+        "step": 2,
+        "token_id": 50363,
+        "token": "<|notimestamps|>",
+        "log_prob": -13.824874877929688,
+        "prob": 9.906794957714737e-07
+      },
+      {
+        "step": 3,
+        "token_id": 25173,
+        "token": " Patient",
+        "log_prob": -20.916889190673828,
+        "prob": 8.239682269817195e-10
+      },
+      {
+        "step": 4,
+        "token_id": 575,
+        "token": " has",
+        "log_prob": -16.733930587768555,
+        "prob": 5.401896885359747e-08
+      },
+      {
+        "step": 5,
+        "token_id": 8922,
+        "token": " severe",
+        "log_prob": -17.65496253967285,
+        "prob": 2.150538414014136e-08
+      },
+      {
+        "step": 6,
+        "token_id": 43097,
+        "token": " pneumonia",
+        "log_prob": -12.430646896362305,
+        "prob": 3.9942815419635735e-06
+      },
+      {
+        "step": 7,
+        "token_id": 8668,
+        "token": " treated",
+        "log_prob": -18.783184051513672,
+        "prob": 6.959320231203492e-09
+      },
+      {
+        "step": 8,
+        "token_id": 365,
+        "token": " with",
+        "log_prob": -17.6273193359375,
+        "prob": 2.2108155306455046e-08
+      },
+      {
+        "step": 9,
+        "token_id": 1769,
+        "token": " ce",
+        "log_prob": -20.09775733947754,
+        "prob": 1.869196353254665e-09
+      },
+      {
+        "step": 10,
+        "token_id": 844,
+        "token": "ft",
+        "log_prob": -15.920171737670898,
+        "prob": 1.218869698504932e-07
+      },
+      {
+        "step": 11,
+        "token_id": 470,
+        "token": "ri",
+        "log_prob": -13.733210563659668,
+        "prob": 1.0857814913833863e-06
+      },
+      {
+        "step": 12,
+        "token_id": 2797,
+        "token": "ax",
+        "log_prob": -10.007221221923828,
+        "prob": 4.507326957536861e-05
+      },
+      {
+        "step": 13,
+        "token_id": 546,
+        "token": "one",
+        "log_prob": -17.34661102294922,
+        "prob": 2.9272685608816573e-08
+      },
+      {
+        "step": 14,
+        "token_id": 293,
+        "token": " and",
+        "log_prob": -22.06902503967285,
+        "prob": 2.603419979596566e-10
+      },
+      {
+        "step": 15,
+        "token_id": 7883,
+        "token": " az",
+        "log_prob": -18.66437339782715,
+        "prob": 7.837284599077066e-09
+      },
+      {
+        "step": 16,
+        "token_id": 355,
+        "token": "ith",
+        "log_prob": -17.20460319519043,
+        "prob": 3.373927981442648e-08
+      },
+      {
+        "step": 17,
+        "token_id": 4397,
+        "token": "rom",
+        "log_prob": -17.15134620666504,
+        "prob": 3.558483641086241e-08
+      },
+      {
+        "step": 18,
+        "token_id": 88,
+        "token": "y",
+        "log_prob": -15.875518798828125,
+        "prob": 1.2745293531679636e-07
+      }
+    ],
+    "raw_asr_prediction": " Patient has severe pneumonia treated with ceftriaxone and azithromycin."
+  },
+  {
+    "audio_id": "svarah_syn_0009",
+    "prediction": "Prescribed Telmisartan 40 mg and hydrochlorothiazide for blood pressure.",
+    "reference": "prescribed telmisartan 40mg and hydrochlorothiazide for blood pressure",
+    "word_timestamps": [],
+    "token_scores": [
+      {
+        "step": 0,
+        "token_id": 50259,
+        "token": "<|en|>",
+        "log_prob": -16.579790115356445,
+        "prob": 6.302148847225908e-08
+      },
+      {
+        "step": 1,
+        "token_id": 50359,
+        "token": "<|transcribe|>",
+        "log_prob": -Infinity,
+        "prob": 0.0
+      },
+      {
+        "step": 2,
+        "token_id": 50363,
+        "token": "<|notimestamps|>",
+        "log_prob": -10.954728126525879,
+        "prob": 1.7475194908911362e-05
+      },
+      {
+        "step": 3,
+        "token_id": 2718,
+        "token": " Pres",
+        "log_prob": -14.219609260559082,
+        "prob": 6.675782628917659e-07
+      },
+      {
+        "step": 4,
+        "token_id": 18732,
+        "token": "cribed",
+        "log_prob": -12.276453971862793,
+        "prob": 4.660191734728869e-06
+      },
+      {
+        "step": 5,
+        "token_id": 27729,
+        "token": " Tel",
+        "log_prob": -16.157995223999023,
+        "prob": 9.608859130594283e-08
+      },
+      {
+        "step": 6,
+        "token_id": 45634,
+        "token": "mis",
+        "log_prob": -18.39133644104004,
+        "prob": 1.0297791064317607e-08
+      },
+      {
+        "step": 7,
+        "token_id": 446,
+        "token": "art",
+        "log_prob": -14.898625373840332,
+        "prob": 3.3853939385153353e-07
+      },
+      {
+        "step": 8,
+        "token_id": 282,
+        "token": "an",
+        "log_prob": -7.447818756103516,
+        "prob": 0.0005827112472616136
+      },
+      {
+        "step": 9,
+        "token_id": 3356,
+        "token": " 40",
+        "log_prob": -14.183304786682129,
+        "prob": 6.922596185177099e-07
+      },
+      {
+        "step": 10,
+        "token_id": 49566,
+        "token": " mg",
+        "log_prob": -18.81587028503418,
+        "prob": 6.735523694345602e-09
+      },
+      {
+        "step": 11,
+        "token_id": 293,
+        "token": " and",
+        "log_prob": -20.563276290893555,
+        "prob": 1.1734986316014329e-09
+      },
+      {
+        "step": 12,
+        "token_id": 15435,
+        "token": " hydro",
+        "log_prob": -16.54131317138672,
+        "prob": 6.549362296937034e-08
+      },
+      {
+        "step": 13,
+        "token_id": 339,
+        "token": "ch",
+        "log_prob": -13.876845359802246,
+        "prob": 9.405083574165474e-07
+      },
+      {
+        "step": 14,
+        "token_id": 6746,
+        "token": "lor",
+        "log_prob": -19.403318405151367,
+        "prob": 3.743224841201709e-09
+      },
+      {
+        "step": 15,
+        "token_id": 900,
+        "token": "oth",
+        "log_prob": -16.06451988220215,
+        "prob": 1.055036946695509e-07
+      },
+      {
+        "step": 16,
+        "token_id": 654,
+        "token": "ia",
+        "log_prob": -15.61674976348877,
+        "prob": 1.6509417832821782e-07
+      },
+      {
+        "step": 17,
+        "token_id": 89,
+        "token": "z",
+        "log_prob": -17.10907554626465,
+        "prob": 3.712127494281958e-08
+      },
+      {
+        "step": 18,
+        "token_id": 482,
+        "token": "ide",
+        "log_prob": -19.795883178710938,
+        "prob": 2.527884124248203e-09
+      },
+      {
+        "step": 19,
+        "token_id": 337,
+        "token": " for",
+        "log_prob": -10.246591567993164,
+        "prob": 3.5478220524964854e-05
+      },
+      {
+        "step": 20,
+        "token_id": 3390,
+        "token": " blood",
+        "log_prob": -10.95304012298584,
+        "prob": 1.7504718925920315e-05
+      }
+    ],
+    "raw_asr_prediction": " Prescribed Telmisartan 40 mg and hydrochlorothiazide for blood pressure."
+  }
+]
