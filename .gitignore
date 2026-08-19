@@ -118,3 +118,25 @@ models/checkpoints/
 *.pt
 *.bin
 *.safetensors
+
+# Documentation and Assets (Track master thesis and images only)
+documentation/*
+!documentation/CARE_ASR_MASTER_THESIS_REPORT.md
+!documentation/images/
+!documentation/images/*
+!documentation/report/
+!documentation/report/*.png
+!documentation/report/*.jpg
+!documentation/report/*.jpeg
+!documentation/report/*.svg
+*.docx
+*.docx.txt
+*.pdf
+
+# Scratch and generated temporary files
+scratch*.py
+*.log
+*.index
+
+/graphify-out
+
