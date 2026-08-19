@@ -10,9 +10,16 @@ from typing import Any
 
 import numpy as np
 
-from src.pipeline.pipeline import CARPipeline
+import sys
+from pathlib import Path
 
+# Add project root to sys.path so 'src' and 'care_asr' can be imported
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from src.pipeline.pipeline import CARPipeline
+from src.asr.transcriber import WhisperTranscriber
 pipeline = CARPipeline()
+pipeline.transcriber = WhisperTranscriber().transcribe
 
 
 def process_audio(audio_tuple: Any) -> tuple[str, str, str]:
