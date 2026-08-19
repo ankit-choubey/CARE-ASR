@@ -5,7 +5,11 @@ Runs all 6 ablation rows on Kaggle GPU P100.
 
 import argparse
 import json
+import os
+import sys
 from pathlib import Path
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import jiwer
 import numpy as np
@@ -32,7 +36,12 @@ def main():
     args = parser.parse_args()
 
     Path(args.out_dir).mkdir(exist_ok=True, parents=True)
-    ds = load_from_disk(args.data_path)
+    try:
+        ds = load_from_disk(args.data_path)
+    except Exception:
+        from datasets import load_dataset
+        print(f"Data path {args.data_path} not found; loading intronhealth/afrispeech-200 (parquet revision) directly from HuggingFace...")
+        ds = load_dataset("intronhealth/afrispeech-200", revision="refs/convert/parquet", split="test")
 
     from src.pipeline.pipeline import CARPipeline
 
@@ -65,32 +74,54 @@ def main():
         from care_asr.uncertainty.gate import TsallisUncertaintyGate
 
         gate_obj = TsallisUncertaintyGate()
-        pipeline.entropy_gate = lambda t: gate_obj.gate_tokens(t.token_scores)["uncertain_flags"]
+        pipeline.entropy_gate = lambda t: gate_obj.evaluate(t.token_scores)["uncertain_flags"]
 
     if args.mode == "unsure_gate":
         from src.safety.unsure_gate import UnsureGate
 
         pipeline.safety_gate = UnsureGate().apply
 
+    import torch
     from transformers import pipeline as hf_pipeline
 
+    device_id = 0 if torch.cuda.is_available() else -1
     asr = hf_pipeline(
         "automatic-speech-recognition",
         model="openai/whisper-medium",
         return_timestamps=True,
-        device=0,
+        device=device_id,
     )
 
+    def extract_audio(audio_data):
+        if isinstance(audio_data, dict):
+            if "array" in audio_data:
+                return {
+                    "array": np.array(audio_data["array"], dtype=np.float32),
+                    "sampling_rate": audio_data.get("sampling_rate", 16000),
+                }
+            elif "bytes" in audio_data and audio_data["bytes"]:
+                import io, soundfile as sf
+                arr, sr = sf.read(io.BytesIO(audio_data["bytes"]))
+                return {
+                    "array": arr.astype(np.float32),
+                    "sampling_rate": sr,
+                }
+            elif "path" in audio_data and audio_data["path"]:
+                import soundfile as sf
+                arr, sr = sf.read(audio_data["path"])
+                return {
+                    "array": arr.astype(np.float32),
+                    "sampling_rate": sr,
+                }
+        raise ValueError(f"Unrecognized audio format: {type(audio_data)}")
+
     refs, hyps, preds = [], [], []
-    unsure_count, total_corrections = 0, 0
+    unsure_count, wrong_count, total_corrections = 0, 0, 0
 
     for sample in ds.select(range(min(200, len(ds)))):
-        audio = {
-            "array": np.array(sample["audio"]["array"], dtype=np.float32),
-            "sampling_rate": sample["audio"]["sampling_rate"],
-        }
+        audio = extract_audio(sample["audio"])
         if args.mode == "baseline":
-            res = asr(audio)
+            res = asr(audio["array"])
             hyp = res["text"].lower().strip()
             pred_dict = {
                 "audio_id": sample.get("id", "unk"),
@@ -113,6 +144,8 @@ def main():
                     total_corrections += 1
                     if entry.get("label") == "UNSURE":
                         unsure_count += 1
+                    elif entry.get("label") == "WRONG":
+                        wrong_count += 1
 
         refs.append(sample["transcript"].lower().strip())
         hyps.append(hyp)
@@ -120,11 +153,13 @@ def main():
 
     wer = jiwer.wer(refs, hyps)
     unsure_rate = unsure_count / total_corrections if total_corrections > 0 else 0.0
+    fdr = wrong_count / total_corrections if total_corrections > 0 else 0.0
 
     row = {
         "mode": args.mode,
         "wer": round(wer, 4),
         "unsure_rate": round(unsure_rate, 4),
+        "fdr": round(fdr, 4),
         "num_samples": len(preds),
     }
     print(json.dumps(row, indent=2))
