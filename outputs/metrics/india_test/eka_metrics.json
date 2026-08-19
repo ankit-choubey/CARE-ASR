@@ -1,0 +1,10 @@
+{
+  "num_samples": 5,
+  "raw_wer": 1.0,
+  "pipeline_wer": 1.0,
+  "cer": 1.0,
+  "wer_improvement": 0.0,
+  "dataset": "eka",
+  "config": "",
+  "model": "frozen-week1"
+}
