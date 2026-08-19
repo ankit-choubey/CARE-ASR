@@ -171,11 +171,11 @@ CARE-ASR/
 ├── demo/                   # Interactive Gradio web application
 ├── documentation/          # Master thesis documentation & visual assets
 │   ├── CARE_ASR_MASTER_THESIS_REPORT.md  # Master Thesis & Patent Documentation
-│   └── images/             # Visual architecture diagrams & benchmark charts
-├── ankit_progress/         # Ankit's architecture progress logs & tasks
-├── mahi_progress/          # Mahi's test verification progress logs & tasks
-├── Aarth_progress/         # Aarth's NLP entity tagging progress logs
-├── divya_progress/         # Divya's retrieval index progress logs
+├── workflow/               # Collaborator execution & progress tracking
+│   ├── ankit_progress/     # Ankit's architecture progress logs & tasks
+│   ├── mahi_progress/      # Mahi's test verification progress logs & tasks
+│   ├── Aarth_progress/     # Aarth's NLP entity tagging progress logs
+│   └── divya_progress/     # Divya's retrieval index progress logs
 ├── scripts/                # Evaluation, benchmarking & index generation scripts
 ├── pyproject.toml          # Package configuration & dependencies
 └── README.md               # Primary project documentation
