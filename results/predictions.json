@@ -1,0 +1,3204 @@
+[
+  {
+    "audio_id": "clinical_utt_001",
+    "prediction": " BEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE EEEEE",
+    "reference": "the patient presents with acute hypertension and elevated fever",
+    "word_timestamps": [
+      {
+        "word": "BEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+        "start": 0.0,
+        "end": 0.3
+      },
+      {
+        "word": "EEEEE",
+        "start": 0.35,
+        "end": 0.65
+      }
+    ],
+    "token_scores": [
+      {
+        "step": 0,
+        "token_id": 363,
+        "token": " B",
+        "log_prob": -2.8895,
+        "prob": 0.055605
+      },
+      {
+        "step": 1,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.2412,
+        "prob": 0.289035
+      },
+      {
+        "step": 2,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1107,
+        "prob": 0.895197
+      },
+      {
+        "step": 3,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1417,
+        "prob": 0.867893
+      },
+      {
+        "step": 4,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1551,
+        "prob": 0.856331
+      },
+      {
+        "step": 5,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1718,
+        "prob": 0.842126
+      },
+      {
+        "step": 6,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1835,
+        "prob": 0.832343
+      },
+      {
+        "step": 7,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1903,
+        "prob": 0.826752
+      },
+      {
+        "step": 8,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1916,
+        "prob": 0.825604
+      },
+      {
+        "step": 9,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1871,
+        "prob": 0.829331
+      },
+      {
+        "step": 10,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1818,
+        "prob": 0.833788
+      },
+      {
+        "step": 11,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1724,
+        "prob": 0.841604
+      },
+      {
+        "step": 12,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1622,
+        "prob": 0.850277
+      },
+      {
+        "step": 13,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1521,
+        "prob": 0.858936
+      },
+      {
+        "step": 14,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1424,
+        "prob": 0.86726
+      },
+      {
+        "step": 15,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1356,
+        "prob": 0.873216
+      },
+      {
+        "step": 16,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1301,
+        "prob": 0.878013
+      },
+      {
+        "step": 17,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1231,
+        "prob": 0.884158
+      },
+      {
+        "step": 18,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.117,
+        "prob": 0.889556
+      },
+      {
+        "step": 19,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1118,
+        "prob": 0.894221
+      },
+      {
+        "step": 20,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1068,
+        "prob": 0.898689
+      },
+      {
+        "step": 21,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1033,
+        "prob": 0.901819
+      },
+      {
+        "step": 22,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0989,
+        "prob": 0.905846
+      },
+      {
+        "step": 23,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0961,
+        "prob": 0.908411
+      },
+      {
+        "step": 24,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0921,
+        "prob": 0.911995
+      },
+      {
+        "step": 25,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0892,
+        "prob": 0.914619
+      },
+      {
+        "step": 26,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0867,
+        "prob": 0.916945
+      },
+      {
+        "step": 27,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0845,
+        "prob": 0.918992
+      },
+      {
+        "step": 28,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0817,
+        "prob": 0.92154
+      },
+      {
+        "step": 29,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0796,
+        "prob": 0.923522
+      },
+      {
+        "step": 30,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0779,
+        "prob": 0.925062
+      },
+      {
+        "step": 31,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0766,
+        "prob": 0.926262
+      },
+      {
+        "step": 32,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.075,
+        "prob": 0.927707
+      },
+      {
+        "step": 33,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0732,
+        "prob": 0.929382
+      },
+      {
+        "step": 34,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.072,
+        "prob": 0.930499
+      },
+      {
+        "step": 35,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.071,
+        "prob": 0.931417
+      },
+      {
+        "step": 36,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0703,
+        "prob": 0.932072
+      },
+      {
+        "step": 37,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0692,
+        "prob": 0.933151
+      },
+      {
+        "step": 38,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0674,
+        "prob": 0.934855
+      },
+      {
+        "step": 39,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0663,
+        "prob": 0.935818
+      },
+      {
+        "step": 40,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0655,
+        "prob": 0.936616
+      },
+      {
+        "step": 41,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0642,
+        "prob": 0.937841
+      },
+      {
+        "step": 42,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.064,
+        "prob": 0.938032
+      },
+      {
+        "step": 43,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0631,
+        "prob": 0.938893
+      },
+      {
+        "step": 44,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0625,
+        "prob": 0.939417
+      },
+      {
+        "step": 45,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0619,
+        "prob": 0.939972
+      },
+      {
+        "step": 46,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0615,
+        "prob": 0.940346
+      },
+      {
+        "step": 47,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0606,
+        "prob": 0.941182
+      },
+      {
+        "step": 48,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0598,
+        "prob": 0.941915
+      },
+      {
+        "step": 49,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0594,
+        "prob": 0.942335
+      },
+      {
+        "step": 50,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0592,
+        "prob": 0.94248
+      },
+      {
+        "step": 51,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0593,
+        "prob": 0.9424
+      },
+      {
+        "step": 52,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0593,
+        "prob": 0.942395
+      },
+      {
+        "step": 53,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0588,
+        "prob": 0.942888
+      },
+      {
+        "step": 54,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0586,
+        "prob": 0.94309
+      },
+      {
+        "step": 55,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0579,
+        "prob": 0.943779
+      },
+      {
+        "step": 56,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0578,
+        "prob": 0.943879
+      },
+      {
+        "step": 57,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.057,
+        "prob": 0.944613
+      },
+      {
+        "step": 58,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0562,
+        "prob": 0.94531
+      },
+      {
+        "step": 59,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0565,
+        "prob": 0.94504
+      },
+      {
+        "step": 60,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0573,
+        "prob": 0.944296
+      },
+      {
+        "step": 61,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0576,
+        "prob": 0.943984
+      },
+      {
+        "step": 62,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0577,
+        "prob": 0.943938
+      },
+      {
+        "step": 63,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0575,
+        "prob": 0.944097
+      },
+      {
+        "step": 64,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0572,
+        "prob": 0.944414
+      },
+      {
+        "step": 65,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0576,
+        "prob": 0.944001
+      },
+      {
+        "step": 66,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0577,
+        "prob": 0.943943
+      },
+      {
+        "step": 67,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.058,
+        "prob": 0.943683
+      },
+      {
+        "step": 68,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0585,
+        "prob": 0.9432
+      },
+      {
+        "step": 69,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0597,
+        "prob": 0.942046
+      },
+      {
+        "step": 70,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0602,
+        "prob": 0.941567
+      },
+      {
+        "step": 71,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0597,
+        "prob": 0.942024
+      },
+      {
+        "step": 72,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0598,
+        "prob": 0.941957
+      },
+      {
+        "step": 73,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0611,
+        "prob": 0.940689
+      },
+      {
+        "step": 74,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0612,
+        "prob": 0.940626
+      },
+      {
+        "step": 75,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0613,
+        "prob": 0.940504
+      },
+      {
+        "step": 76,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0616,
+        "prob": 0.94024
+      },
+      {
+        "step": 77,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0622,
+        "prob": 0.939711
+      },
+      {
+        "step": 78,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0631,
+        "prob": 0.938853
+      },
+      {
+        "step": 79,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.063,
+        "prob": 0.938927
+      },
+      {
+        "step": 80,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.064,
+        "prob": 0.937991
+      },
+      {
+        "step": 81,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0645,
+        "prob": 0.937517
+      },
+      {
+        "step": 82,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.065,
+        "prob": 0.937052
+      },
+      {
+        "step": 83,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.065,
+        "prob": 0.937081
+      },
+      {
+        "step": 84,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0668,
+        "prob": 0.93542
+      },
+      {
+        "step": 85,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0676,
+        "prob": 0.934677
+      },
+      {
+        "step": 86,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0684,
+        "prob": 0.933925
+      },
+      {
+        "step": 87,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0673,
+        "prob": 0.934876
+      },
+      {
+        "step": 88,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0699,
+        "prob": 0.932533
+      },
+      {
+        "step": 89,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0707,
+        "prob": 0.931742
+      },
+      {
+        "step": 90,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0713,
+        "prob": 0.931228
+      },
+      {
+        "step": 91,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0714,
+        "prob": 0.93112
+      },
+      {
+        "step": 92,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.072,
+        "prob": 0.930531
+      },
+      {
+        "step": 93,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0725,
+        "prob": 0.930028
+      },
+      {
+        "step": 94,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0738,
+        "prob": 0.928819
+      },
+      {
+        "step": 95,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0743,
+        "prob": 0.928418
+      },
+      {
+        "step": 96,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0752,
+        "prob": 0.927532
+      },
+      {
+        "step": 97,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0759,
+        "prob": 0.92693
+      },
+      {
+        "step": 98,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0775,
+        "prob": 0.925435
+      },
+      {
+        "step": 99,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0773,
+        "prob": 0.925625
+      },
+      {
+        "step": 100,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0806,
+        "prob": 0.922537
+      },
+      {
+        "step": 101,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.081,
+        "prob": 0.922156
+      },
+      {
+        "step": 102,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0817,
+        "prob": 0.921575
+      },
+      {
+        "step": 103,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0834,
+        "prob": 0.919947
+      },
+      {
+        "step": 104,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0853,
+        "prob": 0.918209
+      },
+      {
+        "step": 105,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.087,
+        "prob": 0.916702
+      },
+      {
+        "step": 106,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0896,
+        "prob": 0.914308
+      },
+      {
+        "step": 107,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0879,
+        "prob": 0.915878
+      },
+      {
+        "step": 108,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0895,
+        "prob": 0.91437
+      },
+      {
+        "step": 109,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0906,
+        "prob": 0.913402
+      },
+      {
+        "step": 110,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0905,
+        "prob": 0.913494
+      },
+      {
+        "step": 111,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0942,
+        "prob": 0.910096
+      },
+      {
+        "step": 112,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0951,
+        "prob": 0.909257
+      },
+      {
+        "step": 113,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0979,
+        "prob": 0.90676
+      },
+      {
+        "step": 114,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1005,
+        "prob": 0.904372
+      },
+      {
+        "step": 115,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.103,
+        "prob": 0.902101
+      },
+      {
+        "step": 116,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1043,
+        "prob": 0.900916
+      },
+      {
+        "step": 117,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1078,
+        "prob": 0.897848
+      },
+      {
+        "step": 118,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1065,
+        "prob": 0.899016
+      },
+      {
+        "step": 119,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1061,
+        "prob": 0.899306
+      },
+      {
+        "step": 120,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1074,
+        "prob": 0.898141
+      },
+      {
+        "step": 121,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1089,
+        "prob": 0.896785
+      },
+      {
+        "step": 122,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1114,
+        "prob": 0.894548
+      },
+      {
+        "step": 123,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1132,
+        "prob": 0.892928
+      },
+      {
+        "step": 124,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1069,
+        "prob": 0.898619
+      },
+      {
+        "step": 125,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1146,
+        "prob": 0.891717
+      },
+      {
+        "step": 126,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1176,
+        "prob": 0.889067
+      },
+      {
+        "step": 127,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1206,
+        "prob": 0.886382
+      },
+      {
+        "step": 128,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1246,
+        "prob": 0.882811
+      },
+      {
+        "step": 129,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1304,
+        "prob": 0.877782
+      },
+      {
+        "step": 130,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1335,
+        "prob": 0.875064
+      },
+      {
+        "step": 131,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1385,
+        "prob": 0.870674
+      },
+      {
+        "step": 132,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1352,
+        "prob": 0.87355
+      },
+      {
+        "step": 133,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1432,
+        "prob": 0.866604
+      },
+      {
+        "step": 134,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1482,
+        "prob": 0.862226
+      },
+      {
+        "step": 135,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1487,
+        "prob": 0.861853
+      },
+      {
+        "step": 136,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1489,
+        "prob": 0.861687
+      },
+      {
+        "step": 137,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1573,
+        "prob": 0.854408
+      },
+      {
+        "step": 138,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1585,
+        "prob": 0.853389
+      },
+      {
+        "step": 139,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1661,
+        "prob": 0.84694
+      },
+      {
+        "step": 140,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.171,
+        "prob": 0.842782
+      },
+      {
+        "step": 141,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1789,
+        "prob": 0.836153
+      },
+      {
+        "step": 142,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1781,
+        "prob": 0.836874
+      },
+      {
+        "step": 143,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1806,
+        "prob": 0.83476
+      },
+      {
+        "step": 144,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1909,
+        "prob": 0.826249
+      },
+      {
+        "step": 145,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2016,
+        "prob": 0.817414
+      },
+      {
+        "step": 146,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2015,
+        "prob": 0.817473
+      },
+      {
+        "step": 147,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2084,
+        "prob": 0.811848
+      },
+      {
+        "step": 148,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2145,
+        "prob": 0.806917
+      },
+      {
+        "step": 149,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2253,
+        "prob": 0.798286
+      },
+      {
+        "step": 150,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2336,
+        "prob": 0.791694
+      },
+      {
+        "step": 151,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2256,
+        "prob": 0.798048
+      },
+      {
+        "step": 152,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2362,
+        "prob": 0.789614
+      },
+      {
+        "step": 153,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2464,
+        "prob": 0.781603
+      },
+      {
+        "step": 154,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2475,
+        "prob": 0.780763
+      },
+      {
+        "step": 155,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2605,
+        "prob": 0.770686
+      },
+      {
+        "step": 156,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2635,
+        "prob": 0.768363
+      },
+      {
+        "step": 157,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2721,
+        "prob": 0.761773
+      },
+      {
+        "step": 158,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2764,
+        "prob": 0.758496
+      },
+      {
+        "step": 159,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2753,
+        "prob": 0.759353
+      },
+      {
+        "step": 160,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2809,
+        "prob": 0.755069
+      },
+      {
+        "step": 161,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2917,
+        "prob": 0.746964
+      },
+      {
+        "step": 162,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2936,
+        "prob": 0.745589
+      },
+      {
+        "step": 163,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3138,
+        "prob": 0.730676
+      },
+      {
+        "step": 164,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3238,
+        "prob": 0.723394
+      },
+      {
+        "step": 165,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3361,
+        "prob": 0.714575
+      },
+      {
+        "step": 166,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3307,
+        "prob": 0.718455
+      },
+      {
+        "step": 167,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.34,
+        "prob": 0.711746
+      },
+      {
+        "step": 168,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3319,
+        "prob": 0.717575
+      },
+      {
+        "step": 169,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3381,
+        "prob": 0.713096
+      },
+      {
+        "step": 170,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3625,
+        "prob": 0.69596
+      },
+      {
+        "step": 171,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3668,
+        "prob": 0.692945
+      },
+      {
+        "step": 172,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3847,
+        "prob": 0.680665
+      },
+      {
+        "step": 173,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3781,
+        "prob": 0.685129
+      },
+      {
+        "step": 174,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3818,
+        "prob": 0.68265
+      },
+      {
+        "step": 175,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3958,
+        "prob": 0.673167
+      },
+      {
+        "step": 176,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3956,
+        "prob": 0.673306
+      },
+      {
+        "step": 177,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.4108,
+        "prob": 0.663095
+      },
+      {
+        "step": 178,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.4191,
+        "prob": 0.657618
+      },
+      {
+        "step": 179,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.4231,
+        "prob": 0.65499
+      },
+      {
+        "step": 180,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.4375,
+        "prob": 0.645673
+      },
+      {
+        "step": 181,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.4582,
+        "prob": 0.63241
+      },
+      {
+        "step": 182,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.4596,
+        "prob": 0.631518
+      },
+      {
+        "step": 183,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.4882,
+        "prob": 0.613733
+      },
+      {
+        "step": 184,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.5151,
+        "prob": 0.597457
+      },
+      {
+        "step": 185,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.5327,
+        "prob": 0.587003
+      },
+      {
+        "step": 186,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.5674,
+        "prob": 0.567008
+      },
+      {
+        "step": 187,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.5734,
+        "prob": 0.563582
+      },
+      {
+        "step": 188,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.5811,
+        "prob": 0.559298
+      },
+      {
+        "step": 189,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.5865,
+        "prob": 0.556281
+      },
+      {
+        "step": 190,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.6118,
+        "prob": 0.542355
+      },
+      {
+        "step": 191,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.6244,
+        "prob": 0.535574
+      },
+      {
+        "step": 192,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.6381,
+        "prob": 0.528312
+      },
+      {
+        "step": 193,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.6562,
+        "prob": 0.5188
+      },
+      {
+        "step": 194,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.667,
+        "prob": 0.513238
+      },
+      {
+        "step": 195,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.7019,
+        "prob": 0.495643
+      },
+      {
+        "step": 196,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.7224,
+        "prob": 0.485585
+      },
+      {
+        "step": 197,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.7866,
+        "prob": 0.455387
+      },
+      {
+        "step": 198,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.7531,
+        "prob": 0.470919
+      },
+      {
+        "step": 199,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.8287,
+        "prob": 0.436633
+      },
+      {
+        "step": 200,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.8265,
+        "prob": 0.437583
+      },
+      {
+        "step": 201,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.8644,
+        "prob": 0.421322
+      },
+      {
+        "step": 202,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.8607,
+        "prob": 0.422875
+      },
+      {
+        "step": 203,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.8908,
+        "prob": 0.410341
+      },
+      {
+        "step": 204,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.9034,
+        "prob": 0.405206
+      },
+      {
+        "step": 205,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.9844,
+        "prob": 0.373648
+      },
+      {
+        "step": 206,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.9763,
+        "prob": 0.37672
+      },
+      {
+        "step": 207,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.1033,
+        "prob": 0.331791
+      },
+      {
+        "step": 208,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.1117,
+        "prob": 0.328989
+      },
+      {
+        "step": 209,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.2029,
+        "prob": 0.30031
+      },
+      {
+        "step": 210,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.1133,
+        "prob": 0.328467
+      },
+      {
+        "step": 211,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.2064,
+        "prob": 0.299275
+      },
+      {
+        "step": 212,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.174,
+        "prob": 0.309137
+      },
+      {
+        "step": 213,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.285,
+        "prob": 0.276639
+      },
+      {
+        "step": 214,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.2935,
+        "prob": 0.274317
+      },
+      {
+        "step": 215,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.2564,
+        "prob": 0.284688
+      },
+      {
+        "step": 216,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.3911,
+        "prob": 0.24879
+      },
+      {
+        "step": 217,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.3132,
+        "prob": 0.268953
+      },
+      {
+        "step": 218,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.26,
+        "prob": 0.283648
+      },
+      {
+        "step": 219,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.2117,
+        "prob": 0.297683
+      },
+      {
+        "step": 220,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.293,
+        "prob": 0.274434
+      },
+      {
+        "step": 221,
+        "token_id": 462,
+        "token": " E",
+        "log_prob": -0.8738,
+        "prob": 0.417378
+      },
+      {
+        "step": 222,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -2.4092,
+        "prob": 0.08989
+      },
+      {
+        "step": 223,
+        "token_id": 50257,
+        "token": "<|endoftext|>",
+        "log_prob": -1.563,
+        "prob": 0.209507
+      }
+    ]
+  },
+  {
+    "audio_id": "clinical_utt_002",
+    "prediction": " you",
+    "reference": "prescribed amoxicillin five hundred milligrams orally twice daily",
+    "word_timestamps": [
+      {
+        "word": "you",
+        "start": 0.0,
+        "end": 0.3
+      }
+    ],
+    "token_scores": [
+      {
+        "step": 0,
+        "token_id": 291,
+        "token": " you",
+        "log_prob": -2.9609,
+        "prob": 0.051773
+      },
+      {
+        "step": 1,
+        "token_id": 50257,
+        "token": "<|endoftext|>",
+        "log_prob": -0.0388,
+        "prob": 0.961928
+      }
+    ]
+  },
+  {
+    "audio_id": "clinical_utt_003",
+    "prediction": " BEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE END",
+    "reference": "electrocardiogram reveals normal sinus rhythm with no ST elevation",
+    "word_timestamps": [
+      {
+        "word": "BEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+        "start": 0.0,
+        "end": 0.3
+      },
+      {
+        "word": "END",
+        "start": 0.35,
+        "end": 0.65
+      }
+    ],
+    "token_scores": [
+      {
+        "step": 0,
+        "token_id": 363,
+        "token": " B",
+        "log_prob": -3.0702,
+        "prob": 0.046411
+      },
+      {
+        "step": 1,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -2.2491,
+        "prob": 0.105489
+      },
+      {
+        "step": 2,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1531,
+        "prob": 0.858058
+      },
+      {
+        "step": 3,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1753,
+        "prob": 0.839197
+      },
+      {
+        "step": 4,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1749,
+        "prob": 0.839529
+      },
+      {
+        "step": 5,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.184,
+        "prob": 0.83191
+      },
+      {
+        "step": 6,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1901,
+        "prob": 0.826845
+      },
+      {
+        "step": 7,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.194,
+        "prob": 0.823681
+      },
+      {
+        "step": 8,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1935,
+        "prob": 0.824044
+      },
+      {
+        "step": 9,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1882,
+        "prob": 0.828449
+      },
+      {
+        "step": 10,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1831,
+        "prob": 0.832724
+      },
+      {
+        "step": 11,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1732,
+        "prob": 0.840944
+      },
+      {
+        "step": 12,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1627,
+        "prob": 0.849878
+      },
+      {
+        "step": 13,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1514,
+        "prob": 0.859467
+      },
+      {
+        "step": 14,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1409,
+        "prob": 0.868589
+      },
+      {
+        "step": 15,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1333,
+        "prob": 0.875188
+      },
+      {
+        "step": 16,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1274,
+        "prob": 0.880363
+      },
+      {
+        "step": 17,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1202,
+        "prob": 0.886717
+      },
+      {
+        "step": 18,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1141,
+        "prob": 0.892174
+      },
+      {
+        "step": 19,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.109,
+        "prob": 0.896747
+      },
+      {
+        "step": 20,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1042,
+        "prob": 0.901029
+      },
+      {
+        "step": 21,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.101,
+        "prob": 0.903924
+      },
+      {
+        "step": 22,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0969,
+        "prob": 0.90763
+      },
+      {
+        "step": 23,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0943,
+        "prob": 0.909971
+      },
+      {
+        "step": 24,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0907,
+        "prob": 0.913257
+      },
+      {
+        "step": 25,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0882,
+        "prob": 0.915592
+      },
+      {
+        "step": 26,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0859,
+        "prob": 0.917661
+      },
+      {
+        "step": 27,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0839,
+        "prob": 0.919493
+      },
+      {
+        "step": 28,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0814,
+        "prob": 0.921853
+      },
+      {
+        "step": 29,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0794,
+        "prob": 0.923695
+      },
+      {
+        "step": 30,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0779,
+        "prob": 0.925016
+      },
+      {
+        "step": 31,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0769,
+        "prob": 0.92601
+      },
+      {
+        "step": 32,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0754,
+        "prob": 0.927348
+      },
+      {
+        "step": 33,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0737,
+        "prob": 0.928967
+      },
+      {
+        "step": 34,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0726,
+        "prob": 0.929968
+      },
+      {
+        "step": 35,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0718,
+        "prob": 0.930733
+      },
+      {
+        "step": 36,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0712,
+        "prob": 0.931293
+      },
+      {
+        "step": 37,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.07,
+        "prob": 0.932421
+      },
+      {
+        "step": 38,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.068,
+        "prob": 0.934225
+      },
+      {
+        "step": 39,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.067,
+        "prob": 0.935162
+      },
+      {
+        "step": 40,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0662,
+        "prob": 0.935942
+      },
+      {
+        "step": 41,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0649,
+        "prob": 0.937153
+      },
+      {
+        "step": 42,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0647,
+        "prob": 0.937333
+      },
+      {
+        "step": 43,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0638,
+        "prob": 0.938176
+      },
+      {
+        "step": 44,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0632,
+        "prob": 0.938732
+      },
+      {
+        "step": 45,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0627,
+        "prob": 0.939233
+      },
+      {
+        "step": 46,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0623,
+        "prob": 0.939583
+      },
+      {
+        "step": 47,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0613,
+        "prob": 0.940507
+      },
+      {
+        "step": 48,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0604,
+        "prob": 0.941355
+      },
+      {
+        "step": 49,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0601,
+        "prob": 0.941714
+      },
+      {
+        "step": 50,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0599,
+        "prob": 0.941837
+      },
+      {
+        "step": 51,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0601,
+        "prob": 0.941692
+      },
+      {
+        "step": 52,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0601,
+        "prob": 0.941661
+      },
+      {
+        "step": 53,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0596,
+        "prob": 0.942156
+      },
+      {
+        "step": 54,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0593,
+        "prob": 0.942388
+      },
+      {
+        "step": 55,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0584,
+        "prob": 0.943231
+      },
+      {
+        "step": 56,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0583,
+        "prob": 0.943345
+      },
+      {
+        "step": 57,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0574,
+        "prob": 0.944222
+      },
+      {
+        "step": 58,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0566,
+        "prob": 0.944952
+      },
+      {
+        "step": 59,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.057,
+        "prob": 0.944565
+      },
+      {
+        "step": 60,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0578,
+        "prob": 0.943826
+      },
+      {
+        "step": 61,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0582,
+        "prob": 0.943496
+      },
+      {
+        "step": 62,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0582,
+        "prob": 0.943417
+      },
+      {
+        "step": 63,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.058,
+        "prob": 0.94367
+      },
+      {
+        "step": 64,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0576,
+        "prob": 0.944066
+      },
+      {
+        "step": 65,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0581,
+        "prob": 0.943512
+      },
+      {
+        "step": 66,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0582,
+        "prob": 0.943485
+      },
+      {
+        "step": 67,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0584,
+        "prob": 0.943295
+      },
+      {
+        "step": 68,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0589,
+        "prob": 0.942786
+      },
+      {
+        "step": 69,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0603,
+        "prob": 0.941459
+      },
+      {
+        "step": 70,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0608,
+        "prob": 0.941012
+      },
+      {
+        "step": 71,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0603,
+        "prob": 0.941471
+      },
+      {
+        "step": 72,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0603,
+        "prob": 0.941456
+      },
+      {
+        "step": 73,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0618,
+        "prob": 0.94005
+      },
+      {
+        "step": 74,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0619,
+        "prob": 0.939955
+      },
+      {
+        "step": 75,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.062,
+        "prob": 0.939898
+      },
+      {
+        "step": 76,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0624,
+        "prob": 0.939545
+      },
+      {
+        "step": 77,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0629,
+        "prob": 0.939061
+      },
+      {
+        "step": 78,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0639,
+        "prob": 0.938052
+      },
+      {
+        "step": 79,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0637,
+        "prob": 0.938286
+      },
+      {
+        "step": 80,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0649,
+        "prob": 0.937153
+      },
+      {
+        "step": 81,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0654,
+        "prob": 0.936669
+      },
+      {
+        "step": 82,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.066,
+        "prob": 0.936159
+      },
+      {
+        "step": 83,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.066,
+        "prob": 0.936174
+      },
+      {
+        "step": 84,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0679,
+        "prob": 0.934352
+      },
+      {
+        "step": 85,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0688,
+        "prob": 0.933522
+      },
+      {
+        "step": 86,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0697,
+        "prob": 0.932666
+      },
+      {
+        "step": 87,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0686,
+        "prob": 0.933694
+      },
+      {
+        "step": 88,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0714,
+        "prob": 0.931111
+      },
+      {
+        "step": 89,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0724,
+        "prob": 0.930174
+      },
+      {
+        "step": 90,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0729,
+        "prob": 0.929679
+      },
+      {
+        "step": 91,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.073,
+        "prob": 0.929585
+      },
+      {
+        "step": 92,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0738,
+        "prob": 0.928854
+      },
+      {
+        "step": 93,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0744,
+        "prob": 0.928309
+      },
+      {
+        "step": 94,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0759,
+        "prob": 0.926952
+      },
+      {
+        "step": 95,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0764,
+        "prob": 0.926444
+      },
+      {
+        "step": 96,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0775,
+        "prob": 0.925393
+      },
+      {
+        "step": 97,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0783,
+        "prob": 0.924676
+      },
+      {
+        "step": 98,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0801,
+        "prob": 0.923032
+      },
+      {
+        "step": 99,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0801,
+        "prob": 0.923053
+      },
+      {
+        "step": 100,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0838,
+        "prob": 0.919658
+      },
+      {
+        "step": 101,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0844,
+        "prob": 0.919062
+      },
+      {
+        "step": 102,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0851,
+        "prob": 0.918449
+      },
+      {
+        "step": 103,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0872,
+        "prob": 0.916519
+      },
+      {
+        "step": 104,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0893,
+        "prob": 0.914546
+      },
+      {
+        "step": 105,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0913,
+        "prob": 0.912788
+      },
+      {
+        "step": 106,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0939,
+        "prob": 0.910362
+      },
+      {
+        "step": 107,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0926,
+        "prob": 0.911524
+      },
+      {
+        "step": 108,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0943,
+        "prob": 0.909989
+      },
+      {
+        "step": 109,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.096,
+        "prob": 0.908428
+      },
+      {
+        "step": 110,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.0963,
+        "prob": 0.908223
+      },
+      {
+        "step": 111,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1002,
+        "prob": 0.904637
+      },
+      {
+        "step": 112,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1017,
+        "prob": 0.903262
+      },
+      {
+        "step": 113,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1048,
+        "prob": 0.900468
+      },
+      {
+        "step": 114,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1082,
+        "prob": 0.897422
+      },
+      {
+        "step": 115,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1108,
+        "prob": 0.895085
+      },
+      {
+        "step": 116,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1127,
+        "prob": 0.893409
+      },
+      {
+        "step": 117,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1163,
+        "prob": 0.890245
+      },
+      {
+        "step": 118,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1153,
+        "prob": 0.891132
+      },
+      {
+        "step": 119,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1151,
+        "prob": 0.891301
+      },
+      {
+        "step": 120,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1167,
+        "prob": 0.889824
+      },
+      {
+        "step": 121,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.118,
+        "prob": 0.888676
+      },
+      {
+        "step": 122,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1213,
+        "prob": 0.88576
+      },
+      {
+        "step": 123,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1233,
+        "prob": 0.883969
+      },
+      {
+        "step": 124,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1179,
+        "prob": 0.888822
+      },
+      {
+        "step": 125,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1259,
+        "prob": 0.88168
+      },
+      {
+        "step": 126,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1303,
+        "prob": 0.877837
+      },
+      {
+        "step": 127,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1345,
+        "prob": 0.874174
+      },
+      {
+        "step": 128,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1391,
+        "prob": 0.870155
+      },
+      {
+        "step": 129,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1459,
+        "prob": 0.864252
+      },
+      {
+        "step": 130,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1495,
+        "prob": 0.861123
+      },
+      {
+        "step": 131,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1554,
+        "prob": 0.856097
+      },
+      {
+        "step": 132,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1529,
+        "prob": 0.858215
+      },
+      {
+        "step": 133,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1617,
+        "prob": 0.850694
+      },
+      {
+        "step": 134,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1676,
+        "prob": 0.845668
+      },
+      {
+        "step": 135,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1693,
+        "prob": 0.844281
+      },
+      {
+        "step": 136,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1703,
+        "prob": 0.843391
+      },
+      {
+        "step": 137,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1804,
+        "prob": 0.834933
+      },
+      {
+        "step": 138,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1824,
+        "prob": 0.833266
+      },
+      {
+        "step": 139,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1914,
+        "prob": 0.825813
+      },
+      {
+        "step": 140,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.1974,
+        "prob": 0.820855
+      },
+      {
+        "step": 141,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.206,
+        "prob": 0.813834
+      },
+      {
+        "step": 142,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2061,
+        "prob": 0.813736
+      },
+      {
+        "step": 143,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.21,
+        "prob": 0.810549
+      },
+      {
+        "step": 144,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2211,
+        "prob": 0.801607
+      },
+      {
+        "step": 145,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2343,
+        "prob": 0.791114
+      },
+      {
+        "step": 146,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.235,
+        "prob": 0.790532
+      },
+      {
+        "step": 147,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2429,
+        "prob": 0.784326
+      },
+      {
+        "step": 148,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2507,
+        "prob": 0.778243
+      },
+      {
+        "step": 149,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2632,
+        "prob": 0.768591
+      },
+      {
+        "step": 150,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2726,
+        "prob": 0.761418
+      },
+      {
+        "step": 151,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2641,
+        "prob": 0.767929
+      },
+      {
+        "step": 152,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2764,
+        "prob": 0.758506
+      },
+      {
+        "step": 153,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2875,
+        "prob": 0.75013
+      },
+      {
+        "step": 154,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.2895,
+        "prob": 0.748652
+      },
+      {
+        "step": 155,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3042,
+        "prob": 0.737736
+      },
+      {
+        "step": 156,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3079,
+        "prob": 0.735015
+      },
+      {
+        "step": 157,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3174,
+        "prob": 0.728067
+      },
+      {
+        "step": 158,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3229,
+        "prob": 0.724016
+      },
+      {
+        "step": 159,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3212,
+        "prob": 0.725311
+      },
+      {
+        "step": 160,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3276,
+        "prob": 0.720687
+      },
+      {
+        "step": 161,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3402,
+        "prob": 0.711626
+      },
+      {
+        "step": 162,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3422,
+        "prob": 0.710204
+      },
+      {
+        "step": 163,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3662,
+        "prob": 0.693331
+      },
+      {
+        "step": 164,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.377,
+        "prob": 0.685897
+      },
+      {
+        "step": 165,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3916,
+        "prob": 0.675984
+      },
+      {
+        "step": 166,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.385,
+        "prob": 0.680457
+      },
+      {
+        "step": 167,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3953,
+        "prob": 0.673486
+      },
+      {
+        "step": 168,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3856,
+        "prob": 0.680052
+      },
+      {
+        "step": 169,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.3918,
+        "prob": 0.675811
+      },
+      {
+        "step": 170,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.4208,
+        "prob": 0.656514
+      },
+      {
+        "step": 171,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.4258,
+        "prob": 0.653226
+      },
+      {
+        "step": 172,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.4464,
+        "prob": 0.639905
+      },
+      {
+        "step": 173,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.4375,
+        "prob": 0.645658
+      },
+      {
+        "step": 174,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.4421,
+        "prob": 0.642699
+      },
+      {
+        "step": 175,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.459,
+        "prob": 0.631907
+      },
+      {
+        "step": 176,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.4566,
+        "prob": 0.633457
+      },
+      {
+        "step": 177,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.4744,
+        "prob": 0.622276
+      },
+      {
+        "step": 178,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.4793,
+        "prob": 0.619192
+      },
+      {
+        "step": 179,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.488,
+        "prob": 0.613878
+      },
+      {
+        "step": 180,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.5003,
+        "prob": 0.606341
+      },
+      {
+        "step": 181,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.5255,
+        "prob": 0.591235
+      },
+      {
+        "step": 182,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.5275,
+        "prob": 0.590072
+      },
+      {
+        "step": 183,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.5555,
+        "prob": 0.573765
+      },
+      {
+        "step": 184,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.5905,
+        "prob": 0.554059
+      },
+      {
+        "step": 185,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.6053,
+        "prob": 0.5459
+      },
+      {
+        "step": 186,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.6468,
+        "prob": 0.52373
+      },
+      {
+        "step": 187,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.6555,
+        "prob": 0.519178
+      },
+      {
+        "step": 188,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.6628,
+        "prob": 0.515427
+      },
+      {
+        "step": 189,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.6686,
+        "prob": 0.512418
+      },
+      {
+        "step": 190,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.6918,
+        "prob": 0.500691
+      },
+      {
+        "step": 191,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.7069,
+        "prob": 0.493165
+      },
+      {
+        "step": 192,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.7203,
+        "prob": 0.486592
+      },
+      {
+        "step": 193,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.743,
+        "prob": 0.475664
+      },
+      {
+        "step": 194,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.7591,
+        "prob": 0.46809
+      },
+      {
+        "step": 195,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.7932,
+        "prob": 0.452381
+      },
+      {
+        "step": 196,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.8166,
+        "prob": 0.441926
+      },
+      {
+        "step": 197,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.873,
+        "prob": 0.417688
+      },
+      {
+        "step": 198,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.8454,
+        "prob": 0.42938
+      },
+      {
+        "step": 199,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.9153,
+        "prob": 0.400408
+      },
+      {
+        "step": 200,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.9232,
+        "prob": 0.397233
+      },
+      {
+        "step": 201,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.9485,
+        "prob": 0.387334
+      },
+      {
+        "step": 202,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.9529,
+        "prob": 0.385621
+      },
+      {
+        "step": 203,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.9854,
+        "prob": 0.373277
+      },
+      {
+        "step": 204,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -0.9933,
+        "prob": 0.370352
+      },
+      {
+        "step": 205,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.0693,
+        "prob": 0.343234
+      },
+      {
+        "step": 206,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.0743,
+        "prob": 0.34155
+      },
+      {
+        "step": 207,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.1745,
+        "prob": 0.308976
+      },
+      {
+        "step": 208,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.2023,
+        "prob": 0.300517
+      },
+      {
+        "step": 209,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.2721,
+        "prob": 0.280251
+      },
+      {
+        "step": 210,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.1993,
+        "prob": 0.301391
+      },
+      {
+        "step": 211,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.2905,
+        "prob": 0.275136
+      },
+      {
+        "step": 212,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.2646,
+        "prob": 0.282353
+      },
+      {
+        "step": 213,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.3611,
+        "prob": 0.256375
+      },
+      {
+        "step": 214,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.3678,
+        "prob": 0.254663
+      },
+      {
+        "step": 215,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.3475,
+        "prob": 0.259894
+      },
+      {
+        "step": 216,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.4604,
+        "prob": 0.232145
+      },
+      {
+        "step": 217,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.4039,
+        "prob": 0.245643
+      },
+      {
+        "step": 218,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.3671,
+        "prob": 0.254839
+      },
+      {
+        "step": 219,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.3322,
+        "prob": 0.263901
+      },
+      {
+        "step": 220,
+        "token_id": 31817,
+        "token": "EEEE",
+        "log_prob": -1.4197,
+        "prob": 0.241777
+      },
+      {
+        "step": 221,
+        "token_id": 462,
+        "token": " E",
+        "log_prob": -0.9028,
+        "prob": 0.405438
+      },
+      {
+        "step": 222,
+        "token_id": 13360,
+        "token": "ND",
+        "log_prob": -2.1095,
+        "prob": 0.121302
+      },
+      {
+        "step": 223,
+        "token_id": 50257,
+        "token": "<|endoftext|>",
+        "log_prob": -0.4497,
+        "prob": 0.637815
+      }
+    ]
+  }
+]

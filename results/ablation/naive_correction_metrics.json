@@ -1,0 +1,7 @@
+{
+  "mode": "naive_correction",
+  "wer": 1.007,
+  "unsure_rate": 0.0,
+  "fdr": 0.0,
+  "num_samples": 200
+}

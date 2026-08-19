@@ -1,0 +1,7 @@
+{
+  "mode": "baseline",
+  "wer": 0.9993,
+  "unsure_rate": 0.0,
+  "fdr": 0.0,
+  "num_samples": 200
+}
