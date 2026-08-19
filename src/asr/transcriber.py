@@ -12,6 +12,7 @@ import yaml
 from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor
 
 from care_asr.contracts.asr_input import TokenScore, Transcript
+from src.entropy.tsallis import tsallis_entropy
 
 
 def _pick_device(cfg_device: str) -> str:
@@ -66,7 +67,7 @@ class WhisperTranscriber:
                 return_dict_in_generate=True,
                 output_scores=True,
                 language=self.cfg.get("language", "en"),
-                max_new_tokens=self.cfg.get("max_new_tokens", 448),
+                max_new_tokens=self.cfg.get("max_new_tokens", 440),
             )
 
         sequences = result.sequences[0]
@@ -78,14 +79,19 @@ class WhisperTranscriber:
                 break
             token_id = int(sequences[step + 1].item())
             log_probs = torch.nn.functional.log_softmax(score_tensor[0], dim=-1)
+            probs = torch.exp(log_probs)
+
             log_p = float(log_probs[token_id].item())
+            entropy_val = tsallis_entropy(probs)
+
             token_scores.append(
                 TokenScore(
                     step=step,
                     token_id=token_id,
                     token=self.processor.decode([token_id]),
                     log_prob=log_p,
-                    prob=float(torch.exp(log_probs[token_id]).item()),
+                    prob=float(probs[token_id].item()),
+                    entropy=entropy_val,
                 )
             )
 
