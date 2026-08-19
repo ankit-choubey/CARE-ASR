@@ -100,6 +100,7 @@ class TokenScore(BaseModel):
     token: str = Field(..., description="Decoded token string")
     log_prob: float = Field(..., description="Log probability score")
     prob: float = Field(..., description="Probability score in [0.0, 1.0]")
+    entropy: float = Field(0.0, description="Tsallis entropy score")
 
 
 class WordTimestamp(BaseModel):
