@@ -1,0 +1,5 @@
+mode,eval_split,num_samples,wer,wer_percentage,unsure_rate,unsure_percentage,fdr_rate,fdr_percentage,total_elapsed_s
+baseline,clinical_100_pairs,105,0.3943,39.43%,0.0,0.0%,0.0,0.0%,0.0
+dual_retrieval,clinical_100_pairs,105,0.4151,41.51%,0.0,0.0%,0.0048,0.48%,9.0
+entropy_gated,clinical_100_pairs,105,0.4151,41.51%,0.0,0.0%,0.0048,0.48%,0.05
+unsure_gate,clinical_100_pairs,105,0.3943,39.43%,0.0,0.0%,0.0,0.0%,0.03

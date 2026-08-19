@@ -1,0 +1,11 @@
+{
+  "dataset": "AfriSpeech-200 clinical test split",
+  "num_samples": 3,
+  "metrics": {
+    "WER": 1.0,
+    "CER": 9.3557,
+    "M-WER": "RESERVED_FOR_T4 (NotImplementedError)",
+    "category_recall": "RESERVED_FOR_T4 (NotImplementedError)"
+  },
+  "status": "T1 Baseline Evaluation Completed Successfully"
+}

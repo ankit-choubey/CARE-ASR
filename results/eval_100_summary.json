@@ -1,0 +1,50 @@
+[
+  {
+    "mode": "baseline",
+    "eval_split": "clinical_100_pairs",
+    "num_samples": 105,
+    "wer": 0.3943,
+    "wer_percentage": "39.43%",
+    "unsure_rate": 0.0,
+    "unsure_percentage": "0.0%",
+    "fdr_rate": 0.0,
+    "fdr_percentage": "0.0%",
+    "total_elapsed_s": 0.0
+  },
+  {
+    "mode": "dual_retrieval",
+    "eval_split": "clinical_100_pairs",
+    "num_samples": 105,
+    "wer": 0.4151,
+    "wer_percentage": "41.51%",
+    "unsure_rate": 0.0,
+    "unsure_percentage": "0.0%",
+    "fdr_rate": 0.0048,
+    "fdr_percentage": "0.48%",
+    "total_elapsed_s": 9.0
+  },
+  {
+    "mode": "entropy_gated",
+    "eval_split": "clinical_100_pairs",
+    "num_samples": 105,
+    "wer": 0.4151,
+    "wer_percentage": "41.51%",
+    "unsure_rate": 0.0,
+    "unsure_percentage": "0.0%",
+    "fdr_rate": 0.0048,
+    "fdr_percentage": "0.48%",
+    "total_elapsed_s": 0.05
+  },
+  {
+    "mode": "unsure_gate",
+    "eval_split": "clinical_100_pairs",
+    "num_samples": 105,
+    "wer": 0.3943,
+    "wer_percentage": "39.43%",
+    "unsure_rate": 0.0,
+    "unsure_percentage": "0.0%",
+    "fdr_rate": 0.0,
+    "fdr_percentage": "0.0%",
+    "total_elapsed_s": 0.03
+  }
+]
