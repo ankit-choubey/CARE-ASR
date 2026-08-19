@@ -1,0 +1,42 @@
+[
+  {
+    "audio_id": "/250427/ce-73d4588f-143b-4ffb-8944-a8df7f811c16/7.m4a",
+    "prediction": "",
+    "reference": "not having adequate rest. Okay okay. So that continues for better part of the day. Hmm, hmm, hmm. Then",
+    "word_timestamps": [],
+    "token_scores": [],
+    "raw_asr_prediction": ""
+  },
+  {
+    "audio_id": "/240907/D3A675F9-69E5-4389-8092-984929C87834/3.m4a",
+    "prediction": "",
+    "reference": "2 times in a day, please have, an antibiotic named azithromycin.",
+    "word_timestamps": [],
+    "token_scores": [],
+    "raw_asr_prediction": ""
+  },
+  {
+    "audio_id": "/240907/D3A675F9-69E5-4389-8092-984929C87834/2.m4a",
+    "prediction": "",
+    "reference": "500 mg. Also, Because you're feeling weak. Take Zincovit once in a day.",
+    "word_timestamps": [],
+    "token_scores": [],
+    "raw_asr_prediction": ""
+  },
+  {
+    "audio_id": "/240907/300F60AD-E9D0-4E5D-BB05-C2D0C9115F8A/1.m4a",
+    "prediction": "",
+    "reference": "Patient has fever, headache, back pain, leg pain all over the body, I recommend to give Dolo 650 tablet thrice a day for 6 days, and I also want to give Pantop DSR for 7 days. Ask patient to come after 12 days and give thyroxine 25 mcg for 15 days.",
+    "word_timestamps": [],
+    "token_scores": [],
+    "raw_asr_prediction": ""
+  },
+  {
+    "audio_id": "/240907/D387A804-8786-4925-86A7-92F78F076425/2.m4a",
+    "prediction": "",
+    "reference": "Gelusil tablet and many more drugs and see after 7 days.",
+    "word_timestamps": [],
+    "token_scores": [],
+    "raw_asr_prediction": ""
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "audio_id": "svarah_syn_0000",
+    "prediction": "",
+    "reference": "patient prescribed amoxicillin five hundred milligrams twice daily",
+    "word_timestamps": [],
+    "token_scores": [],
+    "raw_asr_prediction": ""
+  },
+  {
+    "audio_id": "svarah_syn_0001",
+    "prediction": "",
+    "reference": "follow up blood pressure readings with lisinopril therapy",
+    "word_timestamps": [],
+    "token_scores": [],
+    "raw_asr_prediction": ""
+  },
+  {
+    "audio_id": "svarah_syn_0002",
+    "prediction": "",
+    "reference": "diabetes mellitus controlled with metformin and diet",
+    "word_timestamps": [],
+    "token_scores": [],
+    "raw_asr_prediction": ""
+  },
+  {
+    "audio_id": "svarah_syn_0003",
+    "prediction": "",
+    "reference": "schedule stress test to evaluate chest discomfort",
+    "word_timestamps": [],
+    "token_scores": [],
+    "raw_asr_prediction": ""
+  },
+  {
+    "audio_id": "svarah_syn_0004",
+    "prediction": "",
+    "reference": "continue medication for hypertension as directed",
+    "word_timestamps": [],
+    "token_scores": [],
+    "raw_asr_prediction": ""
+  }
+]
